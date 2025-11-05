@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visualizador de SVG — Corrigido (viewBox e escala)</title>
+<style>
+  :root{
+    --primary:#0066ff;
+    --bg:#f6f8fa;
+    --card:#fff;
+    --muted:#6b7280;
+    --border:#e6e9ef;
+    --success:#16a34a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:var(--bg);
+    color:#111827;
+    -webkit-font-smoothing:antialiased;
+  }
+  header.app-header{
+    position:sticky; top:0; z-index:50;
+    display:flex; gap:12px; align-items:center;
+    padding:12px 16px; background:var(--card); border-bottom:1px solid var(--border);
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+    overflow-x:auto;
+    overflow-y:hidden;
+  }
+  header.app-header::-webkit-scrollbar{height:6px}
+  header.app-header::-webkit-scrollbar-track{background:transparent}
+  header.app-header::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+  header.app-header::-webkit-scrollbar-thumb:hover{background:#999}
+  header h1{margin:0;font-size:1.05rem;white-space:nowrap}
+  .controls{display:flex; gap:8px; align-items:center; margin-left:auto; flex-wrap:nowrap;white-space:nowrap}
+  .btn{
+    background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;
+    font-weight:600; font-size:.9rem;
+  }
+  .btn.ghost{background:transparent; color:var(--primary); border:1px solid var(--primary);}
+  .input, input[type="search"], select{padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:#fff}
+  select#categoryFilter{
+    max-width:280px;
+    min-width:180px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  select#categoryFilter option{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:280px;
+  }
+  main#gallery{max-width:1400px;margin:20px auto;padding:0 16px}
+  .toolbar{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .meta{font-size:.9rem;color:var(--muted)}
+  .grid{display:grid; gap:12px; grid-template-columns: repeat(auto-fill, minmax(160px,1fr));}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden;
+    display:flex; flex-direction:column; align-items:stretch; min-height:160px;
+  }
+  .preview{
+    display:flex; align-items:center; justify-content:center; padding:16px; min-height:110px;
+    color:var(--muted); background:linear-gradient(180deg, rgba(0,0,0,0.01), transparent);
+  }
+
+  /* wrapper que contém o svg e mantém proporção adequada no preview */
+  .svg-wrap {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:auto;
+    height:auto;
+  }
+  .svg-wrap svg{
+    display:block;
+    max-width:100%;
+    max-height:100%;
+  }
+
+  .card .info{padding:10px; display:flex; gap:6px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+  .filename{font-size:.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .actions{display:flex; gap:6px}
+  .small-btn{padding:6px 8px; font-size:.8rem; border-radius:8px; border:1px solid var(--border); background:#fff; cursor:pointer}
+  .small-btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .small-btn.success{background:var(--success); color:#fff; border-color:var(--success)}
+  .favorited{color:gold}
+  /* modal */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:1000}
+  .modal{background:#fff; width:min(900px,95%); border-radius:10px; padding:18px; max-height:85vh; overflow:auto}
+  .modal .controls{margin-top:8px; margin-bottom:6px}
+  .badge{background:#eef2ff;color:var(--primary);padding:6px 8px;border-radius:999px;font-weight:600;border:1px solid rgba(0,102,255,0.08)}
+  /* Cabeçalhos de categoria */
+  .category-header{
+    grid-column:1/-1;
+    padding:16px 12px 8px 12px;
+    font-size:1.1rem;
+    font-weight:700;
+    color:#111827;
+    border-bottom:2px solid var(--border);
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .category-header:first-child{margin-top:0}
+  .category-count{
+    font-size:.85rem;
+    font-weight:400;
+    color:var(--muted);
+    margin-left:auto;
+  }
+  /* Badge de subcategoria nos cards */
+  .subcategory-badge{
+    background:#f3f4f6;
+    color:#6b7280;
+    padding:3px 8px;
+    border-radius:4px;
+    font-size:.75rem;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .card-title-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    width:100%;
+  }
+  footer{padding:20px;text-align:center;color:var(--muted);font-size:.85rem}
+  @media (max-width:640px){
+    .preview svg{width:56px;height:56px}
+  }
+</style>
+</head>
+<body>
+<header class="app-header" role="banner" aria-label="Cabeçalho do visualizador">
+  <h1>Visualizador de SVG</h1>
+  <div class="controls" role="toolbar" aria-label="Controles principais">
+    <label class="btn" for="dir">Selecionar pasta</label>
+    <input id="dir" type="file" webkitdirectory multiple style="display:none" aria-hidden="true">
+    <input id="search" class="input" type="search" placeholder="Pesquisar por nome..." aria-label="Pesquisar ícones">
+    <select id="categoryFilter" class="input" aria-label="Filtrar categoria">
+      <option value="">Todas as categorias</option>
+    </select>
+    <label class="input" title="Tamanho da pré-visualização">Tamanho
+      <input id="sizeRange" type="range" min="24" max="180" value="72" style="vertical-align:middle;margin-left:8px">
+    </label>
+    <input id="colorPicker" type="color" value="#000000" title="Cor global do ícone" style="width:44px;height:36px;border-radius:8px;border:1px solid var(--border)">
+    <button id="clearFav" class="small-btn ghost" title="Limpar favoritos">Limpar favoritos</button>
+  </div>
+</header>
+
+<main id="gallery" role="main">
+  <div class="toolbar">
+    <div class="meta"><span id="count">0</span> ícones carregados • <span id="catName">—</span></div>
+    <div style="margin-left:auto" class="meta">
+      <span class="badge" id="activeColorLabel">#000000</span>
+    </div>
+  </div>
+
+  <div id="grid" class="grid" aria-live="polite">
+    <div id="welcome" class="card" style="grid-column:1/-1;text-align:center;padding:28px;">
+      <p style="margin:0 0 6px 0;font-weight:600">👋 Bem-vindo ao visualizador</p>
+      <p style="margin:0;color:var(--muted)">Use "Selecionar pasta" para escolher a pasta que contém seus .svg — o visualizador agrupa por pasta.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Modal preview -->
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal" role="document">
+    <div id="modalContent"></div>
+    <div class="controls">
+      <button id="modalCopy" class="small-btn">Copiar SVG</button>
+      <button id="modalName" class="small-btn">Copiar nome</button>
+      <button id="modalPath" class="small-btn primary">Copiar caminho</button>
+      <button id="modalClose" class="small-btn">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<footer>Melhorado — funcionalidades: busca, filtro, modal, favoritos, cor/size.</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dir = document.getElementById('dir');
+  const grid = document.getElementById('grid');
+  const welcome = document.getElementById('welcome');
+  const countSpan = document.getElementById('count');
+  const catName = document.getElementById('catName');
+  const search = document.getElementById('search');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const colorPicker = document.getElementById('colorPicker');
+  const sizeRange = document.getElementById('sizeRange');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalContent = document.getElementById('modalContent');
+  const modalCopy = document.getElementById('modalCopy');
+  const modalName = document.getElementById('modalName');
+  const modalPath = document.getElementById('modalPath');
+  const modalClose = document.getElementById('modalClose');
+  const activeColorLabel = document.getElementById('activeColorLabel');
+  const clearFav = document.getElementById('clearFav');
+
+  let allItems = []; // {category,fileName,svgText,svgElement}
+  let favorites = new Set(JSON.parse(localStorage.getItem('svgFavs')||'[]'));
+
+  function saveFavs(){ localStorage.setItem('svgFavs', JSON.stringify(Array.from(favorites))); }
+
+  dir.addEventListener('change', handleFiles);
+
+  search.addEventListener('input', applyFilters);
+  categoryFilter.addEventListener('change', applyFilters);
+
+  colorPicker.addEventListener('input', () => { applyColor(); activeColorLabel.textContent = colorPicker.value; });
+  sizeRange.addEventListener('input', applySize);
+  clearFav.addEventListener('click', () => { favorites.clear(); saveFavs(); renderGrid(); });
+
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e) => { if(e.target===modalBackdrop) closeModal(); });
+
+  // lê arquivos selecionados pela input webkitdirectory
+  function handleFiles(e){
+    const files = Array.from(e.target.files || []);
+    if(files.length === 0) return;
+    // NÃO remove o welcome nem limpa o grid - deixa a transição suave
+    allItems = [];
+
+    const svgFiles = files.filter(f => f.type === 'image/svg+xml' || f.name.toLowerCase().endsWith('.svg'));
+    if(svgFiles.length === 0){
+      grid.innerHTML = '<div class="card" style="grid-column:1/-1;padding:18px">Nenhum .svg encontrado.</div>';
+      return;
+    }
+
+    const readPromises = svgFiles.map(file => readFile(file).then(text => {
+      const path = file.webkitRelativePath || file.name;
+      const pathParts = path.split('/');
+      const fileName = pathParts[pathParts.length-1];
+
+      // Estrutura hierárquica: ignora a primeira pasta (Icons), usa a segunda como categoria principal
+      let category = 'Raiz';
+      let subcategory = '';
+      let fullPath = '';
+
+      if(pathParts.length > 1) {
+        // Remove nome do arquivo
+        const folders = pathParts.slice(0, -1);
+
+        // Se tem pelo menos 2 pastas (ex: Icons/arrow), pega a partir da segunda
+        if(folders.length >= 2) {
+          category = folders[1]; // 'arrow'
+          subcategory = folders.slice(2).join('/'); // 'Fill' ou 'Fill/Other'
+          // fullPath INCLUI a pasta raiz: 'Icons › arrow › Fill'
+          fullPath = folders.join(' › ');
+        } else {
+          // Se tem só 1 pasta, usa ela como categoria
+          category = folders[0];
+          fullPath = folders.join(' › ');
+        }
+      }
+
+      return {category, subcategory, fullPath, fileName, svgText: text, originalPath:path};
+    }));
+
+    Promise.all(readPromises).then(items => {
+      items.sort((a,b)=>{
+        // Ordena por categoria, depois subcategoria, depois nome do arquivo
+        if(a.category!==b.category) return a.category.localeCompare(b.category);
+        if(a.subcategory!==b.subcategory) return a.subcategory.localeCompare(b.subcategory);
+        return a.fileName.localeCompare(b.fileName);
+      });
+      allItems = items;
+      console.log(`Successfully loaded ${items.length} SVG files`);
+      populateCategoryFilter();
+      renderGrid();
+    }).catch(err => {
+      console.error('Error loading SVG files:', err);
+      grid.innerHTML = '<div class="card" style="grid-column:1/-1;padding:18px;color:red">Erro ao carregar arquivos SVG. Veja o console para detalhes.</div>';
+    });
+  }
+
+  function readFile(file){
+    return new Promise((res,rej)=>{
+      const r = new FileReader();
+      r.onload = ()=>res(r.result);
+      r.onerror = ()=>rej(r.error);
+      r.readAsText(file, 'UTF-8');
+    });
+  }
+
+  function populateCategoryFilter(){
+    // Coleta todas as categorias únicas
+    const categories = Array.from(new Set(allItems.map(i => i.category))).sort();
+
+    // Cria opções apenas com o nome da categoria (sem subcategorias)
+    const options = ['<option value="">Todas as categorias</option>'];
+    categories.forEach(cat => {
+      options.push(`<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`);
+    });
+    categoryFilter.innerHTML = options.join('');
+  }
+
+  function applyFilters(){ renderGrid(); }
+
+  function renderGrid(){
+    // Remove o welcome apenas quando tem ícones para mostrar
+    const welcome = document.getElementById('welcome');
+    if(welcome && allItems.length > 0) {
+      welcome.remove();
+    }
+
+    grid.innerHTML = '';
+    const visible = filteredItems();
+    countSpan.textContent = visible.length;
+    catName.textContent = categoryFilter.value || 'Todas';
+    if(visible.length === 0 && allItems.length > 0){
+      grid.innerHTML = '<div class="card" style="grid-column:1/-1;padding:18px">Nenhum resultado encontrado.</div>';
+      return;
+    }
+
+    // Agrupa items por categoria para adicionar cabeçalhos
+    let lastCategory = null;
+
+    for(const item of visible){
+      // Adiciona cabeçalho de categoria quando muda
+      if(item.category !== lastCategory && !categoryFilter.value) {
+        lastCategory = item.category;
+        const categoryHeader = document.createElement('div');
+        categoryHeader.className = 'category-header';
+
+        const catTitle = document.createElement('span');
+        catTitle.textContent = item.category;
+
+        const catCount = document.createElement('span');
+        catCount.className = 'category-count';
+        const itemsInCat = visible.filter(v => v.category === item.category).length;
+        catCount.textContent = `${itemsInCat} ícone${itemsInCat !== 1 ? 's' : ''}`;
+
+        categoryHeader.appendChild(catTitle);
+        categoryHeader.appendChild(catCount);
+        grid.appendChild(categoryHeader);
+      }
+      const card = document.createElement('div'); card.className='card';
+      const preview = document.createElement('div'); preview.className='preview';
+      preview.setAttribute('data-path', item.originalPath);
+
+      const svgParsed = parseAndSanitizeSVG(item.svgText);
+      if(!svgParsed){
+        preview.textContent = 'SVG inválido';
+        console.error('Failed to parse SVG:', item.fileName, item.originalPath);
+      }else{
+        const svgEl = svgParsed.cloneNode(true);
+
+        // === garantia de viewBox correta ===
+        ensureViewBox(svgEl);
+
+        // preserve and avoid clipping
+        svgEl.setAttribute('preserveAspectRatio','xMidYMid meet');
+        svgEl.style.overflow = 'visible';
+        // don't force width/height; let wrapper control it
+        svgEl.removeAttribute('width'); svgEl.removeAttribute('height');
+
+        // aplica currentColor
+        applyCurrentColorToSVG(svgEl);
+
+        // armazena sanitized element (sem estilos de wrapper)
+        item.svgElement = svgEl.cloneNode(true);
+
+        // cria wrapper que controla o tamanho sem distorcer
+        const wrap = document.createElement('div');
+        wrap.className = 'svg-wrap';
+        const size = parseInt(sizeRange.value,10) || 72;
+        wrap.style.maxWidth = size + 'px';
+        wrap.style.maxHeight = size + 'px';
+
+        const toAppend = item.svgElement.cloneNode(true);
+        // aplicar cor no SVG
+        toAppend.style.color = colorPicker.value;
+        // garantir que SVG respeite o viewBox e escala
+        toAppend.setAttribute('preserveAspectRatio','xMidYMid meet');
+        toAppend.style.display = 'block';
+        // Set explicit width/height to ensure rendering
+        toAppend.style.width = size + 'px';
+        toAppend.style.height = size + 'px';
+        wrap.appendChild(toAppend);
+        preview.appendChild(wrap);
+      }
+
+      const info = document.createElement('div'); info.className='info';
+
+      // Cria container para título com badge de subcategoria
+      const titleRow = document.createElement('div');
+      titleRow.className = 'card-title-row';
+
+      const filename = document.createElement('div');
+      filename.className='filename';
+      filename.textContent = item.fileName;
+      filename.title = item.fullPath || item.originalPath;
+      filename.style.flex = '1';
+      filename.style.minWidth = '0'; // permite ellipsis funcionar
+
+      titleRow.appendChild(filename);
+
+      // Adiciona badge de subcategoria se existir
+      if(item.subcategory) {
+        const subBadge = document.createElement('span');
+        subBadge.className = 'subcategory-badge';
+        subBadge.textContent = item.subcategory;
+        subBadge.title = item.fullPath;
+        titleRow.appendChild(subBadge);
+      }
+
+      const actions = document.createElement('div'); actions.className='actions';
+      const btnFav = document.createElement('button'); btnFav.className='small-btn'; btnFav.title='Favoritar';
+      btnFav.innerHTML = favorites.has(item.originalPath)?'★':'☆';
+      if(favorites.has(item.originalPath)) btnFav.classList.add('favorited');
+      btnFav.addEventListener('click', (evt)=>{ evt.stopPropagation(); toggleFav(item.originalPath); btnFav.innerHTML = favorites.has(item.originalPath)?'★':'☆'; btnFav.classList.toggle('favorited'); });
+
+      const btnOpen = document.createElement('button'); btnOpen.className='small-btn primary'; btnOpen.textContent='Abrir';
+      btnOpen.addEventListener('click', (ev)=>{ ev.stopPropagation(); openModal(item); });
+
+      const btnCopy = document.createElement('button'); btnCopy.className='small-btn'; btnCopy.textContent='Copiar';
+      btnCopy.addEventListener('click', (ev)=>{ ev.stopPropagation(); copyToClipboard(getSVGText(item), btnCopy); });
+
+      const btnDownload = document.createElement('button'); btnDownload.className='small-btn'; btnDownload.textContent='Baixar';
+      btnDownload.addEventListener('click', (ev)=>{ ev.stopPropagation(); downloadSVG(getSVGText(item), item.fileName); });
+
+      actions.appendChild(btnFav);
+      actions.appendChild(btnOpen);
+      actions.appendChild(btnCopy);
+      actions.appendChild(btnDownload);
+
+      info.appendChild(titleRow);
+      info.appendChild(actions);
+
+      card.appendChild(preview);
+      card.appendChild(info);
+      grid.appendChild(card);
+    }
+    applyColor();
+    applySize();
+  }
+
+  function filteredItems(){
+    const q = (search.value||'').toLowerCase();
+    const cat = categoryFilter.value;
+    let items = allItems.slice();
+    if(cat) items = items.filter(i => i.category === cat);
+    if(q) items = items.filter(i => (i.fileName + ' ' + i.originalPath + ' ' + i.subcategory).toLowerCase().includes(q));
+    items.sort((a,b)=> {
+      const fa = favorites.has(a.originalPath)?0:1;
+      const fb = favorites.has(b.originalPath)?0:1;
+      if(fa!==fb) return fa-fb;
+      if(a.category!==b.category) return a.category.localeCompare(b.category);
+      if(a.subcategory!==b.subcategory) return a.subcategory.localeCompare(b.subcategory);
+      return a.fileName.localeCompare(b.fileName);
+    });
+    return items;
+  }
+
+  // Tenta garantir um viewBox correto para evitar distorção:
+  function ensureViewBox(svgEl){
+    if(svgEl.getAttribute('viewBox')) return;
+
+    // 1) tenta usar width/height atributos (removendo unidades)
+    const rawW = svgEl.getAttribute('width') || svgEl.getAttribute('data-width') || '';
+    const rawH = svgEl.getAttribute('height') || svgEl.getAttribute('data-height') || '';
+    const numW = parseFloat(String(rawW).replace(/[^0-9.]/g,'')) || 0;
+    const numH = parseFloat(String(rawH).replace(/[^0-9.]/g,'')) || 0;
+    if(numW && numH){
+      svgEl.setAttribute('viewBox', `0 0 ${numW} ${numH}`);
+      return;
+    }
+
+    // 2) tenta calcular getBBox() — precisa estar no DOM para funcionar, então inserimos temporariamente off-screen
+    try {
+      const tempWrap = document.createElement('div');
+      tempWrap.style.position = 'absolute';
+      tempWrap.style.left = '-9999px';
+      tempWrap.style.top = '-9999px';
+      tempWrap.style.width = '0';
+      tempWrap.style.height = '0';
+      tempWrap.style.overflow = 'hidden';
+      const clone = svgEl.cloneNode(true);
+      // remover width/height para bbox correto
+      clone.removeAttribute('width'); clone.removeAttribute('height');
+      tempWrap.appendChild(clone);
+      document.body.appendChild(tempWrap);
+      // força render and measure
+      let bbox;
+      try {
+        bbox = clone.getBBox();
+      } catch(e){
+        bbox = null;
+      }
+      if(bbox && bbox.width && bbox.height){
+        svgEl.setAttribute('viewBox', `0 0 ${bbox.width} ${bbox.height}`);
+      } else {
+        // fallback seguro
+        svgEl.setAttribute('viewBox', '0 0 100 100');
+      }
+      document.body.removeChild(tempWrap);
+      return;
+    } catch(e){
+      // fallback final
+      svgEl.setAttribute('viewBox', '0 0 100 100');
+      return;
+    }
+  }
+
+  function parseAndSanitizeSVG(svgText){
+    try{
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, 'image/svg+xml');
+
+      // Check for parsing errors
+      const parseError = doc.querySelector('parsererror');
+      if(parseError) {
+        console.error('SVG parsing error:', parseError.textContent);
+        return null;
+      }
+
+      const svg = doc.querySelector('svg');
+      if(!svg) {
+        console.error('No SVG element found in parsed document');
+        return null;
+      }
+      // remove scripts
+      svg.querySelectorAll('script').forEach(n=>n.remove());
+      // remove foreignObject/iframe
+      svg.querySelectorAll('foreignObject, iframe').forEach(n=>n.remove());
+      // remove event handlers e href javascript:
+      const walker = document.createTreeWalker(svg, NodeFilter.SHOW_ELEMENT);
+      while(walker.nextNode()){
+        const el = walker.currentNode;
+        const attrs = Array.from(el.attributes||[]);
+        for(const at of attrs){
+          if(/^on/i.test(at.name)) el.removeAttribute(at.name);
+          if((at.name==='href' || at.name==='xlink:href') && /javascript:/i.test(at.value)) el.removeAttribute(at.name);
+        }
+      }
+      // remove imagens externas
+      svg.querySelectorAll('image').forEach(img=>{
+        const href = img.getAttribute('href')||img.getAttribute('xlink:href')||'';
+        if(/^https?:\/\//i.test(href)) img.remove();
+      });
+      // garantir preserveAspectRatio default e overflow
+      if(!svg.getAttribute('preserveAspectRatio')) svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svg.style.overflow = 'visible';
+      return svg;
+    }catch(e){
+      console.error('sanitiza', e);
+      return null;
+    }
+  }
+
+  function applyCurrentColorToSVG(svgEl){
+    try{
+      const walker = document.createTreeWalker(svgEl, NodeFilter.SHOW_ELEMENT);
+      const fillableTags = ['path','circle','rect','ellipse','polygon','polyline'];
+      const strokeableTags = ['path','line','polyline','circle','rect','ellipse','polygon'];
+
+      while(walker.nextNode()){
+        const el = walker.currentNode;
+        const tag = el.tagName.toLowerCase();
+
+        // Skip non-visual elements
+        if (['svg','defs','style','metadata','title','desc','clippath','mask','pattern','lineargradient','radialgradient','g'].includes(tag)) continue;
+
+        // Check for explicit fill and stroke attributes
+        const fill = el.getAttribute('fill');
+        const stroke = el.getAttribute('stroke');
+
+        // Handle fill
+        if (fill !== null) {
+          // If there's an explicit fill that's not 'none', make it currentColor
+          if (fill.trim().toLowerCase() !== 'none') {
+            el.setAttribute('fill','currentColor');
+          }
+        } else if (fillableTags.includes(tag)) {
+          // For fillable shapes without explicit fill, apply currentColor
+          el.setAttribute('fill','currentColor');
+        }
+
+        // Handle stroke - only modify if explicitly set
+        if (stroke !== null && stroke.trim().toLowerCase() !== 'none') {
+          el.setAttribute('stroke','currentColor');
+        }
+      }
+    }catch(e){ console.warn('applyCurrentColorToSVG error', e); }
+  }
+
+  function applyColor(){
+    const color = colorPicker.value;
+    // Just update the color - currentColor is already applied during render
+    document.querySelectorAll('.svg-wrap svg').forEach(svg=>{
+      svg.style.color = color;
+    });
+    // modal
+    const modalSvg = modalContent.querySelector('svg');
+    if(modalSvg){
+      modalSvg.style.color = color;
+    }
+  }
+
+  function applySize(){
+    const sz = parseInt(sizeRange.value,10) || 72;
+    document.querySelectorAll('.svg-wrap').forEach(w=>{ w.style.maxWidth = sz + 'px'; w.style.maxHeight = sz + 'px'; });
+  }
+
+  function getSVGText(item){
+    if(item.svgElement){
+      return item.svgElement.outerHTML;
+    }
+    return item.svgText;
+  }
+
+  function copyToClipboard(text, btn){
+    navigator.clipboard.writeText(text).then(()=>{
+      const old = btn.textContent;
+      btn.textContent = 'Copiado!';
+      btn.disabled = true;
+      setTimeout(()=>{ btn.textContent = old; btn.disabled=false; }, 1400);
+    }).catch(e=>{
+      alert('Não foi possível copiar: ' + (e.message||e));
+    });
+  }
+
+  function downloadSVG(svgText, filename){
+    const blob = new Blob([svgText], {type:'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename.replace(/\s+/g,'_') || 'icon.svg';
+    a.click();
+    setTimeout(()=> URL.revokeObjectURL(url), 1000);
+  }
+
+  function openModal(item){
+    const svgtext = getSVGText(item);
+    modalContent.innerHTML = '';
+    const title = document.createElement('div'); title.style.marginBottom='8px';
+    const pathDisplay = item.fullPath || item.originalPath;
+    title.innerHTML = `<strong>${escapeHtml(item.fileName)}</strong> <span style="color:var(--muted);font-size:.9rem"> — ${escapeHtml(pathDisplay)}</span>`;
+    const previewWrap = document.createElement('div'); previewWrap.style.padding='12px';
+    const svgParsed = parseAndSanitizeSVG(svgtext);
+    if(svgParsed){
+      const svgEl = svgParsed.cloneNode(true);
+      ensureViewBox(svgEl);
+      applyCurrentColorToSVG(svgEl);
+      svgEl.style.height = '320px';
+      svgEl.style.width = 'auto';
+      svgEl.style.display = 'block';
+      svgEl.style.margin = '0 auto';
+      svgEl.style.color = colorPicker.value;
+      svgEl.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svgEl.style.overflow = 'visible';
+      previewWrap.appendChild(svgEl);
+    }else{
+      previewWrap.textContent = 'SVG inválido';
+    }
+    modalContent.appendChild(title);
+    modalContent.appendChild(previewWrap);
+    modalBackdrop.style.display = 'flex';
+    modalBackdrop.setAttribute('aria-hidden','false');
+
+    modalCopy.onclick = ()=> copyToClipboard(svgtext, modalCopy);
+    modalName.onclick = ()=> copyToClipboard(item.fileName, modalName);
+    modalPath.onclick = ()=> copyToClipboard(item.fullPath || item.originalPath, modalPath);
+  }
+
+  function closeModal(){
+    modalBackdrop.style.display='none';
+    modalBackdrop.setAttribute('aria-hidden','true');
+    modalContent.innerHTML = '';
+    modalCopy.onclick = null;
+    modalName.onclick = null;
+    modalPath.onclick = null;
+  }
+
+  function toggleFav(path){ if(favorites.has(path)) favorites.delete(path); else favorites.add(path); saveFavs(); renderGrid(); }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') closeModal();
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='f'){ e.preventDefault(); search.focus(); }
+  });
+
+  window.svgViewer = {
+    getAll: ()=>allItems,
+    getFavorites: ()=>Array.from(favorites)
+  };
+
+});
+</script>
+</body>
+</html>
