@@ -1,0 +1,118 @@
+/**
+ * SVGaze - Layout Styles
+ * Header, main content, grid, footer, and structural layout
+ */
+
+/* === Base Styles === */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Header === */
+header.app-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-header);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+header.app-header::-webkit-scrollbar {
+  height: 6px;
+}
+
+header.app-header::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header.app-header::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+header.app-header::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+header h1 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  white-space: nowrap;
+  font-weight: var(--font-weight-bold);
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-left: auto;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* === Main Content === */
+main#gallery {
+  max-width: var(--max-content-width);
+  margin: 20px auto;
+  padding: 0 var(--space-lg);
+}
+
+/* === Toolbar === */
+.toolbar {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.meta {
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+}
+
+/* === Grid Layout === */
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min-column-width), 1fr));
+}
+
+/* === Footer === */
+footer {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  header.app-header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  main#gallery {
+    padding: 0 var(--space-md);
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

@@ -155,34 +155,23 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 
 ## 🗺️ Roadmap
 
-### Versão Atual: v1.0 - Visualizador
-- ✅ Visualização local de SVGs
-- ✅ Sistema de busca e filtros
-- ✅ Personalização de cor e tamanho
-- ✅ Favoritos persistentes
-- ✅ Agrupamento por categorias
+Para o roadmap completo e detalhado, veja [ROADMAP.md](ROADMAP.md)
 
-### Próximas Versões
+### Status Atual
 
-#### v1.1 - Melhorias UX
-- [ ] Modo escuro / claro
-- [ ] Exportação de favoritos
-- [ ] Grid/List view toggle
-- [ ] Atalhos de teclado
-- [ ] Arrastar e soltar arquivos
+| Versão | Status | Progresso |
+|--------|--------|-----------|
+| v1.0 - Visualizador | ✅ Concluído | 100% |
+| v1.1 - Melhorias UX | 🚧 Em Progresso | 40% |
+| v2.0 - Editor Básico | 📋 Planejado | 0% |
+| v3.0 - Recursos Avançados | 💭 Futuro | 0% |
 
-#### v2.0 - Editor Básico (Planejado)
-- [ ] Edição de paths
-- [ ] Manipulação de cores por camada
-- [ ] Gerenciamento de camadas
-- [ ] Exportação otimizada (SVGO)
-- [ ] Conversão para PNG/JPG
-
-#### v3.0 - Recursos Avançados (Futuro)
-- [ ] Gerador de sprite sheets
-- [ ] Otimizador de SVG em lote
-- [ ] Comparação lado a lado
-- [ ] Histórico de edições
+### Próximas Features (v1.1)
+- 🌓 Tema claro/escuro com toggle
+- 🌍 Internacionalização (pt-BR e en-US)
+- ⌨️ Atalhos de teclado expandidos
+- 🎯 Drag & drop de arquivos
+- 📊 Painel de estatísticas
 
 ---
 
@@ -223,6 +212,10 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 - ✅ Uso privado
 
 Apenas mantenha o aviso de copyright e licença.
+
+### ⚠️ Nota sobre a Marca
+
+Embora o código seja open-source sob licença MIT, **"SVGaze"** e **"svgaze.com"** são marcas registradas. Ao fazer fork ou distribuir versões modificadas, recomendamos usar um nome diferente para evitar confusão com o projeto original.
 
 ---
 

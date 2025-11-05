@@ -1,0 +1,48 @@
+/**
+ * SVGaze - Modal Component
+ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+  backdrop-filter: blur(2px);
+}
+
+.modal-backdrop[aria-hidden="false"] {
+  display: flex;
+}
+
+.modal {
+  background: var(--card);
+  width: min(var(--modal-max-width), 95%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  max-height: 85vh;
+  overflow: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalSlideIn var(--transition-base);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal .controls {
+  margin-top: var(--space-sm);
+  margin-bottom: 6px;
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}

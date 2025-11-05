@@ -1,0 +1,117 @@
+/**
+ * SVGaze - Card Components
+ * Card containers, preview areas, and related elements
+ */
+
+/* === Card Container === */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 160px;
+  transition: all var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* === Preview Area === */
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  min-height: 110px;
+  color: var(--text-muted);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.01), transparent);
+}
+
+/* SVG Wrapper - maintains aspect ratio */
+.svg-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}
+
+.svg-wrap svg {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* === Card Info Section === */
+.card .info {
+  padding: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.filename {
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* === Actions === */
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* === Welcome Card === */
+#welcome {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-3xl);
+  min-height: auto;
+}
+
+#welcome p:first-child {
+  margin: 0 0 6px 0;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+}
+
+#welcome p:last-child {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .preview svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .card .info {
+    padding: var(--space-sm);
+  }
+}

@@ -1,0 +1,50 @@
+/**
+ * SVGaze - Badges and Tags
+ */
+
+.badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 6px 8px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  border: 1px solid rgba(0, 102, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.subcategory-badge {
+  background: var(--bg);
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.category-header {
+  grid-column: 1 / -1;
+  padding: var(--space-lg) var(--space-md) var(--space-sm) var(--space-md);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border);
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.category-header:first-child {
+  margin-top: 0;
+}
+
+.category-count {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-muted);
+  margin-left: auto;
+}
