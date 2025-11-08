@@ -9,9 +9,8 @@ Este documento descreve o planejamento de desenvolvimento do SVGaze, incluindo r
 | Versão | Status | Progresso | Data Estimada |
 |--------|--------|-----------|---------------|
 | v1.0 - Visualizador | ✅ Concluído | 100% | Jan 2025 |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 40% | Fev 2025 |
+| v1.1 - Melhorias UX | 🚧 Em Progresso | 75% | Fev 2025 |
 | v2.0 - Editor Básico | 📋 Planejado | 0% | Jun 2025 |
-| v3.0 - Recursos Avançados | 💭 Futuro | 0% | 2026 |
 
 ---
 
@@ -30,11 +29,16 @@ Criar um visualizador local de arquivos SVG com funcionalidades básicas de orga
 - [x] Badges de subcategorias
 - [x] Preservação de aspect ratio
 - [x] Suporte a viewBox com correção automática
+- [x] Renderização correta de ícones stroke-only (contorno)
+- [x] Layout de botões otimizado (ações na mesma linha)
 
 #### 🔍 Busca e Organização
 - [x] Sistema de busca por nome de arquivo
 - [x] Filtro por categoria baseado em estrutura de pastas
-- [x] Ordenação alfabética
+- [x] Filtro por estilo (Outline, Solid, Linear, etc)
+- [x] Ordenação inteligente agrupando variantes
+- [x] Suporte a estilos compostos ("Linear (Border)")
+- [x] Suporte a separadores variados ("Name- Style", "Name - Style")
 - [x] Contador de ícones por categoria
 
 #### 🎨 Personalização
@@ -81,12 +85,14 @@ Melhorar a usabilidade, acessibilidade e experiência geral do usuário.
 
 #### 🌓 Tema Claro/Escuro
 - [x] Sistema de temas com CSS variables
-- [ ] Toggle de tema no header
-- [ ] Persistência da preferência do usuário
-- [ ] Transições suaves entre temas
-- [ ] Respeito à preferência do sistema (`prefers-color-scheme`)
+- [x] Toggle de tema no header
+- [x] Persistência da preferência do usuário
+- [x] Transições suaves entre temas
+- [x] Respeito à preferência do sistema (`prefers-color-scheme`)
+- [x] Tema escuro com paleta cinza neutra (#1d1f24)
+- [x] Cores adaptativas por tema (SVGs pretos/brancos)
 
-**Progresso:** 40% (Estrutura preparada)
+**Progresso:** 100% ✅
 
 #### 📦 Exportação e Backup
 - [ ] Exportar lista de favoritos como JSON
@@ -215,62 +221,6 @@ Adicionar capacidades básicas de edição de SVG sem necessidade de ferramentas
 
 ---
 
-## 💭 v3.0 - Recursos Avançados (Futuro)
-
-### Objetivos
-Transformar o SVGaze em uma ferramenta profissional completa para gerenciamento de ícones e SVGs.
-
-### Data Estimada: 2026
-
-### Recursos em Consideração
-
-#### 🎨 Gerador de Sprite Sheets
-- [ ] Combinar múltiplos SVGs em um único arquivo
-- [ ] Gerar sprite sheets otimizados
-- [ ] Exportar CSS/JSON com coordenadas
-- [ ] Preview do sprite sheet
-- [ ] Configurações de espaçamento e layout
-
-#### ⚡ Otimizador de SVG em Lote
-- [ ] Processar múltiplos SVGs de uma vez
-- [ ] Aplicar regras de otimização personalizadas
-- [ ] Relatório de economia de bytes
-- [ ] Configurações por categoria
-- [ ] Backup automático antes de otimizar
-
-#### 🔍 Comparação Lado a Lado
-- [ ] Comparar dois SVGs visualmente
-- [ ] Diff de código SVG
-- [ ] Comparar antes/depois de otimização
-- [ ] Comparar versões diferentes
-- [ ] Overlay para detectar diferenças
-
-#### 📚 Biblioteca de Componentes
-- [ ] Criar biblioteca de símbolos reutilizáveis
-- [ ] Tags e categorização avançada
-- [ ] Pesquisa semântica
-- [ ] Sincronização em nuvem (opcional)
-
-#### 🤖 Automação e Scripts
-- [ ] API JavaScript para automações
-- [ ] Criar ações personalizadas
-- [ ] Macros para tarefas repetitivas
-- [ ] Integração com ferramentas de design
-
-#### 🔌 Plugins e Extensões
-- [ ] Sistema de plugins
-- [ ] Marketplace de extensões
-- [ ] SDK para desenvolvedores
-- [ ] Temas personalizados da comunidade
-
-#### 🌐 Colaboração
-- [ ] Compartilhar coleções via link
-- [ ] Comentários em SVGs
-- [ ] Histórico de atividades
-- [ ] Permissões de acesso
-
----
-
 ## 🏗️ Arquitetura e Refatoração Técnica
 
 ### Em Progresso (Paralelo à v1.1)
@@ -313,15 +263,8 @@ Transformar o SVGaze em uma ferramenta profissional completa para gerenciamento 
 - ✅ Lançar v1.0 como visualizador funcional
 - 🎯 Atingir 100 estrelas no GitHub
 - 🎯 Comunidade ativa de contribuidores
-- 🎯 Suporte a 3+ idiomas
+- 🎯 Suporte a 2+ idiomas
 - 🎯 Editor básico funcional (v2.0)
-
-### 2026
-- 🎯 SVGaze como ferramenta de referência para SVGs
-- 🎯 1000+ estrelas no GitHub
-- 🎯 Sistema de plugins maduro
-- 🎯 Versão desktop (Electron/Tauri)
-- 🎯 Parcerias com bibliotecas de ícones
 
 ---
 
@@ -355,7 +298,7 @@ Tem sugestões para o roadmap? Entre em contato:
 
 <div align="center">
 
-**Última atualização:** 2025-01-05
+**Última atualização:** 2025-01-08
 
 ⭐ **Star o projeto no GitHub para acompanhar o progresso!**
 

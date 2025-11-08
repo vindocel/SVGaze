@@ -1,1 +1,100 @@
+# ========================================
+# SVGaze - Git Ignore
+# ========================================
+
+# === Claude AI ===
 /.claude
+
+# === Pastas de Ícones de Teste ===
+/Basil Icons
+/Icons
+/icons
+
+# === Arquivos de Backup e Teste ===
+*_backup.*
+*_old.*
+*_test.*
+index_old_backup.html
+index_standalone.html
+
+# === Arquivos Temporários ===
+*.tmp
+*.temp
+*.log
+*.bak
+~*
+
+# === Node.js ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+package-lock.json
+yarn.lock
+
+# === IDEs e Editores ===
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# === Sistema Operacional ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# === Desenvolvimento Local ===
+/_tests/
+/_local/
+/_dev/
+/test/
+/tests/
+*.local.*
+
+# === Build e Deploy ===
+/dist/
+/build/
+/.cache/
+
+# === Logs e Debug ===
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# === Ambiente ===
+.env
+.env.local
+.env.*.local
+
+# === Outros ===
+*.orig
+.sass-cache/
+.eslintcache
+.stylelintcache
+
+# ========================================
+# Manter no Git (NÃO ignorar):
+# ========================================
+# ✅ index.html
+# ✅ css/
+# ✅ js/
+# ✅ i18n/
+# ✅ docs/
+# ✅ *.md (na raiz: README.md, LICENSE)
+# ✅ CNAME
+# ✅ start-local.bat
+# ✅ start-local.sh

@@ -15,16 +15,21 @@
 - **Galeria responsiva** com grid adaptativo
 - **Preview em tempo real** de todos os SVGs da pasta
 - **Modal de visualização ampliada** para análise detalhada
-- **Agrupamento automático** por pastas e subcategorias
-- **Badges de subcategorias** para navegação visual
+- **Categorização inteligente** — detecta categorias semânticas vs estilos ([detalhes](docs/CATEGORIZATION.md))
+- **Badges de estilo** — Outline, Solid, Fill automáticos nos cards
+- **Unificação de categorias** — agrupa ícones de diferentes estilos na mesma categoria
 
 ### 🔍 Busca e Filtros
 - **Busca instantânea** por nome de arquivo ou caminho
-- **Filtro por categoria** baseado na estrutura de pastas
-- **Ordenação inteligente** com favoritos no topo
+- **Filtro por categoria** baseado em categorias semânticas (não pastas de estilo)
+- **Filtro por estilo** — visualize apenas Outline, Solid, Linear (Border), etc.
+- **Ordenação inteligente** — agrupa variantes do mesmo ícone lado a lado
+- **Favoritos no topo** — seus ícones favoritos sempre primeiro
 
 ### 🎨 Personalização
 - **Seletor de cor global** — altera a cor de todos os ícones em tempo real
+- **Cores adaptativas por tema** — SVGs pretos no tema claro, brancos no tema escuro
+- **Tema escuro aprimorado** — paleta cinza neutra (#1d1f24) para melhor visualização
 - **Controle de tamanho** com slider (24px - 180px)
 - **Preservação de aspect ratio** automática
 - **Suporte a viewBox** com correção inteligente
@@ -32,8 +37,7 @@
 ### ⭐ Gerenciamento
 - **Sistema de favoritos** com persistência local (localStorage)
 - **Copiar SVG** para área de transferência
-- **Copiar nome e caminho** do arquivo
-- **Download individual** de cada SVG
+- **Copiar nome e caminho completo** do arquivo (ex: `Outline › Brands › Adobe.svg`)
 - **Contador de ícones** por categoria
 
 ### 🔒 Segurança e Privacidade
@@ -52,48 +56,88 @@
 3. Escolha a pasta contendo seus arquivos SVG
 4. Aproveite! 🎉
 
-### Opção 2: Local (Offline)
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/vindocel/SVGaze.git
-   ```
-2. Abra `index.html` no navegador
-3. Clique em **"Selecionar pasta"**
-4. Selecione a pasta com seus SVGs
+### Opção 2: Local (Desenvolvimento)
 
-### 📁 Estrutura de Pastas Recomendada
+**Início rápido:** [📖 Guia Completo](docs/QUICK_START.md)
 
-Para melhor organização, recomendamos a seguinte estrutura:
+```bash
+# 1. Clone o repositório
+git clone https://github.com/vindocel/SVGaze.git
+cd SVGaze
 
-```
-Icons/
-├── arrow/
-│   ├── Fill/
-│   │   ├── arrow-left.svg
-│   │   └── arrow-right.svg
-│   └── Outline/
-│       └── arrow-up.svg
-├── social/
-│   ├── facebook.svg
-│   └── twitter.svg
-└── ui/
-    └── close.svg
+# 2. Inicie servidor local
+
+# Windows (duplo clique ou terminal):
+start-local.bat
+
+# Linux/Mac:
+./start-local.sh
+
+# Ou manualmente:
+npx serve -l 3000
+# python -m http.server 8000
 ```
 
-O SVGaze automaticamente:
-- Usa a **primeira pasta** como categoria principal (`arrow`, `social`, `ui`)
-- Usa as **subpastas** como badges de subcategoria (`Fill`, `Outline`)
-- Agrupa e organiza visualmente na interface
+**⚠️ Importante:** Não abra `index.html` diretamente (duplo clique). ES6 modules precisam de servidor HTTP. [Veja como testar](docs/HOW_TO_TEST.md)
+
+---
+
+## 📁 Sistema de Categorização Inteligente
+
+O SVGaze detecta automaticamente a estrutura das suas pastas e organiza de forma inteligente, com suporte avançado para:
+- ✅ Estilos compostos: "Linear (Border)", "Outline (Filled)"
+- ✅ Separadores variados: `"Name - Style"`, `"Name- Style"`, `"Name_Style"`
+- ✅ Renderização correta de ícones stroke-only (contorno)
+
+### Estrutura Recomendada
+
+```
+icons/
+├── Outline/              ← Pasta de ESTILO (ignorada como categoria)
+│   ├── Brands/           ← Categoria semântica
+│   │   ├── Adobe.svg
+│   │   └── Facebook.svg
+│   ├── Communication/    ← Categoria semântica
+│   │   └── Comment.svg
+│   └── Devices/          ← Categoria semântica
+│       └── Phone.svg
+└── Solid/                ← Pasta de ESTILO (ignorada como categoria)
+    ├── Brands/
+    │   ├── Adobe.svg
+    │   └── Facebook.svg
+    └── Communication/
+        └── Comment.svg
+```
+
+### Resultado no SVGaze
+
+**Filtro de Categorias:**
+- ✅ Brands (48 ícones) — unifica Outline + Solid
+- ✅ Communication (36 ícones)
+- ✅ Devices (32 ícones)
+
+**NÃO aparece:**
+- ❌ Outline (é estilo, não categoria)
+- ❌ Solid (é estilo, não categoria)
+
+**Badges nos Cards:**
+- 🔵 Badge azul "Outline" ou "Solid" em cada card
+
+**[📖 Documentação Completa da Categorização](docs/CATEGORIZATION.md)**
 
 ---
 
 ## 🛠️ Tecnologias
 
-Este projeto foi construído com tecnologias web modernas e vanilla (zero dependências):
+### Arquitetura Modular
+- **13 módulos JavaScript ES6** — organização por responsabilidade
+- **7 arquivos CSS** — design system componentizado
+- **Zero dependências** — 100% vanilla
 
+### APIs Utilizadas
 - **HTML5** — Estrutura semântica e acessível
 - **CSS3** — Design system com variáveis CSS e grid layout
-- **Vanilla JavaScript (ES6+)** — Sem frameworks, apenas JS puro
+- **Vanilla JavaScript (ES6+)** — Modules nativos
 - **File System Access API** — `webkitdirectory` para leitura de pastas
 - **DOMParser API** — Parse e sanitização de SVGs
 - **Clipboard API** — Cópia para área de transferência
@@ -101,29 +145,27 @@ Este projeto foi construído com tecnologias web modernas e vanilla (zero depend
 
 ---
 
-## 🏗️ Arquitetura e Funcionamento
+## 🏗️ Arquitetura
 
-### Fluxo Principal
+### Módulos JavaScript
 
 ```
-1. Usuário seleciona pasta → webkitdirectory
-2. FileReader lê arquivos .svg → Promises
-3. Parse com DOMParser → Sanitização
-4. Análise de estrutura de pastas → Categorização
-5. Renderização no DOM → Grid responsivo
-6. Aplicação de cores/tamanhos → CSS + currentColor
+js/
+├── state.js                   # Estado centralizado
+├── main.js                    # Orquestrador
+└── modules/
+    ├── categoryManager.js     # 🧠 Categorização inteligente
+    ├── utils.js               # Utilitários
+    ├── svgProcessor.js        # Parse e sanitização
+    ├── fileHandler.js         # Processamento de arquivos
+    ├── favoriteManager.js     # Sistema de favoritos
+    ├── filterManager.js       # Busca e filtros
+    ├── colorManager.js        # Gerenciamento de cores
+    ├── sizeManager.js         # Controle de tamanho
+    ├── clipboardManager.js    # Copiar/Download
+    ├── modalManager.js        # Modal de preview
+    └── galleryRenderer.js     # Renderização do grid
 ```
-
-### Principais Funções
-
-| Função | Responsabilidade |
-|--------|------------------|
-| `handleFiles()` | Processa arquivos selecionados |
-| `parseAndSanitizeSVG()` | Sanitiza SVGs removendo scripts/XSS |
-| `ensureViewBox()` | Garante viewBox correto com fallbacks |
-| `applyCurrentColorToSVG()` | Aplica currentColor para permitir personalização |
-| `filteredItems()` | Aplica busca, filtros e ordenação |
-| `renderGrid()` | Renderiza galeria com categorias |
 
 ### Sanitização de SVG
 
@@ -148,30 +190,63 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 
 **Requisitos:**
 - Suporte a `webkitdirectory` (seleção de pastas)
+- Suporte a ES6 modules
 - JavaScript habilitado
 - LocalStorage habilitado (para favoritos)
 
 ---
 
+## 📚 Documentação
+
+### Guias Disponíveis
+- 🚀 **[Início Rápido](docs/QUICK_START.md)** — Como começar em 30 segundos
+- 🧪 **[Como Testar Localmente](docs/HOW_TO_TEST.md)** — Guia completo com troubleshooting
+- 🧠 **[Sistema de Categorização](docs/CATEGORIZATION.md)** — Como funciona a detecção inteligente
+- 🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)** — Solução de problemas comuns
+- 🗺️ **[Roadmap](docs/ROADMAP.md)** — Plano de desenvolvimento e próximas features
+
+---
+
 ## 🗺️ Roadmap
 
-Para o roadmap completo e detalhado, veja [ROADMAP.md](ROADMAP.md)
+**[Ver roadmap completo](docs/ROADMAP.md)**
 
 ### Status Atual
 
 | Versão | Status | Progresso |
 |--------|--------|-----------|
 | v1.0 - Visualizador | ✅ Concluído | 100% |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 40% |
+| v1.1 - Melhorias UX | 🚧 Em Progresso | 75% |
 | v2.0 - Editor Básico | 📋 Planejado | 0% |
-| v3.0 - Recursos Avançados | 💭 Futuro | 0% |
 
-### Próximas Features (v1.1)
-- 🌓 Tema claro/escuro com toggle
-- 🌍 Internacionalização (pt-BR e en-US)
+### v1.1 - Em Progresso (75%) 🚧
+**Concluído:**
+- ✅ Arquitetura 100% modular (13 módulos JS + 7 CSS)
+- ✅ Sistema de categorização inteligente
+- ✅ Detecção automática de estilos (Outline, Solid, Linear, etc)
+- ✅ Suporte a estilos compostos ("Linear (Border)")
+- ✅ Suporte a separadores variados ("Name- Style", "Name - Style")
+- ✅ Badges de estilo nos cards
+- ✅ Unificação de categorias duplicadas
+- ✅ Layout de botões otimizado (★ Abrir Copiar)
+- ✅ Copiar caminho completo com nome do arquivo
+- ✅ Tema claro/escuro com toggle
+- ✅ Cores adaptativas por tema (SVGs pretos/brancos)
+- ✅ Tema escuro com paleta cinza neutra
+- ✅ Renderização correta de ícones stroke-only
+- ✅ Ordenação inteligente agrupando variantes
+
+**Em Desenvolvimento:**
+- 🌍 Internacionalização completa (pt-BR e en-US)
 - ⌨️ Atalhos de teclado expandidos
 - 🎯 Drag & drop de arquivos
-- 📊 Painel de estatísticas
+
+### v2.0 - Próximas Features
+- ✏️ Editor básico de SVG
+- 🎨 Manipulação de cores por camada
+- 📑 Gerenciamento de camadas
+- 📐 Transformações (redimensionar, rotacionar)
+- 💾 Exportação otimizada (SVGO)
 
 ---
 
@@ -188,16 +263,18 @@ Contribuições são muito bem-vindas! Este é um projeto open-source e estamos 
 
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+3. Commit suas mudanças (`git commit -m 'feat: adiciona MinhaFeature'`)
 4. Push para a branch (`git push origin feature/MinhaFeature`)
 5. Abra um Pull Request
 
 ### Diretrizes
 
 - Mantenha o código simples e vanilla (sem dependências)
-- Siga o estilo de código existente
+- Siga o estilo de código existente (ES6 modules)
+- Use commits semânticos (feat, fix, refactor, docs)
 - Teste em múltiplos navegadores
 - Documente mudanças significativas
+- Adicione documentação em `docs/` se necessário
 
 ---
 
@@ -240,7 +317,7 @@ Embora o código seja open-source sob licença MIT, **"SVGaze"** e **"svgaze.com
 
 🟢 **Ativo** — Em desenvolvimento ativo com melhorias contínuas
 
-**Última atualização:** 2025-01-05
+**Última atualização:** 2025-01-07
 
 ---
 
@@ -250,6 +327,6 @@ Embora o código seja open-source sob licença MIT, **"SVGaze"** e **"svgaze.com
 
 Feito com ❤️ por desenvolvedores, para desenvolvedores
 
-[🌐 App](https://app.svgaze.com) • [📖 Docs](https://github.com/vindocel/SVGaze/wiki) • [🐛 Issues](https://github.com/vindocel/SVGaze/issues)
+[🌐 App](https://app.svgaze.com) • [📖 Docs](docs/) • [🐛 Issues](https://github.com/vindocel/SVGaze/issues)
 
 </div>
