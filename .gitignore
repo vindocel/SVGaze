@@ -13,7 +13,9 @@
 # === Arquivos de Backup e Teste ===
 *_backup.*
 *_old.*
-*_test.*
+*_test.html
+*_test.js
+*_test.css
 index_old_backup.html
 index_standalone.html
 
