@@ -211,6 +211,8 @@ function createActions(item) {
     toggleFavorite(item.originalPath);
     btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
     btnFav.classList.toggle('favorited');
+    // Re-render gallery to move favorited items to top
+    renderGallery();
   });
 
   // Open modal button

@@ -66,6 +66,22 @@ header h1 {
   white-space: nowrap;
 }
 
+/* === Secondary Toolbar === */
+.secondary-toolbar {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-lg);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: wrap;
+}
+
 /* === Main Content === */
 main#gallery {
   max-width: var(--max-content-width);
@@ -106,6 +122,11 @@ footer {
 @media (max-width: 640px) {
   header.app-header {
     padding: var(--space-sm) var(--space-md);
+  }
+
+  .secondary-toolbar {
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
   }
 
   main#gallery {

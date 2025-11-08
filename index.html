@@ -6,6 +6,18 @@
 <title>SVGaze — Visualizador de Ícones SVG</title>
 <meta name="description" content="SVGaze - Visualizador moderno de ícones SVG com filtros, busca, favoritos e personalização de cores">
 
+<!-- Theme initialization (prevent flash) -->
+<script>
+(function() {
+  const theme = localStorage.getItem('theme');
+  if (theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+
 <!-- CSS Modules -->
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/layout.css">
@@ -20,21 +32,32 @@
 <header class="app-header" role="banner" aria-label="Cabeçalho do visualizador">
   <h1>SVGaze</h1>
   <div class="controls" role="toolbar" aria-label="Controles principais">
-    <label class="btn" for="dir">Selecionar pasta</label>
-    <input id="dir" type="file" webkitdirectory multiple style="display:none" aria-hidden="true">
     <input id="search" class="input" type="search" placeholder="Pesquisar por nome..." aria-label="Pesquisar ícones">
-    <select id="categoryFilter" class="input" aria-label="Filtrar categoria">
-      <option value="">Todas as categorias</option>
-    </select>
-    <label class="input" title="Tamanho da pré-visualização">Tamanho
-      <input id="sizeRange" type="range" min="24" max="180" value="72" style="vertical-align:middle;margin-left:8px">
+    <label class="switch" title="Alternar tema claro/escuro">
+      <input type="checkbox" id="themeToggle" aria-label="Alternar tema">
+      <span class="slider"></span>
     </label>
-    <input id="colorPicker" type="color" value="#000000" title="Cor global do ícone" style="width:44px;height:36px;border-radius:8px;border:1px solid var(--border)">
-    <button id="clearFav" class="small-btn ghost" title="Limpar favoritos">Limpar favoritos</button>
   </div>
 </header>
 
 <main id="gallery" role="main">
+  <div class="secondary-toolbar" role="toolbar" aria-label="Controles de visualização">
+    <label class="btn" for="dir">Selecionar pasta</label>
+    <input id="dir" type="file" webkitdirectory multiple style="display:none" aria-hidden="true">
+
+    <select id="categoryFilter" class="input" aria-label="Filtrar categoria">
+      <option value="">Todas as categorias</option>
+    </select>
+
+    <label class="input" title="Tamanho da pré-visualização">Tamanho
+      <input id="sizeRange" type="range" min="24" max="180" value="72" style="vertical-align:middle;margin-left:8px">
+    </label>
+
+    <input id="colorPicker" type="color" value="#000000" title="Cor global do ícone" style="width:44px;height:36px;border-radius:8px;border:1px solid var(--border)">
+
+    <button id="clearFav" class="small-btn ghost" title="Limpar favoritos">Limpar favoritos</button>
+  </div>
+
   <div class="toolbar">
     <div class="meta"><span id="count">0</span> ícones carregados • <span id="catName">—</span></div>
     <div style="margin-left:auto" class="meta">

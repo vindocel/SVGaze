@@ -16,7 +16,7 @@ import { clearAllFavorites } from './modules/favoriteManager.js';
 import { debounce } from './modules/utils.js';
 
 // DOM Elements
-let dirInput, searchInput, categoryFilterSelect, colorPicker, sizeRange, clearFavBtn, activeColorLabel;
+let dirInput, searchInput, categoryFilterSelect, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle;
 
 // Track if user manually changed color (to preserve across theme changes)
 let userChangedColor = false;
@@ -35,6 +35,7 @@ function init() {
   sizeRange = document.getElementById('sizeRange');
   clearFavBtn = document.getElementById('clearFav');
   activeColorLabel = document.getElementById('activeColorLabel');
+  themeToggle = document.getElementById('themeToggle');
 
   // Initialize modules
   initGallery();
@@ -110,6 +111,22 @@ function setupEventListeners() {
         clearAllFavorites();
         renderGallery();
       }
+    });
+  }
+
+  // Theme toggle
+  if (themeToggle) {
+    // Set initial state based on current theme
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const isDark = currentTheme === 'dark' ||
+                   (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    themeToggle.checked = isDark;
+
+    // Toggle theme on change
+    themeToggle.addEventListener('change', (e) => {
+      const newTheme = e.target.checked ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
     });
   }
 
