@@ -18,7 +18,7 @@ Access to script at 'file:///...' from origin 'null' has been blocked by CORS po
 ### Opção 1: Python (RECOMENDADO)
 ```bash
 # Abrir terminal na pasta do projeto
-cd c:\Users\victo\Documents\GitHub\SVGaze
+cd /path/to/SVGaze
 
 # Iniciar servidor
 python -m http.server 8000

@@ -130,10 +130,10 @@ Categorization Stats: {...}
 
 ## 📚 Mais Informações
 
-- **Testes completos:** `TESTING_GUIDE.md`
-- **Status atual:** `CURRENT_STATUS.md`
-- **Documentação:** `CATEGORIZATION.md`
-- **Roadmap:** `ROADMAP.md`
+- **Testes completos:** [HOW_TO_TEST.md](HOW_TO_TEST.md)
+- **Documentação:** [CATEGORIZATION.md](CATEGORIZATION.md)
+- **Roadmap:** [ROADMAP.md](ROADMAP.md)
+- **Solução de problemas:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ---
 

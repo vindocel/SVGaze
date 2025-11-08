@@ -305,104 +305,32 @@ console.log(`Estilos: ${stats.totalStyles}`);
 
 ---
 
-## 🔧 Integração com o App
+## 📊 Estruturas de Teste
 
-### Atualizar o handleFiles() no index.html:
-
-```javascript
-import { parseFilePath, detectStyleFromSVG } from './js/modules/categoryManager.js';
-
-function handleFiles(e) {
-  const files = Array.from(e.target.files || []);
-  const svgFiles = files.filter(f => f.name.endsWith('.svg'));
-
-  const readPromises = svgFiles.map(file => readFile(file).then(text => {
-    const path = file.webkitRelativePath || file.name;
-    const fileName = path.split('/').pop();
-
-    // Usar o novo sistema de categorização
-    const pathInfo = parseFilePath(path, fileName);
-
-    // Parse SVG para detectar estilo se necessário
-    const svgParsed = parseAndSanitizeSVG(text);
-    const detectedStyle = detectStyleFromSVG(svgParsed);
-
-    // Combinar: usar estilo da pasta OU detectado
-    const finalStyle = pathInfo.style || detectedStyle;
-
-    return {
-      category: pathInfo.category,
-      style: finalStyle,
-      subcategory: pathInfo.subcategory,
-      fullPath: pathInfo.fullPath,
-      fileName,
-      svgText: text,
-      svgElement: svgParsed,
-      originalPath: path
-    };
-  }));
-
-  Promise.all(readPromises).then(items => {
-    allItems = items;
-    populateCategoryFilter();
-    renderGrid();
-  });
-}
-```
-
----
-
-## 📊 Testes
-
-### Estruturas para Testar
+### Estruturas Compatíveis
 
 1. **Icons → Category → Style**
    ```
    Icons/arrow/Fill/arrow-left.svg
    Icons/arrow/Outline/arrow-up.svg
    ```
-   ✅ Categoria: arrow
-   ✅ Estilos: Fill, Outline
+   - Categoria: arrow
+   - Estilos: Fill, Outline
 
 2. **Style → Category**
    ```
    svg/Outline/Brands/Adobe.svg
    svg/Solid/Brands/Adobe.svg
    ```
-   ✅ Categoria: Brands (unificada)
-   ✅ Estilos: Outline, Solid
+   - Categoria: Brands (unificada)
+   - Estilos: Outline, Solid
 
 3. **Flat (sem subcategorias)**
    ```
    icons/close.svg
    icons/menu.svg
    ```
-   ✅ Categoria: Root
-   ✅ Estilo: (auto-detectado)
+   - Categoria: Root
+   - Estilo: (auto-detectado)
 
 ---
-
-## 🎯 Benefícios
-
-✅ **Flexível** - Funciona com qualquer estrutura de pastas
-✅ **Inteligente** - Detecta e ignora pastas de estilo automaticamente
-✅ **Unificado** - Categorias duplicadas são mescladas
-✅ **Visual** - Badges mostram claramente o estilo
-✅ **Extensível** - Fácil adicionar novos estilos ou customizar
-✅ **Robusto** - Fallback para detecção automática de estilo
-
----
-
-## 🚀 Próximos Passos
-
-1. ✅ Módulo criado (`categoryManager.js`)
-2. ⏳ Integrar no `index.html`
-3. ⏳ Atualizar UI para mostrar badges de estilo
-4. ⏳ Adicionar filtro de estilo no header
-5. ⏳ Testar com diferentes estruturas de pastas
-6. ⏳ Documentar no README
-
----
-
-**Última atualização:** 2025-01-05
-**Status:** ✅ Módulo implementado, aguardando integração
