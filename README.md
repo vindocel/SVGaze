@@ -18,13 +18,16 @@
 - **Categorização inteligente** — detecta categorias semânticas vs estilos ([detalhes](docs/CATEGORIZATION.md))
 - **Badges de estilo** — Outline, Solid, Fill automáticos nos cards
 - **Unificação de categorias** — agrupa ícones de diferentes estilos na mesma categoria
+- **Ícones de categoria** — ícones representativos antes de cada categoria (seleção semântica inteligente)
+- **Seção de favoritos dedicada** — seus favoritos em destaque no topo, sem duplicação
 
 ### 🔍 Busca e Filtros
 - **Busca instantânea** por nome de arquivo ou caminho
+- **Dropdown customizado de categorias** com ícones visuais e navegação por teclado
 - **Filtro por categoria** baseado em categorias semânticas (não pastas de estilo)
 - **Filtro por estilo** — visualize apenas Outline, Solid, Linear (Border), etc.
 - **Ordenação inteligente** — agrupa variantes do mesmo ícone lado a lado
-- **Favoritos no topo** — seus ícones favoritos sempre primeiro
+- **Favoritos no topo** — seção dedicada, sem duplicação nas categorias
 
 ### 🎨 Personalização
 - **Seletor de cor global** — altera a cor de todos os ícones em tempo real
@@ -130,8 +133,8 @@ icons/
 ## 🛠️ Tecnologias
 
 ### Arquitetura Modular
-- **13 módulos JavaScript ES6** — organização por responsabilidade
-- **7 arquivos CSS** — design system componentizado
+- **15 módulos JavaScript ES6** — organização por responsabilidade
+- **8 arquivos CSS** — design system componentizado
 - **Zero dependências** — 100% vanilla
 
 ### APIs Utilizadas
@@ -151,20 +154,22 @@ icons/
 
 ```
 js/
-├── state.js                   # Estado centralizado
-├── main.js                    # Orquestrador
+├── state.js                     # Estado centralizado
+├── main.js                      # Orquestrador
 └── modules/
-    ├── categoryManager.js     # 🧠 Categorização inteligente
-    ├── utils.js               # Utilitários
-    ├── svgProcessor.js        # Parse e sanitização
-    ├── fileHandler.js         # Processamento de arquivos
-    ├── favoriteManager.js     # Sistema de favoritos
-    ├── filterManager.js       # Busca e filtros
-    ├── colorManager.js        # Gerenciamento de cores
-    ├── sizeManager.js         # Controle de tamanho
-    ├── clipboardManager.js    # Copiar/Download
-    ├── modalManager.js        # Modal de preview
-    └── galleryRenderer.js     # Renderização do grid
+    ├── categoryManager.js       # 🧠 Categorização inteligente
+    ├── categoryIconManager.js   # 🎨 Seleção de ícones por categoria
+    ├── dropdownManager.js       # 📋 Dropdown customizado com teclado
+    ├── utils.js                 # Utilitários
+    ├── svgProcessor.js          # Parse e sanitização
+    ├── fileHandler.js           # Processamento de arquivos
+    ├── favoriteManager.js       # Sistema de favoritos
+    ├── filterManager.js         # Busca e filtros
+    ├── colorManager.js          # Gerenciamento de cores
+    ├── sizeManager.js           # Controle de tamanho
+    ├── clipboardManager.js      # Copiar/Download
+    ├── modalManager.js          # Modal de preview
+    └── galleryRenderer.js       # Renderização do grid
 ```
 
 ### Sanitização de SVG
@@ -216,12 +221,12 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 | Versão | Status | Progresso |
 |--------|--------|-----------|
 | v1.0 - Visualizador | ✅ Concluído | 100% |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 75% |
+| v1.1 - Melhorias UX | 🚧 Em Progresso | 85% |
 | v2.0 - Editor Básico | 📋 Planejado | 0% |
 
-### v1.1 - Em Progresso (75%) 🚧
+### v1.1 - Em Progresso (85%) 🚧
 **Concluído:**
-- ✅ Arquitetura 100% modular (13 módulos JS + 7 CSS)
+- ✅ Arquitetura 100% modular (15 módulos JS + 8 CSS)
 - ✅ Sistema de categorização inteligente
 - ✅ Detecção automática de estilos (Outline, Solid, Linear, etc)
 - ✅ Suporte a estilos compostos ("Linear (Border)")
@@ -235,6 +240,10 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 - ✅ Tema escuro com paleta cinza neutra
 - ✅ Renderização correta de ícones stroke-only
 - ✅ Ordenação inteligente agrupando variantes
+- ✅ Seção de favoritos dedicada (sem duplicação)
+- ✅ Ícones de categoria com seleção semântica inteligente
+- ✅ Dropdown customizado com navegação por teclado
+- ✅ Ícones visuais no menu de categorias
 
 **Em Desenvolvimento:**
 - 🌍 Internacionalização completa (pt-BR e en-US)
@@ -317,7 +326,7 @@ Embora o código seja open-source sob licença MIT, **"SVGaze"** e **"svgaze.com
 
 🟢 **Ativo** — Em desenvolvimento ativo com melhorias contínuas
 
-**Última atualização:** 2025-01-07
+**Última atualização:** 2025-01-09
 
 ---
 

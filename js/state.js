@@ -35,7 +35,11 @@ export const appState = {
   modal: {
     isOpen: false,
     currentItem: null
-  }
+  },
+
+  // Category icons (persisted during session)
+  categoryIcons: {}, // { categoryName: { icon: SVGElement, style: 'Bold', fileName: 'heart.svg', itemPath: '...' } }
+  categoryIconStyle: null // 'Bold', 'Outline', etc. - ensures consistency across ALL categories
 };
 
 /**
@@ -85,6 +89,8 @@ export function resetState() {
     isOpen: false,
     currentItem: null
   };
+  appState.categoryIcons = {};
+  appState.categoryIconStyle = null;
 
   // Clear localStorage
   localStorage.removeItem('svgFavs');

@@ -36,6 +36,26 @@ const ROOT_FOLDERS = new Set([
   'hicon'
 ]);
 
+// Format/tool folder names to ignore (contain different file formats)
+const FORMAT_FOLDERS = new Set([
+  'figma',
+  'sketch',
+  'xd',
+  'adobe-xd',
+  'png',
+  'jpg',
+  'jpeg',
+  'webp',
+  'pdf',
+  'eps',
+  'ai',
+  'psd',
+  'zip',
+  'src',
+  'source',
+  'exports'
+]);
+
 /**
  * Extract style from folder name (e.g., "Call - Bold" → "Bold")
  * @param {string} folderName - Folder name to check
@@ -108,14 +128,26 @@ export function parseFilePath(webkitRelativePath, fileName) {
   let rootFolderIndex = -1;
   let extractedStyle = '';
 
+  // First pass: identify root folder index
+  cleanFolders.forEach((folder, index) => {
+    if (ROOT_FOLDERS.has(folder)) {
+      rootFolderIndex = index;
+    }
+  });
+
+  // Second pass: categorize folders
   cleanFolders.forEach((folder, index) => {
     const original = folders[index];
 
     if (ROOT_FOLDERS.has(folder)) {
-      rootFolderIndex = index;
+      // Already processed in first pass
+    } else if (FORMAT_FOLDERS.has(folder)) {
+      // Ignore format/tool folders completely
+      // These are containers for different file formats (figma, png, etc)
     } else if (STYLE_FOLDERS.has(folder)) {
       styleFolders.push({ name: original, index });
-    } else if (index > rootFolderIndex) {
+    } else if (rootFolderIndex === -1 || index > rootFolderIndex) {
+      // Only process if after root folder OR no root found
       // Check if style is in the folder name (e.g., "Call - Bold")
       const { cleanName, style: nameStyle } = extractStyleFromName(original);
 
@@ -176,6 +208,7 @@ export function parseFilePath(webkitRelativePath, fileName) {
       allFolders: folders,
       styleFolders: styleFolders.map(f => f.name),
       semanticFolders: semanticFolders.map(f => f.name),
+      formatFoldersDetected: cleanFolders.filter(f => FORMAT_FOLDERS.has(f)),
       rootFolderIndex
     }
   };
@@ -391,6 +424,45 @@ export function resetStyleFolders() {
   });
 }
 
+/**
+ * Add custom format folders to detection list
+ * @param {string[]} folders - Array of folder names to add
+ */
+export function addFormatFolders(folders) {
+  folders.forEach(folder => {
+    FORMAT_FOLDERS.add(folder.toLowerCase());
+  });
+}
+
+/**
+ * Remove format folders from detection list
+ * @param {string[]} folders - Array of folder names to remove
+ */
+export function removeFormatFolders(folders) {
+  folders.forEach(folder => {
+    FORMAT_FOLDERS.delete(folder.toLowerCase());
+  });
+}
+
+/**
+ * Get current list of recognized format folders
+ * @returns {string[]} Array of format folder names
+ */
+export function getFormatFolders() {
+  return Array.from(FORMAT_FOLDERS);
+}
+
+/**
+ * Reset format folders to default list
+ */
+export function resetFormatFolders() {
+  FORMAT_FOLDERS.clear();
+  ['figma', 'sketch', 'xd', 'adobe-xd', 'png', 'jpg', 'jpeg', 'webp',
+   'pdf', 'eps', 'ai', 'psd', 'zip', 'src', 'source', 'exports'].forEach(f => {
+    FORMAT_FOLDERS.add(f);
+  });
+}
+
 export default {
   parseFilePath,
   detectStyleFromSVG,
@@ -402,5 +474,9 @@ export default {
   addStyleFolders,
   removeStyleFolders,
   getStyleFolders,
-  resetStyleFolders
+  resetStyleFolders,
+  addFormatFolders,
+  removeFormatFolders,
+  getFormatFolders,
+  resetFormatFolders
 };

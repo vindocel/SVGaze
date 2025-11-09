@@ -22,6 +22,16 @@
   transform: translateY(-2px);
 }
 
+/* === Favorite Card Highlight === */
+.favorite-card {
+  border-color: rgba(255, 215, 0, 0.2);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.02), transparent);
+}
+
+.favorite-card:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
 /* === Preview Area === */
 .preview {
   display: flex;

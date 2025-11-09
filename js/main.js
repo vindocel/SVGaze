@@ -14,9 +14,11 @@ import { applySize, setSize } from './modules/sizeManager.js';
 import { setSearchFilter, setCategoryFilter } from './modules/filterManager.js';
 import { clearAllFavorites } from './modules/favoriteManager.js';
 import { debounce } from './modules/utils.js';
+import { initializeCategoryIcons } from './modules/categoryIconManager.js';
+import { initDropdown } from './modules/dropdownManager.js';
 
 // DOM Elements
-let dirInput, searchInput, categoryFilterSelect, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle;
+let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle;
 
 // Track if user manually changed color (to preserve across theme changes)
 let userChangedColor = false;
@@ -30,7 +32,7 @@ function init() {
   // Get DOM elements
   dirInput = document.getElementById('dir');
   searchInput = document.getElementById('search');
-  categoryFilterSelect = document.getElementById('categoryFilter');
+  categoryDropdown = document.getElementById('categoryDropdown');
   colorPicker = document.getElementById('colorPicker');
   sizeRange = document.getElementById('sizeRange');
   clearFavBtn = document.getElementById('clearFav');
@@ -76,10 +78,10 @@ function setupEventListeners() {
     }, 300));
   }
 
-  // Category filter
-  if (categoryFilterSelect) {
-    categoryFilterSelect.addEventListener('change', (e) => {
-      setCategoryFilter(e.target.value);
+  // Category dropdown
+  if (categoryDropdown) {
+    initDropdown(categoryDropdown, (value, text) => {
+      setCategoryFilter(value);
       renderGallery();
     });
   }
@@ -190,9 +192,12 @@ function applyInitialState() {
 function onFilesLoaded(items) {
   console.log(`📂 Loaded ${items.length} SVG files`);
 
-  // Populate category filter
-  if (categoryFilterSelect) {
-    populateCategoryFilter(categoryFilterSelect);
+  // Initialize category icons with random selections
+  initializeCategoryIcons();
+
+  // Populate category dropdown
+  if (categoryDropdown) {
+    populateCategoryFilter(categoryDropdown);
   }
 
   // Render gallery

@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/components/cards.css">
 <link rel="stylesheet" href="css/components/modal.css">
 <link rel="stylesheet" href="css/components/badges.css">
+<link rel="stylesheet" href="css/components/dropdown.css">
 </head>
 
 <body>
@@ -45,9 +46,14 @@
     <label class="btn" for="dir">Selecionar pasta</label>
     <input id="dir" type="file" webkitdirectory multiple style="display:none" aria-hidden="true">
 
-    <select id="categoryFilter" class="input" aria-label="Filtrar categoria">
-      <option value="">Todas as categorias</option>
-    </select>
+    <div class="custom-dropdown" id="categoryDropdown">
+      <button class="dropdown-trigger" aria-expanded="false" aria-haspopup="listbox" aria-label="Filtrar categoria">
+        Todas as categorias
+      </button>
+      <ul class="dropdown-menu" role="listbox">
+        <!-- Populated by JS -->
+      </ul>
+    </div>
 
     <label class="input" title="Tamanho da pré-visualização">Tamanho
       <input id="sizeRange" type="range" min="24" max="180" value="72" style="vertical-align:middle;margin-left:8px">

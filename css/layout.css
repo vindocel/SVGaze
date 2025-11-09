@@ -78,8 +78,13 @@ header h1 {
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--space-lg);
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   flex-wrap: wrap;
+}
+
+/* Allow dropdown to escape toolbar bounds when open */
+.secondary-toolbar:has(.custom-dropdown.is-open) {
+  overflow: visible;
 }
 
 /* === Main Content === */

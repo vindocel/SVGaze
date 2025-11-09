@@ -11,6 +11,7 @@ import { parseAndSanitizeSVG, ensureViewBox, applyCurrentColorToSVG, prepareSVGF
 import { openModal } from './modalManager.js';
 import { copySVGCode, downloadSVG } from './clipboardManager.js';
 import { getSVGText } from './svgProcessor.js';
+import { getCategoryIconElement, getCategoryIcon } from './categoryIconManager.js';
 
 let gridElement, countSpan, catNameSpan, welcomeCard;
 
@@ -38,6 +39,22 @@ export function renderGallery() {
 
   const visible = getFilteredItems();
 
+  // Get all favorites (regardless of filters, except search and style)
+  const { search, style } = appState.filters;
+  let allFavorites = appState.allItems.filter(item => isFavorite(item.originalPath));
+
+  // Apply only search and style filters to favorites
+  if (search) {
+    const query = search.toLowerCase();
+    allFavorites = allFavorites.filter(i => {
+      const searchText = `${i.fileName} ${i.originalPath} ${i.subcategory} ${i.style}`.toLowerCase();
+      return searchText.includes(query);
+    });
+  }
+  if (style) {
+    allFavorites = allFavorites.filter(i => i.style === style);
+  }
+
   // Update count
   if (countSpan) {
     countSpan.textContent = visible.length;
@@ -49,19 +66,25 @@ export function renderGallery() {
   }
 
   // No results
-  if (visible.length === 0 && appState.allItems.length > 0) {
+  if (visible.length === 0 && appState.allItems.length > 0 && allFavorites.length === 0) {
     gridElement.innerHTML = '<div class="card" style="grid-column:1/-1;padding:18px">Nenhum resultado encontrado.</div>';
     return;
   }
 
-  // Render items grouped by category
+  // Render Favorites section first (always visible, even with category filters)
+  if (allFavorites.length > 0) {
+    renderFavoritesSection(allFavorites);
+  }
+
+  // Render items grouped by category (excluding favorites)
+  const itemsWithoutFavorites = visible.filter(item => !isFavorite(item.originalPath));
   let lastCategory = null;
 
-  for (const item of visible) {
+  for (const item of itemsWithoutFavorites) {
     // Add category header when category changes
     if (item.category !== lastCategory && !appState.filters.category) {
       lastCategory = item.category;
-      const categoryHeader = createCategoryHeader(item.category, visible);
+      const categoryHeader = createCategoryHeader(item.category, itemsWithoutFavorites);
       gridElement.appendChild(categoryHeader);
     }
 
@@ -75,6 +98,15 @@ function createCategoryHeader(category, allVisibleItems) {
   const header = document.createElement('div');
   header.className = 'category-header';
 
+  // Add category icon
+  const iconSvg = getCategoryIconElement(category, 24);
+  if (iconSvg) {
+    const iconWrapper = document.createElement('div');
+    iconWrapper.className = 'category-icon';
+    iconWrapper.appendChild(iconSvg);
+    header.appendChild(iconWrapper);
+  }
+
   const title = document.createElement('span');
   title.textContent = category;
 
@@ -87,6 +119,30 @@ function createCategoryHeader(category, allVisibleItems) {
   header.appendChild(count);
 
   return header;
+}
+
+function renderFavoritesSection(favorites) {
+  // Create favorites header
+  const header = document.createElement('div');
+  header.className = 'category-header favorites-header';
+
+  const title = document.createElement('span');
+  title.textContent = '⭐ Favoritos';
+
+  const count = document.createElement('span');
+  count.className = 'category-count';
+  count.textContent = `${favorites.length} ícone${favorites.length !== 1 ? 's' : ''}`;
+
+  header.appendChild(title);
+  header.appendChild(count);
+  gridElement.appendChild(header);
+
+  // Render favorite cards
+  for (const item of favorites) {
+    const card = createCard(item);
+    card.classList.add('favorite-card');
+    gridElement.appendChild(card);
+  }
 }
 
 function createCard(item) {
@@ -240,17 +296,50 @@ function createActions(item) {
   return actions;
 }
 
-export function populateCategoryFilter(selectElement) {
-  if (!selectElement) return;
+export function populateCategoryFilter(dropdownElement) {
+  if (!dropdownElement) return;
+
+  const menu = dropdownElement.querySelector('.dropdown-menu');
+  if (!menu) return;
 
   const categories = getUniqueCategories();
-  const options = ['<option value="">Todas as categorias</option>'];
 
+  // Clear existing options
+  menu.innerHTML = '';
+
+  // Add "All Categories" option
+  const allOption = document.createElement('li');
+  allOption.setAttribute('role', 'option');
+  allOption.setAttribute('data-value', '');
+  allOption.setAttribute('aria-selected', 'true');
+  allOption.setAttribute('tabindex', '0');
+  allOption.className = 'is-selected';
+  allOption.textContent = 'Todas as categorias';
+  menu.appendChild(allOption);
+
+  // Add category options with icons
   categories.forEach(cat => {
-    options.push(`<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`);
-  });
+    const option = document.createElement('li');
+    option.setAttribute('role', 'option');
+    option.setAttribute('data-value', escapeHtml(cat));
+    option.setAttribute('aria-selected', 'false');
+    option.setAttribute('tabindex', '0');
 
-  selectElement.innerHTML = options.join('');
+    // Add icon
+    const iconSvg = getCategoryIconElement(cat, 18);
+    if (iconSvg) {
+      const iconWrapper = document.createElement('div');
+      iconWrapper.className = 'dropdown-item-icon';
+      iconWrapper.appendChild(iconSvg);
+      option.appendChild(iconWrapper);
+    }
+
+    // Add text
+    const textNode = document.createTextNode(escapeHtml(cat));
+    option.appendChild(textNode);
+
+    menu.appendChild(option);
+  });
 }
 
 export default {
