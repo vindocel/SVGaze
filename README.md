@@ -221,10 +221,10 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 | Versão | Status | Progresso |
 |--------|--------|-----------|
 | v1.0 - Visualizador | ✅ Concluído | 100% |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 85% |
+| v1.1 - Melhorias UX | 🚧 Em Progresso | 88% |
 | v2.0 - Editor Básico | 📋 Planejado | 0% |
 
-### v1.1 - Em Progresso (85%) 🚧
+### v1.1 - Em Progresso (88%) 🚧
 **Concluído:**
 - ✅ Arquitetura 100% modular (15 módulos JS + 8 CSS)
 - ✅ Sistema de categorização inteligente
@@ -244,6 +244,8 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 - ✅ Ícones de categoria com seleção semântica inteligente
 - ✅ Dropdown customizado com navegação por teclado
 - ✅ Ícones visuais no menu de categorias
+- ✅ Logo e branding unificado com interação (click to home)
+- ✅ Favicon dinâmico baseado em tema do sistema
 
 **Em Desenvolvimento:**
 - 🌍 Internacionalização completa (pt-BR e en-US)

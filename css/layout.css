@@ -52,9 +52,78 @@ header.app-header::-webkit-scrollbar-thumb:hover {
 
 header h1 {
   margin: 0;
-  font-size: var(--font-size-lg);
+  font-size: 0;
   white-space: nowrap;
   font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Logo branding block - unified design */
+.app-branding {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 3px 10px 3px 3px;
+  gap: 6px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.app-branding:active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.app-logo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.app-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  user-select: none;
+}
+
+.app-name-prefix {
+  color: var(--primary);
+}
+
+.app-name-suffix {
+  color: var(--text-primary);
+}
+
+/* Hide dark logo by default (light theme) */
+:root .dark-theme-logo,
+[data-theme="light"] .dark-theme-logo {
+  display: none;
+}
+
+/* Hide light logo in dark theme */
+[data-theme="dark"] .light-theme-logo {
+  display: none;
+}
+
+/* Show dark logo in dark theme */
+[data-theme="dark"] .dark-theme-logo {
+  display: block;
+}
+
+/* System preference fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .light-theme-logo {
+    display: none;
+  }
+
+  :root:not([data-theme]) .dark-theme-logo {
+    display: block;
+  }
 }
 
 .controls {

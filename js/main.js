@@ -18,7 +18,7 @@ import { initializeCategoryIcons } from './modules/categoryIconManager.js';
 import { initDropdown } from './modules/dropdownManager.js';
 
 // DOM Elements
-let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle;
+let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle, appBranding;
 
 // Track if user manually changed color (to preserve across theme changes)
 let userChangedColor = false;
@@ -38,6 +38,7 @@ function init() {
   clearFavBtn = document.getElementById('clearFav');
   activeColorLabel = document.getElementById('activeColorLabel');
   themeToggle = document.getElementById('themeToggle');
+  appBranding = document.querySelector('.app-branding');
 
   // Initialize modules
   initGallery();
@@ -129,6 +130,25 @@ function setupEventListeners() {
       const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
+    });
+  }
+
+  // Logo branding - click to reset/go home
+  if (appBranding) {
+    appBranding.addEventListener('click', () => {
+      // Reset all filters
+      if (searchInput) searchInput.value = '';
+      setSearchFilter('');
+      setCategoryFilter('all');
+
+      // Reset dropdown to "Todas as categorias"
+      if (categoryDropdown) {
+        const trigger = categoryDropdown.querySelector('.dropdown-trigger');
+        if (trigger) trigger.textContent = 'Todas as categorias';
+      }
+
+      // Re-render gallery
+      renderGallery();
     });
   }
 
