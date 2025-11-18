@@ -270,10 +270,14 @@ export function applyCurrentColorToSVG(svgEl) {
  * @returns {string} SVG text
  */
 export function getSVGText(item) {
+  // Prefer svgText as it contains the original SVG with dimensions
+  if (item.svgText) {
+    return item.svgText;
+  }
   if (item.svgElement) {
     return item.svgElement.outerHTML;
   }
-  return item.svgText || '';
+  return '';
 }
 
 /**

@@ -175,17 +175,14 @@ function createPreview(item) {
     return preview;
   }
 
-  // Prepare SVG for display
-  const svgEl = svgElement.cloneNode(true);
-  ensureViewBox(svgEl);
-  svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-  svgEl.style.overflow = 'visible';
-  svgEl.removeAttribute('width');
-  svgEl.removeAttribute('height');
-  applyCurrentColorToSVG(svgEl);
-
-  // Store processed element
-  item.svgElement = svgEl.cloneNode(true);
+  // Prepare SVG for display (clone to avoid modifying original)
+  const displayElement = svgElement.cloneNode(true);
+  ensureViewBox(displayElement);
+  displayElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  displayElement.style.overflow = 'visible';
+  displayElement.removeAttribute('width');
+  displayElement.removeAttribute('height');
+  applyCurrentColorToSVG(displayElement);
 
   // Create wrapper
   const wrap = document.createElement('div');
@@ -195,7 +192,7 @@ function createPreview(item) {
   wrap.style.maxHeight = `${size}px`;
 
   const displaySvg = prepareSVGForDisplay(
-    item.svgElement,
+    displayElement,
     size,
     appState.ui.selectedColor
   );
