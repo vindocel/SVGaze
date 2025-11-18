@@ -3,6 +3,7 @@
  * Render the SVG gallery grid with categories and badges
  */
 
+import { t } from '../../i18n/i18n.js';
 import { appState } from '../state.js';
 import { escapeHtml } from './utils.js';
 import { getFilteredItems, getUniqueCategories } from './filterManager.js';
@@ -12,6 +13,7 @@ import { openModal } from './modalManager.js';
 import { copySVGCode, downloadSVG } from './clipboardManager.js';
 import { getSVGText } from './svgProcessor.js';
 import { getCategoryIconElement, getCategoryIcon } from './categoryIconManager.js';
+import { openInEditor } from './viewManager.js';
 
 let gridElement, countSpan, catNameSpan, welcomeCard;
 
@@ -274,16 +276,34 @@ function createActions(item) {
   // Open modal button
   const btnOpen = document.createElement('button');
   btnOpen.className = 'small-btn primary';
-  btnOpen.textContent = 'Abrir';
+  btnOpen.textContent = t('card.open');
   btnOpen.addEventListener('click', (ev) => {
     ev.stopPropagation();
     openModal(item);
   });
 
+  // Edit button
+  const btnEdit = document.createElement('button');
+  btnEdit.className = 'small-btn edit';
+  btnEdit.textContent = t('card.edit');
+  btnEdit.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    try {
+      // Get SVG text content
+      const svgText = getSVGText(item);
+      if (svgText) {
+        // Open editor with this SVG
+        openInEditor(svgText, item.name);
+      }
+    } catch (error) {
+      console.error('Error loading SVG for editing:', error);
+    }
+  });
+
   // Copy button
   const btnCopy = document.createElement('button');
   btnCopy.className = 'small-btn';
-  btnCopy.textContent = 'Copiar';
+  btnCopy.textContent = t('card.copy');
   btnCopy.addEventListener('click', (ev) => {
     ev.stopPropagation();
     copySVGCode(item, btnCopy);
@@ -291,6 +311,7 @@ function createActions(item) {
 
   actions.appendChild(btnFav);
   actions.appendChild(btnOpen);
+  actions.appendChild(btnEdit);
   actions.appendChild(btnCopy);
 
   return actions;

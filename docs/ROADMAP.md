@@ -6,11 +6,12 @@ Este documento descreve o planejamento de desenvolvimento do SVGaze, incluindo r
 
 ## 📊 Status Geral do Projeto
 
-| Versão | Status | Progresso | Data Estimada |
-|--------|--------|-----------|---------------|
+| Versão | Status | Progresso | Data |
+|--------|--------|-----------|------|
 | v1.0 - Visualizador | ✅ Concluído | 100% | Jan 2025 |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 75% | Fev 2025 |
-| v2.0 - Editor Básico | 📋 Planejado | 0% | Jun 2025 |
+| v1.1 - Melhorias UX | ✅ Concluído | 100% | Jan 2025 |
+| v2.0 - Editor SVG | ✅ Concluído | 100% | Jan 2025 |
+| v3.0 - Avançado | 📋 Planejado | 0% | TBD |
 
 ---
 
@@ -74,12 +75,12 @@ Criar um visualizador local de arquivos SVG com funcionalidades básicas de orga
 
 ---
 
-## 🚧 v1.1 - Melhorias de Experiência do Usuário (Em Progresso)
+## ✅ v1.1 - Melhorias de Experiência do Usuário (Concluído)
 
 ### Objetivos
 Melhorar a usabilidade, acessibilidade e experiência geral do usuário.
 
-### Data Estimada: Fevereiro 2025
+### Concluído: Janeiro 2025
 
 ### Recursos Planejados
 
@@ -160,28 +161,92 @@ Melhorar a usabilidade, acessibilidade e experiência geral do usuário.
 
 ---
 
-## 📋 v2.0 - Editor Básico de SVG (Planejado)
+## ✅ v2.0 - Editor SVG (Concluído)
 
 ### Objetivos
-Adicionar capacidades básicas de edição de SVG sem necessidade de ferramentas externas.
+Adicionar um editor completo de SVG com código, preview ao vivo, transformações e exportação multi-formato.
 
-### Data Estimada: Junho 2025
+### Concluído: Janeiro 2025
+
+### Recursos Implementados
+
+#### 📝 Editor de Código
+- [x] Syntax highlighting customizado para SVG/XML
+- [x] Preview ao vivo sincronizado com código
+- [x] Indicador de tamanho do arquivo em tempo real
+- [x] Botão de upload para carregar SVG
+- [x] Copiar código para clipboard
+
+#### 👁️ Preview ao Vivo
+- [x] Zoom de 10% a 5000%
+- [x] Pan (arrastar com Ctrl+mouse)
+- [x] Zoom com roda do mouse (Ctrl+scroll)
+- [x] Botões de zoom in/out
+- [x] Fit to view
+- [x] Toggle de grid
+- [x] Toggle de fundo checkered
+- [x] Exibição de dimensões do SVG
+
+#### 📤 Sistema de Exportação (5 formatos)
+- [x] **Preview** - Visualização com controles de zoom
+- [x] **React** - Componente JSX (TypeScript opcional, aspas simples)
+- [x] **React Native** - Template com react-native-svg
+- [x] **PNG** - Exportação com escalas 1x, 2x, 3x, 4x
+- [x] **Data URI** - base64 e encodeURIComponent
+
+#### ⚡ Otimização SVGO
+- [x] Modal de configuração com 20+ opções
+- [x] Preview de antes/depois
+- [x] Exibição de redução de tamanho (%)
+- [x] Plugins configuráveis individualmente
+- [x] Resetar configurações para padrão
+
+#### 🔄 Ferramentas de Transformação
+- [x] Rotação 90° horário
+- [x] Rotação 90° anti-horário
+- [x] Espelhamento Horizontal
+- [x] Espelhamento Vertical
+- [x] Editor de dimensões com bloqueio proporcional
+
+#### 🎨 Detecção Inteligente de Cores
+- [x] Detecta se SVG é monocromático ou multicolorido
+- [x] Aplica tema automaticamente em SVGs monocromáticos
+- [x] Preserva cores originais em SVGs multicoloridos
+- [x] Resolve cores CSS de `<style>` tags e classes
+
+#### 🔗 Integração com Galeria
+- [x] Botão "Editar" nos cards da galeria
+- [x] Botão "Editar" no modal de preview
+- [x] `openInEditor(svgCode, fileName)` para abrir SVG no editor
+- [x] Switch de views Gallery ↔ Editor
+
+#### 🔔 Sistema de Notificações
+- [x] Toast para feedback de ações
+- [x] Estados de sucesso/erro
+- [x] Auto-dismiss
+
+#### 🆕 Branding Atualizado
+- [x] Nova logo polida 400x400 viewBox
+- [x] Favicons dinâmicos (dark/light)
+- [x] Logo interativa (clique abre logo no editor)
+
+---
+
+## 📋 v3.0 - Funcionalidades Avançadas (Planejado)
+
+### Objetivos
+Adicionar edição visual avançada e funcionalidades de produtividade.
+
+### Data Estimada: TBD
 
 ### Recursos Planejados
 
-#### ✏️ Edição de Paths
+#### ✏️ Edição Visual de Paths
 - [ ] Visualização de pontos de controle
 - [ ] Mover pontos de paths
 - [ ] Adicionar/remover pontos
 - [ ] Simplificar paths automaticamente
 - [ ] Suavizar curvas
-
-#### 🎨 Manipulação de Cores por Camada
-- [ ] Identificar todas as cores no SVG
-- [ ] Alterar cor de elementos individuais
-- [ ] Pré-visualização de mudanças
-- [ ] Desfazer/refazer alterações
-- [ ] Paleta de cores sugeridas
 
 #### 📑 Gerenciamento de Camadas
 - [ ] Lista de camadas/elementos do SVG
@@ -191,33 +256,27 @@ Adicionar capacidades básicas de edição de SVG sem necessidade de ferramentas
 - [ ] Agrupar/desagrupar elementos
 - [ ] Bloquear camadas
 
-#### 📐 Transformações
-- [ ] Redimensionar elementos
-- [ ] Rotacionar elementos
-- [ ] Espelhar (horizontal/vertical)
-- [ ] Alinhar elementos
-- [ ] Distribuir elementos uniformemente
+#### 🎨 Color Picker Inline
+- [ ] Selecionar cores diretamente no preview
+- [ ] Alterar cor de elementos individuais
+- [ ] Paleta de cores sugeridas
+- [ ] Histórico de cores usadas
 
-#### 💾 Exportação Otimizada
-- [ ] Integração com SVGO para otimização
-- [ ] Ajustes de precisão de números
-- [ ] Remover metadados desnecessários
-- [ ] Minificar SVG
-- [ ] Comparação antes/depois da otimização
+#### 📂 Histórico de Arquivos
+- [ ] Lista de arquivos recentes
+- [ ] Persistência entre sessões
+- [ ] Abrir arquivos recentes rapidamente
 
-#### 🔄 Conversão de Formatos
-- [ ] Exportar como PNG (diferentes resoluções)
-- [ ] Exportar como JPG
-- [ ] Exportar como WebP
-- [ ] Batch conversion (converter múltiplos de uma vez)
-- [ ] Configurações de qualidade e compressão
+#### 🌍 Internacionalização Completa
+- [ ] Idioma Inglês (en-US)
+- [ ] Seletor de idioma no header
+- [ ] Detecção automática do idioma do navegador
 
-#### 📜 Histórico de Edições
-- [ ] Desfazer ilimitado
-- [ ] Refazer
-- [ ] Timeline de modificações
-- [ ] Salvar versões do SVG
-- [ ] Comparar versões
+#### 📊 Estatísticas e Informações
+- [ ] Painel de estatísticas
+- [ ] Exibir tamanho dos arquivos SVG
+- [ ] Mostrar dimensões originais
+- [ ] Gráfico de distribuição por categoria
 
 ---
 
@@ -298,7 +357,7 @@ Tem sugestões para o roadmap? Entre em contato:
 
 <div align="center">
 
-**Última atualização:** 2025-01-08
+**Última atualização:** 2025-01-18
 
 ⭐ **Star o projeto no GitHub para acompanhar o progresso!**
 

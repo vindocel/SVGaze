@@ -39,7 +39,27 @@ export const appState = {
 
   // Category icons (persisted during session)
   categoryIcons: {}, // { categoryName: { icon: SVGElement, style: 'Bold', fileName: 'heart.svg', itemPath: '...' } }
-  categoryIconStyle: null // 'Bold', 'Outline', etc. - ensures consistency across ALL categories
+  categoryIconStyle: null, // 'Bold', 'Outline', etc. - ensures consistency across ALL categories
+
+  // Editor state
+  editor: {
+    currentSVG: '', // Current SVG code being edited
+    fileName: 'untitled.svg', // Current file name
+    originalSize: 0, // Original file size in bytes
+    optimizedSize: 0, // Optimized file size in bytes
+    isModified: false, // Has the code been modified?
+    zoom: 100, // Preview zoom level (percentage)
+    showGrid: false, // Show grid in preview
+    showCheckered: false, // Show checkered background in preview
+    wordWrap: true, // Word wrap in code editor
+    history: {
+      past: [], // Undo stack
+      future: [] // Redo stack
+    }
+  },
+
+  // Current view ('gallery' or 'editor')
+  currentView: 'gallery'
 };
 
 /**

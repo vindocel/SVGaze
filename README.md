@@ -1,8 +1,8 @@
 # SVGaze 🔍
 
-> Visualizador moderno de ícones SVG — totalmente local, sem upload, 100% privacidade
+> Visualizador e editor moderno de ícones SVG — totalmente local, sem upload, 100% privacidade
 
-**SVGaze** é uma aplicação web open-source que permite visualizar, organizar e gerenciar arquivos SVG locais diretamente no navegador, sem necessidade de upload ou backend. Ideal para designers e desenvolvedores que trabalham com coleções de ícones, ilustrações ou vetores em formato SVG.
+**SVGaze** é uma aplicação web open-source que permite visualizar, organizar, editar e exportar arquivos SVG locais diretamente no navegador, sem necessidade de upload ou backend. Ideal para designers e desenvolvedores que trabalham com coleções de ícones, ilustrações ou vetores em formato SVG.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://app.svgaze.com)
@@ -42,6 +42,23 @@
 - **Copiar SVG** para área de transferência
 - **Copiar nome e caminho completo** do arquivo (ex: `Outline › Brands › Adobe.svg`)
 - **Contador de ícones** por categoria
+
+### ✏️ Editor Integrado
+- **Editor de código** com syntax highlighting para SVG/XML
+- **Preview ao vivo** com zoom (10%-5000%), pan e grid
+- **5 formatos de exportação**:
+  - Preview: Visualização com controles de zoom
+  - React: Componente JSX (TypeScript opcional)
+  - React Native: Template com react-native-svg
+  - PNG: Exportação com escalas 1x-4x
+  - Data URI: base64 e encodeURIComponent
+- **Otimização SVGO** com 20+ opções configuráveis
+- **Ferramentas de transformação**:
+  - Rotação (90°/-90°)
+  - Espelhamento (Horizontal/Vertical)
+  - Editor de dimensões com proporções
+- **Detecção inteligente de cores** para aplicação automática de tema
+- **Integração com galeria** — botão "Editar" nos cards e modal
 
 ### 🔒 Segurança e Privacidade
 - **100% processamento local** — seus arquivos nunca saem do navegador
@@ -133,9 +150,9 @@ icons/
 ## 🛠️ Tecnologias
 
 ### Arquitetura Modular
-- **15 módulos JavaScript ES6** — organização por responsabilidade
-- **8 arquivos CSS** — design system componentizado
-- **Zero dependências** — 100% vanilla
+- **26 módulos JavaScript ES6** — organização por responsabilidade
+- **12 arquivos CSS** — design system componentizado
+- **Zero dependências de runtime** — vanilla JS com CDN apenas para editor (CodeMirror, SVGO, Prism)
 
 ### APIs Utilizadas
 - **HTML5** — Estrutura semântica e acessível
@@ -157,11 +174,13 @@ js/
 ├── state.js                     # Estado centralizado
 ├── main.js                      # Orquestrador
 └── modules/
+    # Galeria
     ├── categoryManager.js       # 🧠 Categorização inteligente
     ├── categoryIconManager.js   # 🎨 Seleção de ícones por categoria
     ├── dropdownManager.js       # 📋 Dropdown customizado com teclado
     ├── utils.js                 # Utilitários
     ├── svgProcessor.js          # Parse e sanitização
+    ├── svgColorDetector.js      # 🎨 Detecção monocromático/multicolorido
     ├── fileHandler.js           # Processamento de arquivos
     ├── favoriteManager.js       # Sistema de favoritos
     ├── filterManager.js         # Busca e filtros
@@ -169,7 +188,21 @@ js/
     ├── sizeManager.js           # Controle de tamanho
     ├── clipboardManager.js      # Copiar/Download
     ├── modalManager.js          # Modal de preview
-    └── galleryRenderer.js       # Renderização do grid
+    ├── galleryRenderer.js       # Renderização do grid
+    # Editor
+    ├── viewManager.js           # 🔄 Gerenciamento Gallery ↔ Editor
+    ├── editorManager.js         # 🎯 Orquestrador do editor
+    ├── editorCodeManager.js     # 📝 Editor de código
+    ├── editorPreviewManager.js  # 👁️ Preview com zoom/pan
+    ├── editorToolsManager.js    # 🔧 Ferramentas principais
+    ├── editorExportManager.js   # 📤 Exportação multi-formato
+    ├── editorTabManager.js      # 📑 Sistema de abas
+    ├── editorTransformManager.js # 🔄 Rotação, flip
+    ├── editorDimensionsManager.js # 📐 Editor de dimensões
+    ├── editorSvgoManager.js     # ⚡ Integração SVGO
+    ├── editorSvgMapper.js       # ⚛️ Mapeamento React/RN
+    ├── editorSyntaxHighlighter.js # 🌈 Syntax highlighting
+    └── toast.js                 # 🔔 Notificações
 ```
 
 ### Sanitização de SVG
@@ -206,6 +239,7 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 ### Guias Disponíveis
 - 🚀 **[Início Rápido](docs/QUICK_START.md)** — Como começar em 30 segundos
 - 🧪 **[Como Testar Localmente](docs/HOW_TO_TEST.md)** — Guia completo com troubleshooting
+- ✏️ **[Editor SVG](docs/EDITOR.md)** — Documentação completa do editor
 - 🧠 **[Sistema de Categorização](docs/CATEGORIZATION.md)** — Como funciona a detecção inteligente
 - 🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)** — Solução de problemas comuns
 - 🗺️ **[Roadmap](docs/ROADMAP.md)** — Plano de desenvolvimento e próximas features
@@ -221,43 +255,29 @@ Para garantir segurança, todo SVG passa por sanitização que remove:
 | Versão | Status | Progresso |
 |--------|--------|-----------|
 | v1.0 - Visualizador | ✅ Concluído | 100% |
-| v1.1 - Melhorias UX | 🚧 Em Progresso | 88% |
-| v2.0 - Editor Básico | 📋 Planejado | 0% |
+| v1.1 - Melhorias UX | ✅ Concluído | 100% |
+| v2.0 - Editor SVG | ✅ Concluído | 100% |
+| v3.0 - Avançado | 📋 Planejado | 0% |
 
-### v1.1 - Em Progresso (88%) 🚧
-**Concluído:**
-- ✅ Arquitetura 100% modular (15 módulos JS + 8 CSS)
-- ✅ Sistema de categorização inteligente
-- ✅ Detecção automática de estilos (Outline, Solid, Linear, etc)
-- ✅ Suporte a estilos compostos ("Linear (Border)")
-- ✅ Suporte a separadores variados ("Name- Style", "Name - Style")
-- ✅ Badges de estilo nos cards
-- ✅ Unificação de categorias duplicadas
-- ✅ Layout de botões otimizado (★ Abrir Copiar)
-- ✅ Copiar caminho completo com nome do arquivo
-- ✅ Tema claro/escuro com toggle
-- ✅ Cores adaptativas por tema (SVGs pretos/brancos)
-- ✅ Tema escuro com paleta cinza neutra
-- ✅ Renderização correta de ícones stroke-only
-- ✅ Ordenação inteligente agrupando variantes
-- ✅ Seção de favoritos dedicada (sem duplicação)
-- ✅ Ícones de categoria com seleção semântica inteligente
-- ✅ Dropdown customizado com navegação por teclado
-- ✅ Ícones visuais no menu de categorias
-- ✅ Logo e branding unificado com interação (click to home)
-- ✅ Favicon dinâmico baseado em tema do sistema
+### v2.0 - Editor SVG ✅
+**Todas as funcionalidades implementadas:**
+- ✅ Editor de código com syntax highlighting
+- ✅ Preview ao vivo com zoom/pan
+- ✅ 5 formatos de exportação (Preview, React, React Native, PNG, Data URI)
+- ✅ Modal SVGO com 20+ opções de otimização
+- ✅ Ferramentas de transformação (rotação, flip, dimensões)
+- ✅ Botão "Editar" nos cards e modal da galeria
+- ✅ Detecção inteligente de cores (monocromático vs multicolorido)
+- ✅ Sistema de toast para notificações
+- ✅ Nova logo polida 400x400
+- ✅ Favicons dinâmicos por tema
 
-**Em Desenvolvimento:**
-- 🌍 Internacionalização completa (pt-BR e en-US)
-- ⌨️ Atalhos de teclado expandidos
-- 🎯 Drag & drop de arquivos
-
-### v2.0 - Próximas Features
-- ✏️ Editor básico de SVG
-- 🎨 Manipulação de cores por camada
+### v3.0 - Próximas Features
+- 🖌️ Edição visual de paths
 - 📑 Gerenciamento de camadas
-- 📐 Transformações (redimensionar, rotacionar)
-- 💾 Exportação otimizada (SVGO)
+- 🎨 Color picker inline
+- 📂 Histórico de arquivos recentes
+- 🌍 Internacionalização completa (pt-BR e en-US)
 
 ---
 
@@ -328,7 +348,7 @@ Embora o código seja open-source sob licença MIT, **"SVGaze"** e **"svgaze.com
 
 🟢 **Ativo** — Em desenvolvimento ativo com melhorias contínuas
 
-**Última atualização:** 2025-01-09
+**Última atualização:** 2025-01-18
 
 ---
 

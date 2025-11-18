@@ -7,7 +7,49 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
-### Adicionado
+### Adicionado - Nova View de Editor SVG
+- **Sistema de visualização dual** (Galeria ↔ Editor) com gerenciador de views
+- **Editor de código** com syntax highlighting customizado para SVG/XML
+- **Preview ao vivo** com controles de zoom (10%-5000%), pan e alternância de grid/checkered
+- **Sistema de 5 abas de exportação**:
+  - Preview: Visualização do SVG com controles de zoom
+  - React: Conversão para componente JSX com opções (TypeScript, aspas simples)
+  - React Native: Template de componente com react-native-svg
+  - PNG: Exportação de imagem com seletor de escala (1x-4x)
+  - Data URI: Geração de URI base64 e encodeURIComponent
+- **Modal SVGO** com 20+ opções de otimização configuráveis
+- **Ferramentas de transformação**:
+  - Rotação (90° horário e anti-horário)
+  - Espelhamento (Horizontal e Vertical)
+  - Editor de dimensões com bloqueio proporcional
+- **Botão "Editar"** nos cards e modal da galeria para abrir SVG no editor
+- **Detecção inteligente de cores** (monocromático vs multicolorido) para aplicação automática de tema
+- **Resolução de cores CSS** para SVGs com `<style>` tags e classes (ex: `.fil1 {fill:black}`)
+- **Sistema de toast** para notificações de ações do usuário
+- **14 novos módulos JavaScript** do editor:
+  - `viewManager.js` - Gerenciamento de views
+  - `editorManager.js` - Orquestrador principal
+  - `editorCodeManager.js` - Editor de código
+  - `editorPreviewManager.js` - Preview com zoom/pan
+  - `editorToolsManager.js` - Ferramentas principais
+  - `editorExportManager.js` - Exportação multi-formato
+  - `editorTabManager.js` - Sistema de abas
+  - `editorTransformManager.js` - Transformações
+  - `editorDimensionsManager.js` - Editor de dimensões
+  - `editorSvgoManager.js` - Integração SVGO
+  - `editorSvgMapper.js` - Mapeamento SVG para React/RN
+  - `editorSyntaxHighlighter.js` - Syntax highlighting
+  - `svgColorDetector.js` - Detecção de cores
+  - `toast.js` - Notificações
+- **3 novos arquivos CSS**: `editor.css`, `svgo-modal.css`, `toast.css`
+
+### Adicionado - Branding Atualizado
+- Nova logo polida com viewBox 400x400
+- Favicons dinâmicos (dark/light) que adaptam ao tema do sistema
+- Logo interativa (clique navega para galeria ou abre no editor)
+- Tradução "Carregar SVG" para botão de upload no editor
+
+### Adicionado - Melhorias na Galeria
 - Seção de favoritos dedicada no topo da galeria com destaque visual
 - Ícones de categoria nos cabeçalhos da galeria
 - Ícones de categoria no menu de filtro de categorias
@@ -22,10 +64,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Adaptação automática de cores dos ícones ao tema (claro/escuro)
 
 ### Alterado
+- Arquitetura expandida para **26 módulos JavaScript ES6** (era 15)
+- **12 componentes CSS** modulares (era 8)
 - Favoritos agora aparecem apenas na seção "⭐ Favoritos", não mais duplicados nas categorias originais
 - Menu de categorias usa dropdown customizado em vez de `<select>` padrão
 - Ícones de categoria agora usam correspondência semântica inteligente em vez de seleção aleatória
-- Melhorada visualização do dropdown para não ser cortado pela toolbar
+- Zoom do preview exibe valores inteiros (ex: "106%" em vez de "106.1520150601%")
+- Preview PNG renderiza em tamanho limitado (máx 400px) para melhor visualização
 
 ### Corrigido
 - Problema de texto cortado no botão do dropdown

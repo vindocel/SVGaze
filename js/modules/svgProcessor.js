@@ -6,6 +6,7 @@
  */
 
 import { logError } from './utils.js';
+import { isSVGMonochromatic } from './svgColorDetector.js';
 
 /**
  * Parse and sanitize SVG text
@@ -147,13 +148,72 @@ export function ensureViewBox(svgEl) {
 }
 
 /**
+ * Resolve CSS-defined colors to inline attributes
+ * Handles SVGs that use <style> tags and CSS classes instead of inline colors
+ * @param {SVGElement} svgEl - SVG element to process
+ */
+function resolveCSSStylesToAttributes(svgEl) {
+  if (!svgEl) return;
+
+  try {
+    const walker = document.createTreeWalker(svgEl, NodeFilter.SHOW_ELEMENT);
+
+    while (walker.nextNode()) {
+      const el = walker.currentNode;
+      const className = el.getAttribute('class');
+
+      if (!className) continue;
+
+      // Find all <style> tags in the SVG
+      const styleElements = svgEl.querySelectorAll('style');
+      styleElements.forEach(styleEl => {
+        const cssText = styleEl.textContent;
+
+        // Extract CSS rules for this class (escape special regex characters)
+        const escapedClassName = className.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const classRegex = new RegExp(`\\.${escapedClassName}\\s*\\{([^}]+)\\}`, 'g');
+        const matches = cssText.match(classRegex);
+
+        if (matches) {
+          matches.forEach(rule => {
+            const fillMatch = rule.match(/fill:\s*([^;}\s]+)/);
+            const strokeMatch = rule.match(/stroke:\s*([^;}\s]+)/);
+
+            if (fillMatch && fillMatch[1] !== 'none' && fillMatch[1] !== 'transparent') {
+              // Remove the class and apply fill as inline attribute
+              el.removeAttribute('class');
+              el.setAttribute('fill', fillMatch[1]);
+            }
+            if (strokeMatch && strokeMatch[1] !== 'none' && strokeMatch[1] !== 'transparent') {
+              el.setAttribute('stroke', strokeMatch[1]);
+            }
+          });
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error resolving CSS styles to attributes:', error);
+  }
+}
+
+/**
  * Apply currentColor to SVG elements for color control
  * Replaces fill and stroke colors with currentColor to enable CSS color control
+ * Only applies to monochromatic SVGs - multicolor SVGs preserve original colors
  *
  * @param {SVGElement} svgEl - SVG element to process
  */
 export function applyCurrentColorToSVG(svgEl) {
   if (!svgEl) return;
+
+  // FIRST: Resolve CSS classes to inline attributes before color detection
+  resolveCSSStylesToAttributes(svgEl);
+
+  // Detect if SVG is monochromatic or multicolor
+  if (!isSVGMonochromatic(svgEl)) {
+    console.log('🎨 Multicolor SVG detected - preserving original colors');
+    return; // Skip color transformation for multicolor SVGs
+  }
 
   try {
     const walker = document.createTreeWalker(svgEl, NodeFilter.SHOW_ELEMENT);

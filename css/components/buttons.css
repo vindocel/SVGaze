@@ -157,6 +157,16 @@
   border-color: var(--primary-hover);
 }
 
+.small-btn.edit {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.small-btn.edit:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
 .small-btn.success {
   background: var(--success);
   color: #ffffff;

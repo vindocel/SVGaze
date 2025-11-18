@@ -5,6 +5,7 @@
  * This is the only script loaded by index.html.
  */
 
+import { initI18n, t } from '../i18n/i18n.js';
 import { appState } from './state.js';
 import { initFileHandler } from './modules/fileHandler.js';
 import { initGallery, renderGallery, populateCategoryFilter } from './modules/galleryRenderer.js';
@@ -16,6 +17,8 @@ import { clearAllFavorites } from './modules/favoriteManager.js';
 import { debounce } from './modules/utils.js';
 import { initializeCategoryIcons } from './modules/categoryIconManager.js';
 import { initDropdown } from './modules/dropdownManager.js';
+import { initViewManager } from './modules/viewManager.js';
+import { initEditorManager } from './modules/editorManager.js';
 
 // DOM Elements
 let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle, appBranding;
@@ -28,6 +31,9 @@ let userChangedColor = false;
  */
 function init() {
   console.log('🎨 SVGaze initializing...');
+
+  // Initialize i18n system first
+  initI18n();
 
   // Get DOM elements
   dirInput = document.getElementById('dir');
@@ -43,6 +49,8 @@ function init() {
   // Initialize modules
   initGallery();
   initModal();
+  initViewManager();
+  initEditorManager();
 
   // Setup file handler
   initFileHandler(
@@ -110,7 +118,7 @@ function setupEventListeners() {
   // Clear favorites
   if (clearFavBtn) {
     clearFavBtn.addEventListener('click', () => {
-      if (confirm('Tem certeza que deseja limpar todos os favoritos?')) {
+      if (confirm(t('confirmations.clearFavorites'))) {
         clearAllFavorites();
         renderGallery();
       }
@@ -130,25 +138,59 @@ function setupEventListeners() {
       const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
+
+      // Dispatch custom event to notify editor preview of theme change
+      window.dispatchEvent(new CustomEvent('theme-changed', {
+        detail: { theme: newTheme }
+      }));
     });
   }
 
-  // Logo branding - click to reset/go home
+  // Logo branding - different behavior based on current view
   if (appBranding) {
-    appBranding.addEventListener('click', () => {
-      // Reset all filters
-      if (searchInput) searchInput.value = '';
-      setSearchFilter('');
-      setCategoryFilter('all');
+    appBranding.style.cursor = 'pointer';
+    appBranding.addEventListener('click', async () => {
+      const currentView = appState.currentView;
 
-      // Reset dropdown to "Todas as categorias"
-      if (categoryDropdown) {
-        const trigger = categoryDropdown.querySelector('.dropdown-trigger');
-        if (trigger) trigger.textContent = 'Todas as categorias';
+      if (currentView === 'editor') {
+        // If in editor, load logo SVG into editor at 400x400
+        const { openInEditor } = await import('./modules/viewManager.js');
+
+        // Detect current theme and get the correct logo
+        const currentTheme = document.documentElement.getAttribute('data-theme') ||
+                             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const logoClass = currentTheme === 'dark' ? 'dark-theme-logo' : 'light-theme-logo';
+        const logoSvg = document.querySelector(`.app-logo.${logoClass}`);
+        if (logoSvg) {
+          // Clone and modify to 400x400
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(logoSvg.outerHTML, 'image/svg+xml');
+          const svg = doc.querySelector('svg');
+
+          if (svg) {
+            svg.setAttribute('width', '400');
+            svg.setAttribute('height', '400');
+
+            const serializer = new XMLSerializer();
+            const svgCode = serializer.serializeToString(svg);
+            openInEditor(svgCode, 'svgaze-logo.svg');
+          }
+        }
+      } else {
+        // If in gallery, reset filters (original behavior)
+        if (searchInput) searchInput.value = '';
+        setSearchFilter('');
+        setCategoryFilter('all');
+
+        // Reset dropdown to "Todas as categorias"
+        if (categoryDropdown) {
+          const trigger = categoryDropdown.querySelector('.dropdown-trigger');
+          if (trigger) trigger.textContent = t('header.allCategories');
+        }
+
+        // Re-render gallery
+        renderGallery();
       }
-
-      // Re-render gallery
-      renderGallery();
     });
   }
 

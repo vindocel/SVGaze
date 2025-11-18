@@ -48,6 +48,7 @@ export const translations = {
     favorite: 'Favoritar',
     unfavorite: 'Remover dos favoritos',
     open: 'Abrir',
+    edit: 'Editar',
     copy: 'Copiar',
     download: 'Baixar',
     invalidSvg: 'SVG inválido'
@@ -88,10 +89,147 @@ export const translations = {
     gridLive: 'Grade de ícones atualizada'
   },
 
-  // === Footer ===
-  footer: {
-    text: 'SVGaze - Visualizador moderno de ícones SVG',
-    features: 'Funcionalidades: busca, filtro por categoria, modal, favoritos, personalização de cor e tamanho'
+  // === Views ===
+  views: {
+    gallery: 'Galeria',
+    editor: 'Editor'
+  },
+
+  // === Upload File ===
+  uploadFile: 'Carregar SVG',
+
+  // === Editor Tools ===
+  editor: {
+    // Buttons
+    upload: 'Upload',
+    uploadTitle: 'Upload SVG',
+    copy: 'Copiar',
+    copyTitle: 'Copiar código SVG',
+    download: 'Baixar',
+    downloadTitle: 'Baixar SVG',
+    optimize: 'Otimizar',
+    optimizeTitle: 'Otimizar SVG',
+    prettify: 'Formatar',
+    prettifyTitle: 'Formatar código',
+
+    // Tools
+    rotate: 'Rotacionar 90°',
+    flipHorizontal: 'Espelhar Horizontal',
+    flipVertical: 'Espelhar Vertical',
+    dimensions: 'Alterar dimensões',
+    dimensionsModal: 'DIMENSÕES',
+    widthLabel: 'L',
+    heightLabel: 'A',
+    lockProportions: 'Travar proporções',
+    apply: 'Aplicar',
+
+    // Messages
+    placeholder: 'Cole ou digite código SVG no editor',
+    noContent: 'Nenhum SVG para visualizar',
+    invalidSvg: 'SVG inválido',
+    optimized: 'Otimizado',
+
+    // Theme toggle
+    themeToggle: 'Alternar tema claro/escuro'
+  },
+
+  // === Export Tabs ===
+  exportTabs: {
+    preview: 'Prévia',
+    react: 'React',
+    reactNative: 'React Native',
+    png: 'PNG',
+    dataUri: 'Data URI',
+    reactComponent: 'Componente React',
+    reactNativeComponent: 'Componente React Native'
+  },
+
+  // === Export Settings ===
+  exportSettings: {
+    typescript: 'TypeScript',
+    singleQuotes: 'Aspas Simples',
+    stripSemicolons: 'Remover Ponto e Vírgula',
+    minifiedDataUri: 'Data URI Minificado',
+    base64: 'base64',
+    encodeUriComponent: 'encodeURIComponent',
+    downloadJsx: 'Baixar JSX',
+    downloadPng: 'Baixar PNG',
+    copyCode: 'Copiar código'
+  },
+
+  // === Preview Controls ===
+  preview: {
+    zoomIn: 'Aumentar Zoom',
+    zoomOut: 'Diminuir Zoom',
+    fitToView: 'Ajustar à Tela',
+    toggleGrid: 'Alternar Grade',
+    toggleCheckered: 'Alternar Fundo Quadriculado',
+    downloadSvg: 'Baixar SVG',
+    dimensionsPlaceholder: '—'
+  },
+
+  // === Toast Messages ===
+  toasts: {
+    // Success
+    svgCopied: '✓ Código SVG copiado!',
+    svgDownloaded: '✓ SVG baixado!',
+    codeCopied: '✓ Código copiado!',
+    reactCopied: '✓ Código React copiado!',
+    reactNativeCopied: '✓ Código React Native copiado!',
+    jsxDownloaded: '✓ JSX baixado!',
+    pngExported: '✓ PNG exportado!',
+    dataUriCopied: '✓ Data URI copiado!',
+    svgFormatted: '✓ SVG formatado!',
+    svgMinified: '✓ SVG minificado!',
+    svgValid: '✓ SVG válido!',
+    svgRotated: '✅ Rotacionado {degrees}°',
+    svgFlipped: '✅ Espelhado {axis}mente',
+    dimensionsApplied: '✅ Dimensões: {width}×{height}',
+    transformsReset: '✅ Transformações resetadas',
+    settingsRestored: '✅ Configurações restauradas',
+    codeManualCopy: 'Código copiado! (ou pressione Ctrl+C para copiar manualmente)',
+
+    // Errors
+    errorCopy: '✗ Erro ao copiar',
+    errorExportPng: '✗ Erro ao exportar PNG',
+    errorNoContent: '✗ Nenhum SVG para exportar',
+    errorFormat: 'Erro ao formatar SVG.',
+    errorMinify: 'Erro ao minificar SVG.',
+    errorValidate: 'Erro ao validar SVG.',
+    errorRotate: '❌ Erro ao rotacionar SVG',
+    errorFlip: '❌ Erro ao espelhar SVG',
+    errorDimensions: '❌ Erro ao aplicar dimensões',
+    errorTransforms: '❌ Erro ao resetar transformações',
+    errorOptimize: '❌ Erro ao otimizar SVG',
+    errorExport: 'Erro ao exportar para {format}.',
+    errorReactConvert: 'Erro ao converter para React JSX.',
+    errorReactNativeConvert: 'Erro ao converter para React Native.',
+    errorDataUriCreate: 'Erro ao criar Data URI.',
+    errorReadFile: 'Erro ao ler o arquivo. Por favor, tente novamente.',
+
+    // Warnings
+    warningNoSvgElement: '⚠️ Nenhum elemento SVG encontrado',
+    warningNoSvgToOptimize: '⚠️ Nenhum código SVG para otimizar',
+    warningNoContentToCopy: 'Não há conteúdo para copiar.',
+    warningNoContentToDownload: 'Não há conteúdo para baixar.',
+    warningNoContentToFormat: 'Não há conteúdo para formatar.',
+    warningNoContentToMinify: 'Não há conteúdo para minificar.',
+    warningNoContentToValidate: 'Não há conteúdo para validar.',
+    warningNoContentToExport: 'Não há conteúdo para exportar.',
+    warningInvalidFile: 'Por favor, selecione um arquivo SVG válido.',
+    warningInvalidDimensions: 'Por favor, insira dimensões válidas.',
+    warningSyntaxError: '❌ Erro de sintaxe no SVG:\n\n{error}',
+    warningNoSvgTag: '❌ Nenhum elemento <svg> encontrado.'
+  },
+
+  // === Favorites ===
+  favorites: {
+    title: '⭐ Favoritos'
+  },
+
+  // === Validation Messages ===
+  validation: {
+    noSvgFiles: 'Nenhum arquivo .svg encontrado na pasta selecionada.'
   },
 
   // === Keyboard Shortcuts ===

@@ -90,7 +90,7 @@ http://localhost:8000
    - `icons/Solid/Brands/`
 3. Cada um com badge correto
 
-### Funcionalidades
+### Funcionalidades da Galeria
 - 🎨 Mudar cor → ícones mudam
 - 📏 Mudar tamanho → ícones crescem/diminuem
 - 🔍 Buscar → filtra instantaneamente
@@ -98,6 +98,21 @@ http://localhost:8000
 - 📂 Modal → preview grande
 - 📋 Copiar → código no clipboard
 - ⬇️ Download → arquivo baixado
+- ✏️ Editar → abre no Editor
+
+### 5️⃣ Usar o Editor SVG
+1. Clicar no botão **"Editor"** no header
+2. Ou clicar em **"Editar"** em qualquer card
+3. Editor abre com o SVG carregado
+
+### Funcionalidades do Editor
+- 📝 Editar código com syntax highlighting
+- 👁️ Preview atualiza em tempo real
+- 🔍 Zoom com Ctrl+scroll ou botões
+- 🔄 Rotacionar e espelhar SVG
+- ⚡ Otimizar com SVGO
+- 📤 Exportar: React, React Native, PNG, Data URI
+- 📐 Alterar dimensões com proporções
 
 ---
 
@@ -130,6 +145,7 @@ Categorization Stats: {...}
 
 ## 📚 Mais Informações
 
+- **Editor SVG:** [EDITOR.md](EDITOR.md)
 - **Testes completos:** [HOW_TO_TEST.md](HOW_TO_TEST.md)
 - **Documentação:** [CATEGORIZATION.md](CATEGORIZATION.md)
 - **Roadmap:** [ROADMAP.md](ROADMAP.md)

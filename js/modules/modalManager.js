@@ -7,14 +7,16 @@ import { appState } from '../state.js';
 import { escapeHtml } from './utils.js';
 import { parseAndSanitizeSVG, ensureViewBox, applyCurrentColorToSVG, getSVGText } from './svgProcessor.js';
 import { copySVGCode, copyFileName, copyFilePath } from './clipboardManager.js';
+import { openInEditor } from './viewManager.js';
 
-let modalBackdrop, modalContent, modalCopyBtn, modalNameBtn, modalPathBtn, modalCloseBtn;
+let modalBackdrop, modalContent, modalCopyBtn, modalNameBtn, modalEditBtn, modalPathBtn, modalCloseBtn;
 
 export function initModal() {
   modalBackdrop = document.getElementById('modalBackdrop');
   modalContent = document.getElementById('modalContent');
   modalCopyBtn = document.getElementById('modalCopy');
   modalNameBtn = document.getElementById('modalName');
+  modalEditBtn = document.getElementById('modalEdit');
   modalPathBtn = document.getElementById('modalPath');
   modalCloseBtn = document.getElementById('modalClose');
 
@@ -89,6 +91,15 @@ export function openModal(item) {
   }
   if (modalNameBtn) {
     modalNameBtn.onclick = () => copyFileName(item, modalNameBtn);
+  }
+  if (modalEditBtn) {
+    modalEditBtn.onclick = () => {
+      const svgText = getSVGText(item);
+      if (svgText) {
+        openInEditor(svgText, item.name);
+        closeModal();
+      }
+    };
   }
   if (modalPathBtn) {
     modalPathBtn.onclick = () => copyFilePath(item, modalPathBtn);

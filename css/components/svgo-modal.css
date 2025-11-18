@@ -1,0 +1,144 @@
+/**
+ * SVGaze - SVGO Configuration Modal Styles
+ *
+ * Styles for the SVGO optimization settings modal
+ */
+
+/* === SVGO Modal Specific Styles === */
+.svgo-modal-content {
+  max-width: 700px;
+  max-height: 80vh;
+}
+
+.svgo-modal-body {
+  max-height: calc(80vh - 180px);
+  overflow-y: auto;
+}
+
+/* === Plugins Grid === */
+.svgo-plugins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: var(--space-md);
+}
+
+/* === Plugin Item === */
+.svgo-plugin-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.svgo-plugin-item:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-hover);
+}
+
+.svgo-plugin-item input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.svgo-plugin-item span {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.svgo-plugin-item input[type="checkbox"]:checked + span {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary);
+}
+
+/* === Modal Footer Actions === */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.modal-footer .btn {
+  white-space: nowrap;
+}
+
+/* === Responsive Design === */
+@media (max-width: 600px) {
+  .svgo-plugins-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .svgo-modal-content {
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+
+  .svgo-modal-body {
+    max-height: calc(90vh - 180px);
+  }
+
+  .modal-footer {
+    flex-wrap: wrap;
+  }
+
+  .modal-footer .btn {
+    flex: 1;
+    min-width: 100px;
+  }
+}
+
+/* === Scrollbar Styling === */
+.svgo-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.svgo-modal-body::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-radius: 4px;
+}
+
+.svgo-modal-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.svgo-modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* === Animation === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal.active .svgo-modal-content {
+  animation: slideUp 0.2s ease-out;
+}

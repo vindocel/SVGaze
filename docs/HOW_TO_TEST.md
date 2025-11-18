@@ -89,7 +89,7 @@ Cada card deve ter:
 - Ambos na mesma lista!
 - Cada um com seu badge correto
 
-### 5. Testar Funcionalidades
+### 5. Testar Funcionalidades da Galeria
 - [ ] **Busca:** Digite "Adobe" → filtra
 - [ ] **Cor:** Mude cor → ícones mudam
 - [ ] **Tamanho:** Arraste slider → ícones crescem
@@ -97,6 +97,83 @@ Cada card deve ter:
 - [ ] **Modal:** Clique "Abrir" → preview grande
 - [ ] **Copiar:** Clique "Copiar" → código copiado
 - [ ] **Download:** Clique "Baixar" → arquivo baixado
+- [ ] **Editar:** Clique "Editar" → abre no Editor
+
+---
+
+## ✏️ Testando o Editor SVG
+
+### 1. Acessar o Editor
+- [ ] Clicar botão **"Editor"** no header
+- [ ] Ou clicar **"Editar"** em qualquer card da galeria
+- [ ] Editor deve abrir com interface split-pane
+
+### 2. Carregar SVG
+- [ ] Clicar **"Carregar SVG"** → selecionar arquivo
+- [ ] Arquivo carrega no editor
+- [ ] Nome do arquivo atualiza
+- [ ] Preview mostra o SVG
+
+### 3. Editar Código
+- [ ] Digitar/colar código SVG no editor
+- [ ] Preview atualiza em tempo real
+- [ ] Syntax highlighting funciona (cores nas tags)
+- [ ] Tab insere 2 espaços
+
+### 4. Controles de Preview
+- [ ] **Zoom +/-:** Botões funcionam
+- [ ] **Ctrl + Scroll:** Zoom com mouse funciona
+- [ ] **Fit to View:** Ajusta ao tamanho da área
+- [ ] **Pan:** Ctrl + Click + Arraste move o preview
+- [ ] **Grid toggle:** Liga/desliga grade
+- [ ] **Checkered toggle:** Liga/desliga fundo xadrez
+- [ ] **Dimensões:** Mostra largura × altura
+
+### 5. Ferramentas de Transformação
+- [ ] **Rotação 90° horário:** SVG gira para direita
+- [ ] **Rotação 90° anti-horário:** SVG gira para esquerda
+- [ ] **Flip Horizontal:** Espelha horizontalmente
+- [ ] **Flip Vertical:** Espelha verticalmente
+- [ ] **Editor de dimensões:** Altera tamanho com proporções
+
+### 6. Otimização SVGO
+- [ ] Clicar botão **SVGO** → modal abre
+- [ ] Configurar plugins (checkboxes)
+- [ ] Clicar **Otimizar** → código otimizado
+- [ ] Mostra comparação: "578 bytes → 493 bytes (-15%)"
+- [ ] **Reset** restaura configurações padrão
+
+### 7. Abas de Exportação
+- [ ] **Preview:** Mostra SVG com controles de zoom
+- [ ] **React:** Gera componente JSX
+  - [ ] Toggle TypeScript funciona
+  - [ ] Toggle aspas simples funciona
+  - [ ] Botão Copiar copia código
+- [ ] **React Native:** Mostra template com instruções
+  - [ ] Botão Copiar funciona
+- [ ] **PNG:** Mostra preview da imagem
+  - [ ] Seletor de escala (1x-4x) funciona
+  - [ ] Botão Download baixa PNG
+- [ ] **Data URI:** Mostra URI codificada
+  - [ ] Toggle base64/encoded funciona
+  - [ ] Botão Copiar funciona
+
+### 8. Integração com Galeria
+- [ ] Clicar "Editar" no card → abre no Editor com SVG
+- [ ] Clicar "Editar" no modal → abre no Editor com SVG
+- [ ] Nome do arquivo aparece no editor
+- [ ] Switch Gallery ↔ Editor no header funciona
+
+### 9. Sistema de Toast
+- [ ] Copiar código → toast "Copiado!" aparece
+- [ ] Erro → toast vermelho aparece
+- [ ] Toast desaparece automaticamente
+
+### 10. Tema Claro/Escuro
+- [ ] Editor adapta cores ao tema
+- [ ] Syntax highlighting muda cores
+- [ ] Preview adapta ao tema
+- [ ] SVGs monocromáticos mudam cor (preto/branco)
 
 ---
 
@@ -163,7 +240,7 @@ svgViewer.getAll().map(i => i.category)
 
 ## ✅ Checklist de Testes
 
-### Funcionalidades Básicas:
+### Funcionalidades da Galeria:
 - [ ] Servidor HTTP funcionando
 - [ ] Ícones carregam da pasta `icons/`
 - [ ] Categorias corretas (Brands, Communication, etc)
@@ -173,7 +250,24 @@ svgViewer.getAll().map(i => i.category)
 - [ ] Cor e tamanho funcionam
 - [ ] Modal abre e fecha
 - [ ] Copiar e download funcionam
+- [ ] Botão "Editar" funciona
 - [ ] Console sem erros
+
+### Funcionalidades do Editor:
+- [ ] Editor abre corretamente
+- [ ] Carregar SVG funciona
+- [ ] Syntax highlighting funciona
+- [ ] Preview ao vivo funciona
+- [ ] Zoom e pan funcionam
+- [ ] Rotação e flip funcionam
+- [ ] SVGO otimiza corretamente
+- [ ] Exportação React funciona
+- [ ] Exportação React Native funciona
+- [ ] Exportação PNG funciona
+- [ ] Exportação Data URI funciona
+- [ ] Toast notifications aparecem
+- [ ] Integração com galeria funciona
+- [ ] Tema claro/escuro adapta
 
 ---
 
