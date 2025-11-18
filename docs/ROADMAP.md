@@ -248,35 +248,16 @@ Adicionar edição visual avançada e funcionalidades de produtividade.
 - [ ] Simplificar paths automaticamente
 - [ ] Suavizar curvas
 
-#### 📑 Gerenciamento de Camadas
-- [ ] Lista de camadas/elementos do SVG
-- [ ] Mostrar/ocultar camadas
-- [ ] Renomear camadas
-- [ ] Reordenar camadas (z-index)
-- [ ] Agrupar/desagrupar elementos
-- [ ] Bloquear camadas
-
 #### 🎨 Color Picker Inline
 - [ ] Selecionar cores diretamente no preview
 - [ ] Alterar cor de elementos individuais
 - [ ] Paleta de cores sugeridas
 - [ ] Histórico de cores usadas
 
-#### 📂 Histórico de Arquivos
-- [ ] Lista de arquivos recentes
-- [ ] Persistência entre sessões
-- [ ] Abrir arquivos recentes rapidamente
-
 #### 🌍 Internacionalização Completa
 - [ ] Idioma Inglês (en-US)
 - [ ] Seletor de idioma no header
 - [ ] Detecção automática do idioma do navegador
-
-#### 📊 Estatísticas e Informações
-- [ ] Painel de estatísticas
-- [ ] Exibir tamanho dos arquivos SVG
-- [ ] Mostrar dimensões originais
-- [ ] Gráfico de distribuição por categoria
 
 ---
 

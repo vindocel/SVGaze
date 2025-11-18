@@ -378,12 +378,9 @@ css/components/
 ## 🔮 Próximas Melhorias (v3.0)
 
 - [ ] Edição visual de paths (pontos de controle)
-- [ ] Gerenciamento de camadas
 - [ ] Color picker inline
-- [ ] Histórico de arquivos recentes
-- [ ] Buscar e substituir
-- [ ] Auto-complete de tags SVG
-- [ ] Salvar rascunhos no localStorage
+
+**[📖 Ver roadmap completo](ROADMAP.md)**
 
 ---
 
