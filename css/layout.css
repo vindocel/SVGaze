@@ -137,18 +137,41 @@ header h1 {
 
 /* === Secondary Toolbar === */
 .secondary-toolbar {
+  position: sticky;
+  top: 60px;
+  z-index: var(--z-sticky);
   display: flex;
   gap: var(--space-md);
   align-items: center;
   padding: var(--space-md) var(--space-lg);
   background: var(--card);
+
+  /* Border completa por padrão */
   border: 1px solid var(--border);
+
+  /* Cantos arredondados completos por padrão */
   border-radius: var(--radius-lg);
+
+  /* Sombra completa */
   box-shadow: var(--shadow-sm);
+
+  /* Margem superior para separar do header quando não sticky */
+  margin-top: var(--space-lg);
   margin-bottom: var(--space-lg);
+
   overflow-x: auto;
   overflow-y: visible;
   flex-wrap: wrap;
+
+  /* Quando fica sticky, remove margem superior e ajusta visual */
+  /* O navegador remove o margin-top automaticamente quando sticky */
+}
+
+/* Stuck state - unified with header when scrolled */
+.secondary-toolbar.is-stuck {
+  border-top: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  margin-top: 0;
 }
 
 /* Allow dropdown to escape toolbar bounds when open */
@@ -192,15 +215,191 @@ footer {
   font-size: var(--font-size-sm);
 }
 
+/* === Mobile Toolbar Toggle === */
+.mobile-toolbar-toggle {
+  display: none; /* Escondido em desktop */
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: var(--space-sm);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  gap: 0;
+}
+
+/* Hide text "Filtros" on mobile */
+.mobile-toolbar-toggle span {
+  display: none;
+}
+
+.mobile-toolbar-toggle svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.secondary-toolbar-content {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Search input expands to fill available space on desktop */
+#search {
+  flex: 1 1 auto;
+  min-width: 180px;
+  max-width: 400px;
+}
+
 /* === Responsive === */
 @media (max-width: 640px) {
   header.app-header {
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    gap: var(--space-xs);
   }
 
+  /* Reduzir tamanho do logo e branding */
+  .app-branding {
+    padding: 2px 6px 2px 2px;
+    gap: 4px;
+  }
+
+  .app-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .app-name {
+    font-size: var(--font-size-base);
+  }
+
+  /* Reduzir tamanho dos botões de view toggle */
+  .view-toggle {
+    gap: 4px;
+  }
+
+  .view-toggle-btn {
+    padding: 6px 8px;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Ocultar texto dos botões em mobile, mostrar apenas ícones */
+  .view-toggle-btn .btn-text {
+    display: none;
+  }
+
+  /* Reduzir espaçamento dos controls */
+  .controls {
+    gap: 6px;
+  }
+
+  /* Reduzir tamanho do switch de tema */
+  .switch {
+    --width-of-switch: 2.8em;
+    --height-of-switch: 1.6em;
+    --size-of-icon: 1.1em;
+    --slider-offset: 0.25em;
+  }
+
+  /* Reduzir tamanho do botão mobile */
+  .mobile-toolbar-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+
+  .mobile-toolbar-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Mobile toolbar as dropdown */
   .secondary-toolbar {
-    padding: var(--space-sm) var(--space-md);
-    gap: var(--space-sm);
+    padding: 0;
+    gap: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    margin-top: var(--space-md);
+  }
+
+  /* Show mobile toggle button in header */
+  .mobile-toolbar-toggle {
+    display: flex;
+  }
+
+  .mobile-toolbar-toggle:hover {
+    background: var(--bg);
+  }
+
+  .mobile-toolbar-toggle:active {
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  /* Hide toolbar content by default on mobile */
+  .secondary-toolbar-content {
+    display: none;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+    margin-top: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Show when toggled */
+  .secondary-toolbar.is-open .secondary-toolbar-content {
+    display: flex;
+  }
+
+  /* All items full width matching menu container */
+  .secondary-toolbar-content > *:not(input[type="file"]) {
+    width: 100%;
+    max-width: none;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  /* Ensure dropdown also fills width */
+  .secondary-toolbar-content .custom-dropdown {
+    width: 100%;
+  }
+
+  .secondary-toolbar-content .custom-dropdown .dropdown-trigger {
+    width: 100%;
+  }
+
+  /* Search input full width on mobile */
+  #search {
+    width: 100%;
+    max-width: none;
+    min-width: auto;
+  }
+
+  /* Range slider labels */
+  .secondary-toolbar-content label.input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    width: 100%;
+  }
+
+  .secondary-toolbar-content label.input input[type="range"] {
+    width: 100%;
+    margin-left: 0 !important;
   }
 
   main#gallery {

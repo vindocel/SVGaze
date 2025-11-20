@@ -8,11 +8,13 @@
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  min-height: 160px;
+  padding: 10px;
+  gap: 10px;
+  min-height: auto;
   transition: all var(--transition-fast);
 }
 
@@ -34,13 +36,16 @@
 
 /* === Preview Area === */
 .preview {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-lg);
-  min-height: 110px;
+  aspect-ratio: 1 / 1;
+  width: 100%;
   color: var(--text-muted);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.01), transparent);
+  background: var(--bg);
+  border-radius: var(--radius-md);
 }
 
 /* SVG Wrapper - maintains aspect ratio */
@@ -58,40 +63,89 @@
   max-height: 100%;
 }
 
+/* === Favorite Button in Preview === */
+.preview .favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  font-size: 20px;
+  transition: color var(--transition-fast);
+  z-index: 1;
+}
+
+.preview .favorite-btn:hover {
+  color: #ef4444;
+}
+
+.preview .favorite-btn.favorited {
+  color: #fbbf24;
+}
+
+.preview .favorite-btn.favorited:hover {
+  color: #ef4444;
+}
+
 /* === Card Info Section === */
 .card .info {
-  padding: 10px;
+  padding: 0;
   display: flex;
-  gap: 6px;
+  gap: 10px;
   flex-direction: column;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
+  background: transparent;
+  border-top: none;
 }
 
 .card-title-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   width: 100%;
 }
 
 .filename {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   color: var(--text-primary);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-normal);
+}
+
+/* === Badge Container === */
+.card-badges {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  min-height: 22px;
+  flex-wrap: wrap;
 }
 
 /* === Actions === */
 .actions {
   display: flex;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-direction: column;
   width: 100%;
+}
+
+.actions .primary-action {
+  width: 100%;
+}
+
+.actions .secondary-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
 }
 
 /* === Welcome Card === */

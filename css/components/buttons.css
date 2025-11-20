@@ -32,6 +32,12 @@
   color: #ffffff;
 }
 
+.btn svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
 .btn:hover:not(:disabled) {
   background: var(--primary-hover);
   transform: translateY(-1px);
@@ -180,13 +186,17 @@
 
 .small-btn.ghost {
   background: transparent;
-  border-color: var(--border);
-  color: var(--text-secondary);
+  border: none;
+  color: var(--text-muted);
+  padding: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
 }
 
 .small-btn.ghost:hover:not(:disabled) {
-  background: var(--bg);
-  color: var(--text-primary);
+  background: transparent;
+  color: var(--primary);
+  text-decoration: none;
 }
 
 /* === Icon Buttons === */

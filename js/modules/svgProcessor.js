@@ -209,16 +209,25 @@ export function applyCurrentColorToSVG(svgEl) {
   // FIRST: Resolve CSS classes to inline attributes before color detection
   resolveCSSStylesToAttributes(svgEl);
 
+  // Remove fill="none" from root SVG element to allow children to inherit color
+  if (svgEl.getAttribute('fill') === 'none') {
+    svgEl.removeAttribute('fill');
+    console.log('🔧 Removed fill="none" from root SVG');
+  }
+
   // Detect if SVG is monochromatic or multicolor
   if (!isSVGMonochromatic(svgEl)) {
     console.log('🎨 Multicolor SVG detected - preserving original colors');
     return; // Skip color transformation for multicolor SVGs
   }
 
+  console.log('✅ Monochromatic SVG - applying currentColor');
+
   try {
     const walker = document.createTreeWalker(svgEl, NodeFilter.SHOW_ELEMENT);
     const fillableTags = ['path', 'circle', 'rect', 'ellipse', 'polygon', 'polyline'];
     const strokeableTags = ['path', 'line', 'polyline', 'circle', 'rect', 'ellipse', 'polygon'];
+    let processedElements = 0;
 
     while (walker.nextNode()) {
       const el = walker.currentNode;
@@ -227,11 +236,12 @@ export function applyCurrentColorToSVG(svgEl) {
       // Skip non-visual elements
       const skipTags = ['svg', 'defs', 'style', 'metadata', 'title', 'desc',
                         'clippath', 'mask', 'pattern', 'lineargradient',
-                        'radialgradient', 'g'];
+                        'radialgradient'];
       if (skipTags.includes(tag)) continue;
 
       const fill = el.getAttribute('fill');
       const stroke = el.getAttribute('stroke');
+      const initialFill = fill;
 
       // Handle stroke first
       if (stroke !== null && stroke.trim().toLowerCase() !== 'none') {
@@ -244,6 +254,8 @@ export function applyCurrentColorToSVG(svgEl) {
         // Don't replace 'none' or 'transparent', but replace everything else including hardcoded colors
         if (fillValue !== 'none' && fillValue !== 'transparent') {
           el.setAttribute('fill', 'currentColor');
+          processedElements++;
+          console.log(`  → ${tag} (${initialFill} → currentColor)`);
         }
       } else if (fillableTags.includes(tag)) {
         // Check if element has stroke - if yes, it's likely stroke-only
@@ -255,9 +267,13 @@ export function applyCurrentColorToSVG(svgEl) {
         } else {
           // No stroke - this is a filled element, add currentColor
           el.setAttribute('fill', 'currentColor');
+          processedElements++;
+          console.log(`  → ${tag} (no fill → currentColor)`);
         }
       }
     }
+
+    console.log(`📊 Processed ${processedElements} elements`);
   } catch (error) {
     logError('Apply CurrentColor', error);
   }

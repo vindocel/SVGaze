@@ -52,6 +52,12 @@ function init() {
   initViewManager();
   initEditorManager();
 
+  // Setup mobile toolbar toggle
+  initMobileToolbarToggle();
+
+  // Setup sticky toolbar detection
+  initStickyToolbar();
+
   // Setup file handler
   initFileHandler(
     dirInput,
@@ -180,13 +186,32 @@ function setupEventListeners() {
         // If in gallery, reset filters (original behavior)
         if (searchInput) searchInput.value = '';
         setSearchFilter('');
-        setCategoryFilter('all');
+        setCategoryFilter(''); // Empty string means "All Categories"
 
         // Reset dropdown to "Todas as categorias"
         if (categoryDropdown) {
           const trigger = categoryDropdown.querySelector('.dropdown-trigger');
+          const allOption = categoryDropdown.querySelector('[data-value=""]');
+
           if (trigger) trigger.textContent = t('header.allCategories');
+
+          // Update selected state in dropdown
+          categoryDropdown.querySelectorAll('[role="option"]').forEach(opt => {
+            opt.classList.remove('is-selected');
+            opt.setAttribute('aria-selected', 'false');
+          });
+
+          if (allOption) {
+            allOption.classList.add('is-selected');
+            allOption.setAttribute('aria-selected', 'true');
+          }
         }
+
+        // Scroll to top smoothly
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
 
         // Re-render gallery
         renderGallery();
@@ -268,6 +293,47 @@ function onFilesLoaded(items) {
   // Apply colors and sizes
   applyColor();
   applySize();
+}
+
+/**
+ * Initialize mobile toolbar toggle functionality
+ */
+function initMobileToolbarToggle() {
+  const toggleBtn = document.getElementById('mobileToolbarToggle');
+  const toolbar = document.querySelector('.secondary-toolbar');
+
+  if (!toggleBtn || !toolbar) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isOpen = toolbar.classList.toggle('is-open');
+    toggleBtn.setAttribute('aria-expanded', isOpen);
+    toggleBtn.setAttribute('aria-label', isOpen ? 'Fechar filtros' : 'Abrir filtros');
+  });
+
+  console.log('📱 Mobile toolbar toggle initialized');
+}
+
+/**
+ * Initialize sticky toolbar detection
+ */
+function initStickyToolbar() {
+  const toolbar = document.querySelector('.secondary-toolbar');
+  if (!toolbar) return;
+
+  // Use Intersection Observer to detect when toolbar becomes sticky
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      // Toggle 'is-stuck' class when toolbar is not intersecting (i.e., is stuck)
+      toolbar.classList.toggle('is-stuck', !entry.isIntersecting);
+    },
+    {
+      threshold: [1],
+      rootMargin: '-60px 0px 0px 0px' // Offset by header height
+    }
+  );
+
+  observer.observe(toolbar);
+  console.log('📌 Sticky toolbar detection initialized');
 }
 
 /**

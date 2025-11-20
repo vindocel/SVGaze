@@ -7,6 +7,30 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
+### Adicionado - Melhorias de UX e Interface
+- **Novo design de cards modernizado**:
+  - Preview com aspect-ratio 1:1 e background temático
+  - Botão de favorito posicionado no canto superior direito da preview
+  - Filename centralizado abaixo da preview
+  - Badges de estilo e subcategoria centralizadas
+  - Botão "Abrir" como ação primária ocupando toda largura
+  - Botões "Editar" e "Copiar" como links secundários no rodapé
+- **Ícones nos botões do header**:
+  - Botão "Galeria" com ícone de galeria (imagem)
+  - Botão "Editor" com ícone de workflow/git
+  - Botão "Selecionar pasta" com ícone de pasta
+  - Desktop: ícone + texto visíveis
+  - Mobile: apenas ícone visível (exceto "Selecionar pasta" que mantém ambos)
+- **Melhorias no comportamento do logo**:
+  - Clicar no logo no modo galeria reseta filtros para "Todas as categorias"
+  - Scroll suave para o topo da página ao clicar no logo
+  - Atualização correta do estado do dropdown de categorias
+- **Otimização de espaço no header mobile**:
+  - Elementos reduzidos em escala (logo 24px, botões menores, switch compacto)
+  - Elimina necessidade de scroll horizontal
+  - Botão de menu mobile movido para o header primário
+  - Layout mais harmonioso e compacto
+
 ### Adicionado - Nova View de Editor SVG
 - **Sistema de visualização dual** (Galeria ↔ Editor) com gerenciador de views
 - **Editor de código** com syntax highlighting customizado para SVG/XML
@@ -78,6 +102,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Menu dropdown sendo cortado dentro da toolbar (overflow context)
 - Duplicação de favoritos na galeria
 - Conflito de padding no botão do dropdown
+- SVGs com `fill="none"` no elemento raiz agora recebem coloração correta
+- SVGs com elementos dentro de `<g>` (grupos) agora são processados corretamente
+- Scroll horizontal desnecessário no header mobile
+- Comportamento incorreto ao clicar no logo (não resetava para "Todas as categorias")
 
 ## [1.1.0] - 2025-01-07
 

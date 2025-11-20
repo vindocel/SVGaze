@@ -9,7 +9,7 @@ import { parseAndSanitizeSVG, ensureViewBox, applyCurrentColorToSVG, getSVGText 
 import { copySVGCode, copyFileName, copyFilePath } from './clipboardManager.js';
 import { openInEditor } from './viewManager.js';
 
-let modalBackdrop, modalContent, modalCopyBtn, modalNameBtn, modalEditBtn, modalPathBtn, modalCloseBtn;
+let modalBackdrop, modalContent, modalCopyBtn, modalNameBtn, modalEditBtn, modalPathBtn, modalCloseBtn, modalColorPicker;
 
 export function initModal() {
   modalBackdrop = document.getElementById('modalBackdrop');
@@ -19,6 +19,7 @@ export function initModal() {
   modalEditBtn = document.getElementById('modalEdit');
   modalPathBtn = document.getElementById('modalPath');
   modalCloseBtn = document.getElementById('modalClose');
+  modalColorPicker = document.getElementById('modalColorPicker');
 
   if (!modalBackdrop || !modalContent) {
     console.error('Modal elements not found');
@@ -41,6 +42,16 @@ export function initModal() {
       closeModal();
     }
   });
+
+  // Modal color picker - changes color in real-time (not saved)
+  if (modalColorPicker) {
+    modalColorPicker.addEventListener('input', (e) => {
+      const modalSvg = document.querySelector('#modalContent svg');
+      if (modalSvg) {
+        modalSvg.style.color = e.target.value;
+      }
+    });
+  }
 }
 
 export function openModal(item) {
@@ -51,6 +62,11 @@ export function openModal(item) {
 
   const svgText = getSVGText(item);
   modalContent.innerHTML = '';
+
+  // Reset modal color picker to current global color
+  if (modalColorPicker) {
+    modalColorPicker.value = appState.ui.selectedColor;
+  }
 
   // Title
   const title = document.createElement('div');

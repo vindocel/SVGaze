@@ -201,7 +201,24 @@ function createPreview(item) {
     wrap.appendChild(displaySvg);
   }
 
+  // Add favorite button to preview
+  const btnFav = document.createElement('button');
+  btnFav.className = 'favorite-btn';
+  btnFav.title = 'Favoritar';
+  btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
+  if (isFavorite(item.originalPath)) {
+    btnFav.classList.add('favorited');
+  }
+  btnFav.addEventListener('click', (evt) => {
+    evt.stopPropagation();
+    toggleFavorite(item.originalPath);
+    btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
+    btnFav.classList.toggle('favorited');
+    renderGallery();
+  });
+
   preview.appendChild(wrap);
+  preview.appendChild(btnFav);
   return preview;
 }
 
@@ -209,26 +226,24 @@ function createInfo(item) {
   const info = document.createElement('div');
   info.className = 'info';
 
-  // Title row with badges
-  const titleRow = document.createElement('div');
-  titleRow.className = 'card-title-row';
-
-  // Filename
+  // Filename (centered)
   const filename = document.createElement('div');
   filename.className = 'filename';
   filename.textContent = item.fileName;
   filename.title = item.fullPath || item.originalPath;
-  filename.style.flex = '1';
-  filename.style.minWidth = '0';
-  titleRow.appendChild(filename);
+  info.appendChild(filename);
 
-  // Style badge (NEW - Outline, Solid, etc)
+  // Badges container
+  const badgesContainer = document.createElement('div');
+  badgesContainer.className = 'card-badges';
+
+  // Style badge (Outline, Solid, etc)
   if (item.style) {
     const styleBadge = document.createElement('span');
     styleBadge.className = 'style-badge';
     styleBadge.textContent = item.style;
     styleBadge.title = `Estilo: ${item.style}`;
-    titleRow.appendChild(styleBadge);
+    badgesContainer.appendChild(styleBadge);
   }
 
   // Subcategory badge
@@ -237,10 +252,10 @@ function createInfo(item) {
     subBadge.className = 'subcategory-badge';
     subBadge.textContent = item.subcategory;
     subBadge.title = item.fullPath;
-    titleRow.appendChild(subBadge);
+    badgesContainer.appendChild(subBadge);
   }
 
-  info.appendChild(titleRow);
+  info.appendChild(badgesContainer);
 
   // Actions
   const actions = createActions(item);
@@ -253,43 +268,29 @@ function createActions(item) {
   const actions = document.createElement('div');
   actions.className = 'actions';
 
-  // Favorite button
-  const btnFav = document.createElement('button');
-  btnFav.className = 'small-btn';
-  btnFav.title = 'Favoritar';
-  btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
-  if (isFavorite(item.originalPath)) {
-    btnFav.classList.add('favorited');
-  }
-  btnFav.addEventListener('click', (evt) => {
-    evt.stopPropagation();
-    toggleFavorite(item.originalPath);
-    btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
-    btnFav.classList.toggle('favorited');
-    // Re-render gallery to move favorited items to top
-    renderGallery();
-  });
-
-  // Open modal button
+  // Open modal button (primary action)
   const btnOpen = document.createElement('button');
-  btnOpen.className = 'small-btn primary';
+  btnOpen.className = 'small-btn primary primary-action';
   btnOpen.textContent = t('card.open');
   btnOpen.addEventListener('click', (ev) => {
     ev.stopPropagation();
     openModal(item);
   });
+  actions.appendChild(btnOpen);
 
-  // Edit button
+  // Secondary actions container
+  const secondaryActions = document.createElement('div');
+  secondaryActions.className = 'secondary-actions';
+
+  // Edit button (link style)
   const btnEdit = document.createElement('button');
-  btnEdit.className = 'small-btn edit';
+  btnEdit.className = 'small-btn ghost';
   btnEdit.textContent = t('card.edit');
   btnEdit.addEventListener('click', (ev) => {
     ev.stopPropagation();
     try {
-      // Get SVG text content
       const svgText = getSVGText(item);
       if (svgText) {
-        // Open editor with this SVG
         openInEditor(svgText, item.name);
       }
     } catch (error) {
@@ -297,19 +298,18 @@ function createActions(item) {
     }
   });
 
-  // Copy button
+  // Copy button (link style)
   const btnCopy = document.createElement('button');
-  btnCopy.className = 'small-btn';
+  btnCopy.className = 'small-btn ghost';
   btnCopy.textContent = t('card.copy');
   btnCopy.addEventListener('click', (ev) => {
     ev.stopPropagation();
     copySVGCode(item, btnCopy);
   });
 
-  actions.appendChild(btnFav);
-  actions.appendChild(btnOpen);
-  actions.appendChild(btnEdit);
-  actions.appendChild(btnCopy);
+  secondaryActions.appendChild(btnEdit);
+  secondaryActions.appendChild(btnCopy);
+  actions.appendChild(secondaryActions);
 
   return actions;
 }
