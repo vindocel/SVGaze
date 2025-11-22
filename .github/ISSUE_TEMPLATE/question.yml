@@ -1,0 +1,65 @@
+name: ❓ Question
+description: Ask a question about SVGaze
+title: "[Question]: "
+labels: ["question"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about SVGaze? We're here to help! Please check the documentation first.
+
+        📖 [Documentation](https://github.com/vindocel/SVGaze/tree/main/docs)
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What is your question about?
+      options:
+        - Installation & Setup
+        - Usage & Features
+        - SVG Editor
+        - Export Options
+        - Troubleshooting
+        - Performance
+        - Browser Compatibility
+        - Customization
+        - Contributing
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Have you looked at the documentation or tried anything already?
+      placeholder: I checked...
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help us answer your question.
+      placeholder: Any additional information...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have checked the documentation
+          required: true
+        - label: I have searched existing issues for similar questions
+          required: true

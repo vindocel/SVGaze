@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/vindocel/SVGaze/tree/main/docs
+    about: Check our comprehensive documentation for guides and tutorials
+  - name: 💬 Discussions
+    url: https://github.com/vindocel/SVGaze/discussions
+    about: Ask questions and discuss features with the community
+  - name: 🌐 Live Demo
+    url: https://app.svgaze.com
+    about: Try SVGaze online without installation
