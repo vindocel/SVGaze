@@ -1,64 +1,64 @@
-# 🚀 Como Testar o SVGaze Localmente
+# 🚀 How to Test SVGaze Locally
 
-## ✅ Método Mais Fácil: Script Automático
+## ✅ Easiest Method: Automatic Script
 
-### Opção A: Windows
-1. **Duplo clique** em `start-local.bat`
-2. Aguarde o navegador abrir automaticamente
-3. Pronto! 🎉
+### Option A: Windows
+1. **Double click** on `start-local.bat`
+2. Wait for browser to open automatically
+3. Done! 🎉
 
-### Opção B: Linux/Mac
-1. Abrir terminal na pasta do projeto
-2. Executar: `./start-local.sh`
-3. Aguarde o navegador abrir automaticamente
-4. Pronto! 🎉
+### Option B: Linux/Mac
+1. Open terminal in project folder
+2. Execute: `./start-local.sh`
+3. Wait for browser to open automatically
+4. Done! 🎉
 
-**O que o script faz:**
-- ✅ Verifica se Node.js está instalado
-- ✅ Inicia servidor na porta 3000
-- ✅ Abre navegador automaticamente (macOS, Linux, WSL)
-- ✅ Mostra instruções claras
+**What the script does:**
+- ✅ Checks if Node.js is installed
+- ✅ Starts server on port 3000
+- ✅ Opens browser automatically (macOS, Linux, WSL)
+- ✅ Shows clear instructions
 
-**Se Node.js não estiver instalado:**
-- Download: https://nodejs.org/ (escolha LTS)
-- Instalar
-- Executar script novamente
-
----
-
-### Opção C: VSCode Live Server (Recomendado para Desenvolvimento)
-
-#### Primeira vez (configurar):
-1. Abrir VSCode
-2. Abrir pasta do projeto: `File → Open Folder` → SVGaze
-3. Ir em Extensions (Ctrl+Shift+X)
-4. Buscar "Live Server"
-5. Instalar extensão do **Ritwick Dey**
-
-#### Toda vez que quiser testar:
-1. Abrir `index.html` no VSCode
-2. **Botão direito** no código
-3. Clicar "**Open with Live Server**"
-4. Abre automaticamente! ✅
-
-**Vantagens:**
-- 🔥 Hot reload (salva e atualiza automático)
-- 🎨 Vê mudanças instantaneamente
-- 💯 Não precisa terminal
+**If Node.js is not installed:**
+- Download: https://nodejs.org/ (choose LTS)
+- Install
+- Run script again
 
 ---
 
-## 🧪 Testando o App
+### Option C: VSCode Live Server (Recommended for Development)
 
-### 1. Selecionar Pasta de Ícones
-- Clicar botão "**Selecionar pasta**"
-- Navegar até `icons/` (na raiz do projeto)
-- Confirmar
+#### First time (setup):
+1. Open VSCode
+2. Open project folder: `File → Open Folder` → SVGaze
+3. Go to Extensions (Ctrl+Shift+X)
+4. Search "Live Server"
+5. Install extension by **Ritwick Dey**
 
-### 2. Verificar Categorias
-**Deve aparecer no filtro:**
+#### Every time you want to test:
+1. Open `index.html` in VSCode
+2. **Right-click** in code
+3. Click "**Open with Live Server**"
+4. Opens automatically! ✅
+
+**Advantages:**
+- 🔥 Hot reload (saves and updates automatically)
+- 🎨 See changes instantly
+- 💯 No terminal needed
+
+---
+
+## 🧪 Testing the App
+
+### 1. Select Icon Folder
+- Click "**Select folder**" button
+- Navigate to `icons/` (in project root)
+- Confirm
+
+### 2. Verify Categories
+**Should appear in filter:**
 ```
-Todas as categorias
+All categories
 Brands
 Communication
 Devices
@@ -70,121 +70,121 @@ Navigation
 Status
 ```
 
-**NÃO deve aparecer:**
+**Should NOT appear:**
 - ❌ Outline
 - ❌ Solid
-- ❌ icons (pasta raiz)
+- ❌ icons (root folder)
 
-### 3. Verificar Badges
-Cada card deve ter:
-- 🔵 **Badge azul** → "Outline" ou "Solid"
-- Nome do arquivo
-- Botões: ★ Abrir Copiar Baixar
+### 3. Verify Badges
+Each card should have:
+- 🔵 **Blue badge** → "Outline" or "Solid"
+- File name
+- Buttons: ★ Open Copy Download
 
-### 4. Testar Filtro
-- Selecionar "**Brands**" no filtro
-- Deve mostrar ícones de:
+### 4. Test Filter
+- Select "**Brands**" in filter
+- Should show icons from:
   - `icons/Outline/Brands/`
   - `icons/Solid/Brands/`
-- Ambos na mesma lista!
-- Cada um com seu badge correto
+- Both in same list!
+- Each with correct badge
 
-### 5. Testar Funcionalidades da Galeria
-- [ ] **Busca:** Digite "Adobe" → filtra
-- [ ] **Cor:** Mude cor → ícones mudam
-- [ ] **Tamanho:** Arraste slider → ícones crescem
-- [ ] **Favorito:** Clique ★ → fica dourado
-- [ ] **Modal:** Clique "Abrir" → preview grande
-- [ ] **Copiar:** Clique "Copiar" → código copiado
-- [ ] **Download:** Clique "Baixar" → arquivo baixado
-- [ ] **Editar:** Clique "Editar" → abre no Editor
-
----
-
-## ✏️ Testando o Editor SVG
-
-### 1. Acessar o Editor
-- [ ] Clicar botão **"Editor"** no header
-- [ ] Ou clicar **"Editar"** em qualquer card da galeria
-- [ ] Editor deve abrir com interface split-pane
-
-### 2. Carregar SVG
-- [ ] Clicar **"Carregar SVG"** → selecionar arquivo
-- [ ] Arquivo carrega no editor
-- [ ] Nome do arquivo atualiza
-- [ ] Preview mostra o SVG
-
-### 3. Editar Código
-- [ ] Digitar/colar código SVG no editor
-- [ ] Preview atualiza em tempo real
-- [ ] Syntax highlighting funciona (cores nas tags)
-- [ ] Tab insere 2 espaços
-
-### 4. Controles de Preview
-- [ ] **Zoom +/-:** Botões funcionam
-- [ ] **Ctrl + Scroll:** Zoom com mouse funciona
-- [ ] **Fit to View:** Ajusta ao tamanho da área
-- [ ] **Pan:** Ctrl + Click + Arraste move o preview
-- [ ] **Grid toggle:** Liga/desliga grade
-- [ ] **Checkered toggle:** Liga/desliga fundo xadrez
-- [ ] **Dimensões:** Mostra largura × altura
-
-### 5. Ferramentas de Transformação
-- [ ] **Rotação 90° horário:** SVG gira para direita
-- [ ] **Rotação 90° anti-horário:** SVG gira para esquerda
-- [ ] **Flip Horizontal:** Espelha horizontalmente
-- [ ] **Flip Vertical:** Espelha verticalmente
-- [ ] **Editor de dimensões:** Altera tamanho com proporções
-
-### 6. Otimização SVGO
-- [ ] Clicar botão **SVGO** → modal abre
-- [ ] Configurar plugins (checkboxes)
-- [ ] Clicar **Otimizar** → código otimizado
-- [ ] Mostra comparação: "578 bytes → 493 bytes (-15%)"
-- [ ] **Reset** restaura configurações padrão
-
-### 7. Abas de Exportação
-- [ ] **Preview:** Mostra SVG com controles de zoom
-- [ ] **React:** Gera componente JSX
-  - [ ] Toggle TypeScript funciona
-  - [ ] Toggle aspas simples funciona
-  - [ ] Botão Copiar copia código
-- [ ] **React Native:** Mostra template com instruções
-  - [ ] Botão Copiar funciona
-- [ ] **PNG:** Mostra preview da imagem
-  - [ ] Seletor de escala (1x-4x) funciona
-  - [ ] Botão Download baixa PNG
-- [ ] **Data URI:** Mostra URI codificada
-  - [ ] Toggle base64/encoded funciona
-  - [ ] Botão Copiar funciona
-
-### 8. Integração com Galeria
-- [ ] Clicar "Editar" no card → abre no Editor com SVG
-- [ ] Clicar "Editar" no modal → abre no Editor com SVG
-- [ ] Nome do arquivo aparece no editor
-- [ ] Switch Gallery ↔ Editor no header funciona
-
-### 9. Sistema de Toast
-- [ ] Copiar código → toast "Copiado!" aparece
-- [ ] Erro → toast vermelho aparece
-- [ ] Toast desaparece automaticamente
-
-### 10. Tema Claro/Escuro
-- [ ] Editor adapta cores ao tema
-- [ ] Syntax highlighting muda cores
-- [ ] Preview adapta ao tema
-- [ ] SVGs monocromáticos mudam cor (preto/branco)
+### 5. Test Gallery Features
+- [ ] **Search:** Type "Adobe" → filters
+- [ ] **Color:** Change color → icons change
+- [ ] **Size:** Drag slider → icons grow
+- [ ] **Favorite:** Click ★ → turns golden
+- [ ] **Modal:** Click "Open" → large preview
+- [ ] **Copy:** Click "Copy" → code copied
+- [ ] **Download:** Click "Download" → file downloaded
+- [ ] **Edit:** Click "Edit" → opens in Editor
 
 ---
 
-## 🔍 Verificar Console (Debug)
+## ✏️ Testing the SVG Editor
 
-### Abrir Console:
-- Pressione **F12**
-- Ou botão direito → "Inspecionar"
-- Aba "**Console**"
+### 1. Access the Editor
+- [ ] Click **"Editor"** button in header
+- [ ] Or click **"Edit"** on any gallery card
+- [ ] Editor should open with split-pane interface
 
-### Mensagens esperadas:
+### 2. Load SVG
+- [ ] Click **"Load SVG"** → select file
+- [ ] File loads in editor
+- [ ] File name updates
+- [ ] Preview shows the SVG
+
+### 3. Edit Code
+- [ ] Type/paste SVG code in editor
+- [ ] Preview updates in real-time
+- [ ] Syntax highlighting works (colors in tags)
+- [ ] Tab inserts 2 spaces
+
+### 4. Preview Controls
+- [ ] **Zoom +/-:** Buttons work
+- [ ] **Ctrl + Scroll:** Zoom with mouse works
+- [ ] **Fit to View:** Adjusts to area size
+- [ ] **Pan:** Ctrl + Click + Drag moves preview
+- [ ] **Grid toggle:** Turns grid on/off
+- [ ] **Checkered toggle:** Turns checkered background on/off
+- [ ] **Dimensions:** Shows width × height
+
+### 5. Transformation Tools
+- [ ] **90° clockwise rotation:** SVG rotates right
+- [ ] **90° counter-clockwise rotation:** SVG rotates left
+- [ ] **Horizontal flip:** Mirrors horizontally
+- [ ] **Vertical flip:** Mirrors vertically
+- [ ] **Dimensions editor:** Changes size with aspect ratio
+
+### 6. SVGO Optimization
+- [ ] Click **SVGO** button → modal opens
+- [ ] Configure plugins (checkboxes)
+- [ ] Click **Optimize** → code optimized
+- [ ] Shows comparison: "578 bytes → 493 bytes (-15%)"
+- [ ] **Reset** restores default settings
+
+### 7. Export Tabs
+- [ ] **Preview:** Shows SVG with zoom controls
+- [ ] **React:** Generates JSX component
+  - [ ] TypeScript toggle works
+  - [ ] Single quotes toggle works
+  - [ ] Copy button copies code
+- [ ] **React Native:** Shows template with instructions
+  - [ ] Copy button works
+- [ ] **PNG:** Shows image preview
+  - [ ] Scale selector (1x-4x) works
+  - [ ] Download button downloads PNG
+- [ ] **Data URI:** Shows encoded URI
+  - [ ] base64/encoded toggle works
+  - [ ] Copy button works
+
+### 8. Gallery Integration
+- [ ] Click "Edit" on card → opens in Editor with SVG
+- [ ] Click "Edit" in modal → opens in Editor with SVG
+- [ ] File name appears in editor
+- [ ] Gallery ↔ Editor switch in header works
+
+### 9. Toast System
+- [ ] Copy code → "Copied!" toast appears
+- [ ] Error → red toast appears
+- [ ] Toast disappears automatically
+
+### 10. Light/Dark Theme
+- [ ] Editor adapts colors to theme
+- [ ] Syntax highlighting changes colors
+- [ ] Preview adapts to theme
+- [ ] Monochromatic SVGs change color (black/white)
+
+---
+
+## 🔍 Check Console (Debug)
+
+### Open Console:
+- Press **F12**
+- Or right-click → "Inspect"
+- Tab "**Console**"
+
+### Expected messages:
 ```
 🎨 SVGaze initializing...
 ✅ SVGaze initialized successfully
@@ -200,105 +200,105 @@ Categorization Stats: {
 }
 ```
 
-### NÃO deve ter:
-- ❌ Erros em vermelho
+### Should NOT have:
+- ❌ Red errors
 - ❌ "Failed to load module"
 - ❌ "CORS policy"
 - ❌ "Cannot find module"
 
 ---
 
-## 🐛 Solução de Problemas
+## 🐛 Troubleshooting
 
-### Problema: "Failed to load module"
-**Causa:** Abriu com duplo clique (protocolo `file://`)
-**Solução:** Use `start-local.bat` ou Live Server
+### Problem: "Failed to load module"
+**Cause:** Opened with double-click (`file://` protocol)
+**Solution:** Use `start-local.bat` or Live Server
 
-### Problema: Node.js não encontrado
-**Solução:**
-1. Instalar Node.js: https://nodejs.org/
-2. Reiniciar terminal/VSCode
-3. Tentar novamente
+### Problem: Node.js not found
+**Solution:**
+1. Install Node.js: https://nodejs.org/
+2. Restart terminal/VSCode
+3. Try again
 
-### Problema: Página em branco
+### Problem: Blank page
 **Debug:**
-1. Abrir console (F12)
-2. Ver mensagens de erro
-3. Verificar se arquivos CSS/JS carregaram (aba Network)
+1. Open console (F12)
+2. See error messages
+3. Check if CSS/JS files loaded (Network tab)
 
-### Problema: Categorias erradas
-**Debug no console:**
+### Problem: Wrong categories
+**Debug in console:**
 ```javascript
-// Ver estrutura detectada
+// See detected structure
 svgViewer.getAll()[0]._debug
 
-// Ver todas categorias
+// See all categories
 svgViewer.getAll().map(i => i.category)
 ```
 
 ---
 
-## ✅ Checklist de Testes
+## ✅ Testing Checklist
 
-### Funcionalidades da Galeria:
-- [ ] Servidor HTTP funcionando
-- [ ] Ícones carregam da pasta `icons/`
-- [ ] Categorias corretas (Brands, Communication, etc)
-- [ ] Badges aparecem (Outline, Solid)
-- [ ] Busca funciona
-- [ ] Filtro funciona
-- [ ] Cor e tamanho funcionam
-- [ ] Modal abre e fecha
-- [ ] Copiar e download funcionam
-- [ ] Botão "Editar" funciona
-- [ ] Console sem erros
+### Gallery Features:
+- [ ] HTTP server working
+- [ ] Icons load from `icons/` folder
+- [ ] Correct categories (Brands, Communication, etc)
+- [ ] Badges appear (Outline, Solid)
+- [ ] Search works
+- [ ] Filter works
+- [ ] Color and size work
+- [ ] Modal opens and closes
+- [ ] Copy and download work
+- [ ] "Edit" button works
+- [ ] Console without errors
 
-### Funcionalidades do Editor:
-- [ ] Editor abre corretamente
-- [ ] Carregar SVG funciona
-- [ ] Syntax highlighting funciona
-- [ ] Preview ao vivo funciona
-- [ ] Zoom e pan funcionam
-- [ ] Rotação e flip funcionam
-- [ ] SVGO otimiza corretamente
-- [ ] Exportação React funciona
-- [ ] Exportação React Native funciona
-- [ ] Exportação PNG funciona
-- [ ] Exportação Data URI funciona
-- [ ] Toast notifications aparecem
-- [ ] Integração com galeria funciona
-- [ ] Tema claro/escuro adapta
+### Editor Features:
+- [ ] Editor opens correctly
+- [ ] Load SVG works
+- [ ] Syntax highlighting works
+- [ ] Live preview works
+- [ ] Zoom and pan work
+- [ ] Rotation and flip work
+- [ ] SVGO optimizes correctly
+- [ ] React export works
+- [ ] React Native export works
+- [ ] PNG export works
+- [ ] Data URI export works
+- [ ] Toast notifications appear
+- [ ] Gallery integration works
+- [ ] Light/dark theme adapts
 
 ---
 
 ## 🎯 Quick Reference
 
-| Ação | Comando/Método |
+| Action | Command/Method |
 |------|----------------|
-| Iniciar servidor | Duplo clique `start-local.bat` |
-| VSCode Live Server | Botão direito → Open with Live Server |
-| Ver console | F12 |
-| Debug categorias | `svgViewer.getAll()[0]._debug` |
-| Hard refresh (sem cache) | Ctrl+Shift+R |
+| Start server | Double click `start-local.bat` |
+| VSCode Live Server | Right-click → Open with Live Server |
+| See console | F12 |
+| Debug categories | `svgViewer.getAll()[0]._debug` |
+| Hard refresh (no cache) | Ctrl+Shift+R |
 
 ---
 
-## 💡 Dicas
+## 💡 Tips
 
-### Para Testes Efetivos:
-- Use **VSCode Live Server** → hot reload automático
-- Mantenha console aberto (F12) → vê erros na hora
-- Use `Ctrl+Shift+R` → hard refresh sem cache
-- Teste em diferentes navegadores (Chrome, Firefox, Safari)
-- Teste com diferentes estruturas de pastas
-- Verifique console sempre para detectar problemas
+### For Effective Tests:
+- Use **VSCode Live Server** → automatic hot reload
+- Keep console open (F12) → see errors immediately
+- Use `Ctrl+Shift+R` → hard refresh without cache
+- Test in different browsers (Chrome, Firefox, Safari)
+- Test with different folder structures
+- Always check console to detect problems
 
 ---
 
-## 🚀 Você está pronto!
+## 🚀 You're ready!
 
-1. **Duplo clique** em `start-local.bat`
-2. **Selecionar pasta** `icons/`
-3. **Ver mágica acontecer** ✨
+1. **Double click** on `start-local.bat`
+2. **Select folder** `icons/`
+3. **See the magic happen** ✨
 
-**Problemas?** Veja `TROUBLESHOOTING.md` ou abra issue! 🎯
+**Problems?** See `TROUBLESHOOTING.md` or open issue! 🎯

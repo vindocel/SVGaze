@@ -1,335 +1,335 @@
 # 🗺️ SVGaze Roadmap
 
-Este documento descreve o planejamento de desenvolvimento do SVGaze, incluindo recursos implementados, em andamento e planejados para o futuro.
+This document describes SVGaze's development planning, including implemented features, in-progress work, and future plans.
 
 ---
 
-## 📊 Status Geral do Projeto
+## 📊 Overall Project Status
 
-| Versão | Status | Progresso | Data |
+| Version | Status | Progress | Date |
 |--------|--------|-----------|------|
-| v1.0 - Visualizador | ✅ Concluído | 100% | Jan 2025 |
-| v1.1 - Melhorias UX | ✅ Concluído | 100% | Jan 2025 |
-| v2.0 - Editor SVG | ✅ Concluído | 100% | Jan 2025 |
-| v3.0 - Avançado | 📋 Planejado | 0% | TBD |
+| v1.0 - Viewer | ✅ Completed | 100% | Jan 2025 |
+| v1.1 - UX Improvements | ✅ Completed | 100% | Jan 2025 |
+| v2.0 - SVG Editor | ✅ Completed | 100% | Jan 2025 |
+| v3.0 - Advanced | 📋 Planned | 0% | TBD |
 
 ---
 
-## ✅ v1.0 - Visualizador (Concluído)
+## ✅ v1.0 - Viewer (Completed)
 
-### Objetivos
-Criar um visualizador local de arquivos SVG com funcionalidades básicas de organização e personalização.
+### Goals
+Create a local SVG file viewer with basic organization and customization features.
 
-### Recursos Implementados
+### Implemented Features
 
-#### 🎯 Visualização
-- [x] Galeria responsiva com CSS Grid
-- [x] Preview em tempo real de todos os SVGs
-- [x] Modal de visualização ampliada
-- [x] Agrupamento automático por pastas
-- [x] Badges de subcategorias
-- [x] Preservação de aspect ratio
-- [x] Suporte a viewBox com correção automática
-- [x] Renderização correta de ícones stroke-only (contorno)
-- [x] Layout de botões otimizado (ações na mesma linha)
+#### 🎯 Visualization
+- [x] Responsive gallery with CSS Grid
+- [x] Real-time preview of all SVGs
+- [x] Enlarged view modal
+- [x] Automatic grouping by folders
+- [x] Subcategory badges
+- [x] Aspect ratio preservation
+- [x] viewBox support with automatic correction
+- [x] Correct rendering of stroke-only icons (outline)
+- [x] Optimized button layout (actions on same line)
 
-#### 🔍 Busca e Organização
-- [x] Sistema de busca por nome de arquivo
-- [x] Filtro por categoria baseado em estrutura de pastas
-- [x] Filtro por estilo (Outline, Solid, Linear, etc)
-- [x] Ordenação inteligente agrupando variantes
-- [x] Suporte a estilos compostos ("Linear (Border)")
-- [x] Suporte a separadores variados ("Name- Style", "Name - Style")
-- [x] Contador de ícones por categoria
+#### 🔍 Search and Organization
+- [x] Search system by file name
+- [x] Category filter based on folder structure
+- [x] Style filter (Outline, Solid, Linear, etc)
+- [x] Intelligent sorting grouping variants
+- [x] Support for compound styles ("Linear (Border)")
+- [x] Support for varied separators ("Name- Style", "Name - Style")
+- [x] Icon counter per category
 
-#### 🎨 Personalização
-- [x] Seletor de cor global com preview em tempo real
-- [x] Controle de tamanho via slider (24px - 180px)
-- [x] Aplicação de `currentColor` para SVGs
-- [x] Interface moderna com design system
+#### 🎨 Customization
+- [x] Global color picker with real-time preview
+- [x] Size control via slider (24px - 180px)
+- [x] `currentColor` application for SVGs
+- [x] Modern interface with design system
 
-#### ⭐ Gerenciamento
-- [x] Sistema de favoritos
-- [x] Persistência local via localStorage
-- [x] Favoritos aparecem no topo da lista
-- [x] Botão para limpar todos os favoritos
+#### ⭐ Management
+- [x] Favorites system
+- [x] Local persistence via localStorage
+- [x] Favorites appear at top of list
+- [x] Button to clear all favorites
 
-#### 🔧 Utilidades
-- [x] Copiar código SVG para área de transferência
-- [x] Copiar nome do arquivo
-- [x] Copiar caminho completo
-- [x] Download individual de SVG
-- [x] Atalhos de teclado (Esc, Ctrl+F)
+#### 🔧 Utilities
+- [x] Copy SVG code to clipboard
+- [x] Copy file name
+- [x] Copy full path
+- [x] Individual SVG download
+- [x] Keyboard shortcuts (Esc, Ctrl+F)
 
-#### 🔒 Segurança
-- [x] Processamento 100% local (sem upload)
-- [x] Sanitização de SVG (remove scripts, XSS)
-- [x] Sem dependências externas
-- [x] Sem tracking ou analytics
+#### 🔒 Security
+- [x] 100% local processing (no upload)
+- [x] SVG sanitization (removes scripts, XSS)
+- [x] No external dependencies
+- [x] No tracking or analytics
 
-#### 🌐 Compatibilidade
-- [x] Funciona em navegadores modernos (Chrome, Edge, Firefox, Safari)
-- [x] Suporte a `webkitdirectory` para seleção de pastas
-- [x] Responsivo para mobile e desktop
-- [x] Compatível com GitHub Pages
+#### 🌐 Compatibility
+- [x] Works in modern browsers (Chrome, Edge, Firefox, Safari)
+- [x] `webkitdirectory` support for folder selection
+- [x] Responsive for mobile and desktop
+- [x] Compatible with GitHub Pages
 
 ---
 
-## ✅ v1.1 - Melhorias de Experiência do Usuário (Concluído)
+## ✅ v1.1 - User Experience Improvements (Completed)
 
-### Objetivos
-Melhorar a usabilidade, acessibilidade e experiência geral do usuário.
+### Goals
+Improve usability, accessibility and overall user experience.
 
-### Concluído: Janeiro 2025
+### Completed: January 2025
 
-### Recursos Planejados
+### Planned Features
 
-#### 🌓 Tema Claro/Escuro
-- [x] Sistema de temas com CSS variables
-- [x] Toggle de tema no header
-- [x] Persistência da preferência do usuário
-- [x] Transições suaves entre temas
-- [x] Respeito à preferência do sistema (`prefers-color-scheme`)
-- [x] Tema escuro com paleta cinza neutra (#1d1f24)
-- [x] Cores adaptativas por tema (SVGs pretos/brancos)
+#### 🌓 Light/Dark Theme
+- [x] Theme system with CSS variables
+- [x] Theme toggle in header
+- [x] User preference persistence
+- [x] Smooth transitions between themes
+- [x] Respect system preference (`prefers-color-scheme`)
+- [x] Dark theme with neutral gray palette (#1d1f24)
+- [x] Adaptive colors per theme (black/white SVGs)
 
-**Progresso:** 100% ✅
+**Progress:** 100% ✅
 
-#### 📦 Exportação e Backup
-- [ ] Exportar lista de favoritos como JSON
-- [ ] Importar favoritos de arquivo JSON
-- [ ] Exportar coleção inteira de SVGs
-- [ ] Backup automático de configurações
+#### 📦 Export and Backup
+- [ ] Export favorites list as JSON
+- [ ] Import favorites from JSON file
+- [ ] Export entire SVG collection
+- [ ] Automatic configuration backup
 
-**Progresso:** 0%
+**Progress:** 0%
 
-#### 🎨 Visualização Alternativa
-- [ ] Toggle entre Grid View e List View
-- [ ] Grid compacto (mais ícones por linha)
-- [ ] Grid expandido (menos ícones, maiores)
-- [ ] Persistir preferência de visualização
+#### 🎨 Alternative View
+- [ ] Toggle between Grid View and List View
+- [ ] Compact grid (more icons per row)
+- [ ] Expanded grid (fewer icons, larger)
+- [ ] Persist view preference
 
-**Progresso:** 0%
+**Progress:** 0%
 
-#### ⌨️ Atalhos de Teclado
-- [x] Esc para fechar modal (implementado)
-- [x] Ctrl+F para busca (implementado)
-- [ ] Setas para navegar entre ícones no modal
-- [ ] Enter para abrir modal do item selecionado
-- [ ] Ctrl+C para copiar SVG selecionado
-- [ ] Tecla F para adicionar/remover favorito
-- [ ] Página de ajuda com todos os atalhos
+#### ⌨️ Keyboard Shortcuts
+- [x] Esc to close modal (implemented)
+- [x] Ctrl+F for search (implemented)
+- [ ] Arrows to navigate between icons in modal
+- [ ] Enter to open modal of selected item
+- [ ] Ctrl+C to copy selected SVG
+- [ ] F key to add/remove favorite
+- [ ] Help page with all shortcuts
 
-**Progresso:** 30%
+**Progress:** 30%
 
 #### 🎯 Drag & Drop
-- [ ] Arrastar e soltar pasta de SVGs
-- [ ] Arrastar e soltar arquivos SVG individuais
-- [ ] Feedback visual durante o arrasto
-- [ ] Suporte a múltiplas pastas
+- [ ] Drag and drop SVG folder
+- [ ] Drag and drop individual SVG files
+- [ ] Visual feedback during drag
+- [ ] Support for multiple folders
 
-**Progresso:** 0%
+**Progress:** 0%
 
-#### 🌍 Internacionalização (i18n)
-- [x] Sistema de traduções implementado
-- [x] Idioma Português (pt-BR) completo
-- [ ] Idioma Inglês (en-US)
-- [ ] Seletor de idioma no header
-- [ ] Detecção automática do idioma do navegador
-- [ ] Persistência da escolha de idioma
+#### 🌍 Internationalization (i18n)
+- [x] Translation system implemented
+- [x] Portuguese language (pt-BR) complete
+- [ ] English language (en-US)
+- [ ] Language selector in header
+- [ ] Automatic browser language detection
+- [ ] Language choice persistence
 
-**Progresso:** 60% (Estrutura pronta, falta inglês)
+**Progress:** 60% (Structure ready, missing English)
 
-#### ♿ Acessibilidade
-- [ ] Suporte completo a leitores de tela
-- [ ] Navegação por teclado aprimorada
-- [ ] Indicadores de foco visíveis
-- [ ] Contraste adequado em todos os temas
-- [ ] Labels ARIA completos
-- [ ] Testes com ferramentas de acessibilidade
+#### ♿ Accessibility
+- [ ] Full screen reader support
+- [ ] Enhanced keyboard navigation
+- [ ] Visible focus indicators
+- [ ] Adequate contrast in all themes
+- [ ] Complete ARIA labels
+- [ ] Tests with accessibility tools
 
-**Progresso:** 20%
+**Progress:** 20%
 
-#### 📊 Estatísticas e Informações
-- [ ] Painel de estatísticas (total de SVGs, categorias, etc)
-- [ ] Exibir tamanho dos arquivos SVG
-- [ ] Mostrar dimensões originais do SVG
-- [ ] Tempo de carregamento
-- [ ] Gráfico de distribuição por categoria
+#### 📊 Statistics and Information
+- [ ] Statistics panel (total SVGs, categories, etc)
+- [ ] Display SVG file sizes
+- [ ] Show original SVG dimensions
+- [ ] Loading time
+- [ ] Distribution chart per category
 
-**Progresso:** 0%
+**Progress:** 0%
 
 ---
 
-## ✅ v2.0 - Editor SVG (Concluído)
+## ✅ v2.0 - SVG Editor (Completed)
 
-### Objetivos
-Adicionar um editor completo de SVG com código, preview ao vivo, transformações e exportação multi-formato.
+### Goals
+Add a complete SVG editor with code, live preview, transformations and multi-format export.
 
-### Concluído: Janeiro 2025
+### Completed: January 2025
 
-### Recursos Implementados
+### Implemented Features
 
-#### 📝 Editor de Código
-- [x] Syntax highlighting customizado para SVG/XML
-- [x] Preview ao vivo sincronizado com código
-- [x] Indicador de tamanho do arquivo em tempo real
-- [x] Botão de upload para carregar SVG
-- [x] Copiar código para clipboard
+#### 📝 Code Editor
+- [x] Custom syntax highlighting for SVG/XML
+- [x] Live preview synchronized with code
+- [x] Real-time file size indicator
+- [x] Upload button to load SVG
+- [x] Copy code to clipboard
 
-#### 👁️ Preview ao Vivo
-- [x] Zoom de 10% a 5000%
-- [x] Pan (arrastar com Ctrl+mouse)
-- [x] Zoom com roda do mouse (Ctrl+scroll)
-- [x] Botões de zoom in/out
+#### 👁️ Live Preview
+- [x] Zoom from 10% to 5000%
+- [x] Pan (drag with Ctrl+mouse)
+- [x] Zoom with mouse wheel (Ctrl+scroll)
+- [x] Zoom in/out buttons
 - [x] Fit to view
-- [x] Toggle de grid
-- [x] Toggle de fundo checkered
-- [x] Exibição de dimensões do SVG
+- [x] Grid toggle
+- [x] Checkered background toggle
+- [x] SVG dimensions display
 
-#### 📤 Sistema de Exportação (5 formatos)
-- [x] **Preview** - Visualização com controles de zoom
-- [x] **React** - Componente JSX (TypeScript opcional, aspas simples)
-- [x] **React Native** - Template com react-native-svg
-- [x] **PNG** - Exportação com escalas 1x, 2x, 3x, 4x
-- [x] **Data URI** - base64 e encodeURIComponent
+#### 📤 Export System (5 formats)
+- [x] **Preview** - Visualization with zoom controls
+- [x] **React** - JSX component (optional TypeScript, single quotes)
+- [x] **React Native** - Template with react-native-svg
+- [x] **PNG** - Export with 1x, 2x, 3x, 4x scales
+- [x] **Data URI** - base64 and encodeURIComponent
 
-#### ⚡ Otimização SVGO
-- [x] Modal de configuração com 20+ opções
-- [x] Preview de antes/depois
-- [x] Exibição de redução de tamanho (%)
-- [x] Plugins configuráveis individualmente
-- [x] Resetar configurações para padrão
+#### ⚡ SVGO Optimization
+- [x] Configuration modal with 20+ options
+- [x] Before/after preview
+- [x] Size reduction display (%)
+- [x] Individually configurable plugins
+- [x] Reset settings to default
 
-#### 🔄 Ferramentas de Transformação
-- [x] Rotação 90° horário
-- [x] Rotação 90° anti-horário
-- [x] Espelhamento Horizontal
-- [x] Espelhamento Vertical
-- [x] Editor de dimensões com bloqueio proporcional
+#### 🔄 Transformation Tools
+- [x] 90° clockwise rotation
+- [x] 90° counter-clockwise rotation
+- [x] Horizontal flip
+- [x] Vertical flip
+- [x] Dimensions editor with proportional lock
 
-#### 🎨 Detecção Inteligente de Cores
-- [x] Detecta se SVG é monocromático ou multicolorido
-- [x] Aplica tema automaticamente em SVGs monocromáticos
-- [x] Preserva cores originais em SVGs multicoloridos
-- [x] Resolve cores CSS de `<style>` tags e classes
+#### 🎨 Intelligent Color Detection
+- [x] Detects if SVG is monochromatic or multicolored
+- [x] Automatically applies theme in monochromatic SVGs
+- [x] Preserves original colors in multicolored SVGs
+- [x] Resolves CSS colors from `<style>` tags and classes
 
-#### 🔗 Integração com Galeria
-- [x] Botão "Editar" nos cards da galeria
-- [x] Botão "Editar" no modal de preview
-- [x] `openInEditor(svgCode, fileName)` para abrir SVG no editor
-- [x] Switch de views Gallery ↔ Editor
+#### 🔗 Gallery Integration
+- [x] "Edit" button on gallery cards
+- [x] "Edit" button in preview modal
+- [x] `openInEditor(svgCode, fileName)` to open SVG in editor
+- [x] Gallery ↔ Editor view switch
 
-#### 🔔 Sistema de Notificações
-- [x] Toast para feedback de ações
-- [x] Estados de sucesso/erro
+#### 🔔 Notification System
+- [x] Toast for action feedback
+- [x] Success/error states
 - [x] Auto-dismiss
 
-#### 🆕 Branding Atualizado
-- [x] Nova logo polida 400x400 viewBox
-- [x] Favicons dinâmicos (dark/light)
-- [x] Logo interativa (clique abre logo no editor)
+#### 🆕 Updated Branding
+- [x] New polished 400x400 viewBox logo
+- [x] Dynamic favicons (dark/light)
+- [x] Interactive logo (click opens logo in editor)
 
 ---
 
-## 📋 v3.0 - Funcionalidades Avançadas (Planejado)
+## 📋 v3.0 - Advanced Features (Planned)
 
-### Objetivos
-Adicionar edição visual avançada e funcionalidades de produtividade.
+### Goals
+Add advanced visual editing and productivity features.
 
-### Data Estimada: TBD
+### Estimated Date: TBD
 
-### Recursos Planejados
+### Planned Features
 
-#### ✏️ Edição Visual de Paths
-- [ ] Visualização de pontos de controle
-- [ ] Mover pontos de paths
-- [ ] Adicionar/remover pontos
-- [ ] Simplificar paths automaticamente
-- [ ] Suavizar curvas
+#### ✏️ Visual Path Editing
+- [ ] Control points visualization
+- [ ] Move path points
+- [ ] Add/remove points
+- [ ] Automatically simplify paths
+- [ ] Smooth curves
 
-#### 🎨 Color Picker Inline
-- [ ] Selecionar cores diretamente no preview
-- [ ] Alterar cor de elementos individuais
-- [ ] Paleta de cores sugeridas
-- [ ] Histórico de cores usadas
+#### 🎨 Inline Color Picker
+- [ ] Select colors directly in preview
+- [ ] Change color of individual elements
+- [ ] Suggested color palette
+- [ ] Color history
 
-#### 🌍 Internacionalização Completa
-- [ ] Idioma Inglês (en-US)
-- [ ] Seletor de idioma no header
-- [ ] Detecção automática do idioma do navegador
+#### 🌍 Complete Internationalization
+- [ ] English language (en-US)
+- [ ] Language selector in header
+- [ ] Automatic browser language detection
 
 ---
 
-## 🏗️ Arquitetura e Refatoração Técnica
+## 🏗️ Architecture and Technical Refactoring
 
-### Em Progresso (Paralelo à v1.1)
+### In Progress (Parallel to v1.1)
 
-#### 📦 Modularização
-- [x] Separar CSS em arquivos de componentes
-- [x] Criar sistema de módulos ES6 para JavaScript
-- [x] Estrutura de diretórios organizada
-- [x] Sistema de estado centralizado
-- [ ] Lazy loading de módulos não críticos
-- [ ] Service Worker para cache offline
+#### 📦 Modularization
+- [x] Separate CSS into component files
+- [x] Create ES6 module system for JavaScript
+- [x] Organized directory structure
+- [x] Centralized state system
+- [ ] Lazy loading of non-critical modules
+- [ ] Service Worker for offline cache
 
-#### 🧪 Testes
-- [ ] Configurar ambiente de testes
-- [ ] Testes unitários para funções críticas
-- [ ] Testes de integração
-- [ ] Testes E2E básicos
-- [ ] Testes de acessibilidade automatizados
+#### 🧪 Testing
+- [ ] Configure testing environment
+- [ ] Unit tests for critical functions
+- [ ] Integration tests
+- [ ] Basic E2E tests
+- [ ] Automated accessibility tests
 
-#### 📝 Documentação
-- [x] README.md completo
-- [x] ROADMAP.md detalhado
-- [ ] Documentação técnica da API
-- [ ] Guia de contribuição expandido
-- [ ] Wiki no GitHub
-- [ ] Tutoriais em vídeo
+#### 📝 Documentation
+- [x] Complete README.md
+- [x] Detailed ROADMAP.md
+- [ ] Technical API documentation
+- [ ] Expanded contribution guide
+- [ ] GitHub wiki
+- [ ] Video tutorials
 
 #### 🚀 Performance
-- [ ] Virtualização da lista para grandes coleções
-- [ ] Web Workers para processamento pesado
-- [ ] IndexedDB para cache de SVGs grandes
-- [ ] Otimização de renderização
-- [ ] Profiling e benchmarks
+- [ ] List virtualization for large collections
+- [ ] Web Workers for heavy processing
+- [ ] IndexedDB for large SVG cache
+- [ ] Rendering optimization
+- [ ] Profiling and benchmarks
 
 ---
 
-## 🎯 Metas de Longo Prazo
+## 🎯 Long-term Goals
 
 ### 2025
-- ✅ Lançar v1.0 como visualizador funcional
-- 🎯 Atingir 100 estrelas no GitHub
-- 🎯 Comunidade ativa de contribuidores
-- 🎯 Suporte a 2+ idiomas
-- 🎯 Editor básico funcional (v2.0)
+- ✅ Launch v1.0 as functional viewer
+- 🎯 Reach 100 stars on GitHub
+- 🎯 Active contributor community
+- 🎯 Support for 2+ languages
+- 🎯 Functional basic editor (v2.0)
 
 ---
 
-## 🤝 Como Contribuir com o Roadmap
+## 🤝 How to Contribute to the Roadmap
 
-Sua opinião é importante! Se você tem sugestões de recursos:
+Your opinion matters! If you have feature suggestions:
 
-1. **Abra uma Issue** no GitHub com a tag `feature-request`
-2. **Vote em features** existentes com 👍 nas issues
-3. **Junte-se à discussão** em issues abertas
-4. **Contribua com código** para recursos planejados
+1. **Open an Issue** on GitHub with the `feature-request` tag
+2. **Vote on features** existing with 👍 on issues
+3. **Join the discussion** in open issues
+4. **Contribute code** for planned features
 
-### Priorização
+### Prioritization
 
-As features são priorizadas com base em:
-1. **Impacto no usuário** - Quantos usuários se beneficiam?
-2. **Complexidade técnica** - Quanto esforço é necessário?
-3. **Alinhamento com visão** - Faz sentido para o projeto?
-4. **Feedback da comunidade** - Quantos usuários pediram?
+Features are prioritized based on:
+1. **User impact** - How many users benefit?
+2. **Technical complexity** - How much effort is required?
+3. **Vision alignment** - Does it make sense for the project?
+4. **Community feedback** - How many users requested it?
 
 ---
 
 ## 📞 Feedback
 
-Tem sugestões para o roadmap? Entre em contato:
+Have suggestions for the roadmap? Get in touch:
 
 - **GitHub Issues:** [github.com/vindocel/SVGaze/issues](https://github.com/vindocel/SVGaze/issues)
 - **Discussions:** [github.com/vindocel/SVGaze/discussions](https://github.com/vindocel/SVGaze/discussions)
@@ -338,9 +338,9 @@ Tem sugestões para o roadmap? Entre em contato:
 
 <div align="center">
 
-**Última atualização:** 2025-01-18
+**Last updated:** 2025-01-18
 
-⭐ **Star o projeto no GitHub para acompanhar o progresso!**
+⭐ **Star the project on GitHub to follow progress!**
 
 [🌐 App](https://app.svgaze.com) • [📖 README](README.md) • [🐛 Issues](https://github.com/vindocel/SVGaze/issues)
 

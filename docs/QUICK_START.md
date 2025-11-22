@@ -4,54 +4,54 @@
 
 ### Windows
 ```bash
-# Duplo clique em: start-local.bat
+# Double click: start-local.bat
 ```
 
 ### Linux/Mac
 ```bash
-# Rodar script:
+# Run script:
 ./start-local.sh
 ```
 
-### Qualquer Sistema (Python)
+### Any System (Python)
 ```bash
 python -m http.server 8000
-# Abrir: http://localhost:8000
+# Open: http://localhost:8000
 ```
 
 ---
 
-## ⚡ Início Rápido
+## ⚡ Quick Start
 
-### 1️⃣ Iniciar Servidor HTTP
+### 1️⃣ Start HTTP Server
 
-#### Opção A: Script Automático (Recomendado)
+#### Option A: Automatic Script (Recommended)
 
 **Windows:**
 ```bash
-# Duplo clique em:
+# Double click:
 start-local.bat
 ```
 
 **Linux/Mac:**
 ```bash
-# No terminal:
+# In terminal:
 ./start-local.sh
 ```
 
-**O que o script faz:**
-- ✅ Verifica se Node.js está instalado
-- ✅ Inicia servidor na porta 3000
-- ✅ Abre navegador automaticamente
-- ✅ Mostra instruções claras
+**What the script does:**
+- ✅ Checks if Node.js is installed
+- ✅ Starts server on port 3000
+- ✅ Opens browser automatically
+- ✅ Shows clear instructions
 
-#### Opção B: Manualmente
+#### Option B: Manually
 
 **Python:**
 ```bash
-cd /caminho/para/SVGaze
+cd /path/to/SVGaze
 python -m http.server 8000
-# Ou: python3 -m http.server 8000
+# Or: python3 -m http.server 8000
 ```
 
 **Node.js:**
@@ -60,65 +60,65 @@ npx serve -l 3000
 ```
 
 **VSCode:**
-- Instalar extensão "Live Server"
-- Botão direito → Open with Live Server
+- Install "Live Server" extension
+- Right-click → Open with Live Server
 
-### 2️⃣ Abrir no Navegador
+### 2️⃣ Open in Browser
 ```
 http://localhost:8000
 ```
 
-### 3️⃣ Selecionar Pasta
-1. Clicar botão "Selecionar pasta"
-2. Navegar até `icons/` (na raiz do projeto)
-3. Selecionar e confirmar
+### 3️⃣ Select Folder
+1. Click "Select folder" button
+2. Navigate to `icons/` (in project root)
+3. Select and confirm
 
-### 4️⃣ Verificar
-**Deve aparecer:**
-- ✅ Categorias: Brands, Communication, Devices, Files, General, Interface, Media, Navigation, Status
-- ✅ Cards com badges azuis "Outline" ou "Solid"
-- ✅ Console sem erros (F12)
+### 4️⃣ Verify
+**Should show:**
+- ✅ Categories: Brands, Communication, Devices, Files, General, Interface, Media, Navigation, Status
+- ✅ Cards with blue "Outline" or "Solid" badges
+- ✅ Console without errors (F12)
 
 ---
 
-## 🎯 O Que Testar
+## 🎯 What to Test
 
-### Categorização Inteligente
-1. Filtrar por "Brands"
-2. Ver ícones de **duas** pastas:
+### Intelligent Categorization
+1. Filter by "Brands"
+2. See icons from **two** folders:
    - `icons/Outline/Brands/`
    - `icons/Solid/Brands/`
-3. Cada um com badge correto
+3. Each with correct badge
 
-### Funcionalidades da Galeria
-- 🎨 Mudar cor → ícones mudam
-- 📏 Mudar tamanho → ícones crescem/diminuem
-- 🔍 Buscar → filtra instantaneamente
-- ⭐ Favoritar → estrela fica dourada
-- 📂 Modal → preview grande
-- 📋 Copiar → código no clipboard
-- ⬇️ Download → arquivo baixado
-- ✏️ Editar → abre no Editor
+### Gallery Features
+- 🎨 Change color → icons change
+- 📏 Change size → icons grow/shrink
+- 🔍 Search → filters instantly
+- ⭐ Favorite → star turns golden
+- 📂 Modal → large preview
+- 📋 Copy → code to clipboard
+- ⬇️ Download → file downloaded
+- ✏️ Edit → opens in Editor
 
-### 5️⃣ Usar o Editor SVG
-1. Clicar no botão **"Editor"** no header
-2. Ou clicar em **"Editar"** em qualquer card
-3. Editor abre com o SVG carregado
+### 5️⃣ Use the SVG Editor
+1. Click **"Editor"** button in header
+2. Or click **"Edit"** on any card
+3. Editor opens with SVG loaded
 
-### Funcionalidades do Editor
-- 📝 Editar código com syntax highlighting
-- 👁️ Preview atualiza em tempo real
-- 🔍 Zoom com Ctrl+scroll ou botões
-- 🔄 Rotacionar e espelhar SVG
-- ⚡ Otimizar com SVGO
-- 📤 Exportar: React, React Native, PNG, Data URI
-- 📐 Alterar dimensões com proporções
+### Editor Features
+- 📝 Edit code with syntax highlighting
+- 👁️ Preview updates in real-time
+- 🔍 Zoom with Ctrl+scroll or buttons
+- 🔄 Rotate and flip SVG
+- ⚡ Optimize with SVGO
+- 📤 Export: React, React Native, PNG, Data URI
+- 📐 Change dimensions with aspect ratio
 
 ---
 
-## ✅ Tudo Certo?
+## ✅ Everything OK?
 
-**Console mostra:**
+**Console shows:**
 ```
 🎨 SVGaze initializing...
 ✅ SVGaze initialized successfully
@@ -126,31 +126,31 @@ Successfully processed 145 SVG files
 Categorization Stats: {...}
 ```
 
-**Sem erros vermelhos!**
+**No red errors!**
 
 ---
 
-## ❌ Deu Erro?
+## ❌ Got Error?
 
 ### "Failed to load module"
-**→ Use servidor HTTP** (métodos acima)
+**→ Use HTTP server** (methods above)
 
-### Página em branco
-**→ Verifique console (F12)**
+### Blank page
+**→ Check console (F12)**
 
-### Categorias erradas
-**→ Abra issue no GitHub com print**
+### Wrong categories
+**→ Open issue on GitHub with screenshot**
 
 ---
 
-## 📚 Mais Informações
+## 📚 More Information
 
-- **Editor SVG:** [EDITOR.md](EDITOR.md)
-- **Testes completos:** [HOW_TO_TEST.md](HOW_TO_TEST.md)
-- **Documentação:** [CATEGORIZATION.md](CATEGORIZATION.md)
+- **SVG Editor:** [EDITOR.md](EDITOR.md)
+- **Complete tests:** [HOW_TO_TEST.md](HOW_TO_TEST.md)
+- **Documentation:** [CATEGORIZATION.md](CATEGORIZATION.md)
 - **Roadmap:** [ROADMAP.md](ROADMAP.md)
-- **Solução de problemas:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- **Troubleshooting:** [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ---
 
-**Dúvidas?** Abra issue no GitHub! 🚀
+**Questions?** Open issue on GitHub! 🚀

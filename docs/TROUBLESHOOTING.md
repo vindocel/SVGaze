@@ -1,64 +1,64 @@
-# 🔧 Solução de Problemas - SVGaze
+# 🔧 Troubleshooting - SVGaze
 
-## ❌ Problema: SVGs Detectados mas Não Aparecem
+## ❌ Problem: SVGs Detected but Don't Appear
 
-### Causa
-Você abriu o arquivo com duplo clique (`file://` protocol), mas ES6 modules precisam de servidor HTTP.
+### Cause
+You opened the file with double-click (`file://` protocol), but ES6 modules need HTTP server.
 
-### Erro no Console (F12)
-Provavelmente aparece:
+### Console Error (F12)
+Probably shows:
 ```
 Access to script at 'file:///...' from origin 'null' has been blocked by CORS policy
 ```
 
 ---
 
-## ✅ SOLUÇÃO RÁPIDA
+## ✅ QUICK SOLUTION
 
-### Opção 1: Python (RECOMENDADO)
+### Option 1: Python (RECOMMENDED)
 ```bash
-# Abrir terminal na pasta do projeto
+# Open terminal in project folder
 cd /path/to/SVGaze
 
-# Iniciar servidor
+# Start server
 python -m http.server 8000
 
-# Abrir navegador em:
+# Open browser at:
 http://localhost:8000
 ```
 
-### Opção 2: Node.js
+### Option 2: Node.js
 ```bash
 npx serve
 ```
 
-### Opção 3: VSCode Live Server
-1. Instalar extensão "Live Server"
-2. Botão direito no `index.html` → "Open with Live Server"
+### Option 3: VSCode Live Server
+1. Install "Live Server" extension
+2. Right-click on `index.html` → "Open with Live Server"
 
 ---
 
-## 🐛 OUTROS PROBLEMAS
+## 🐛 OTHER PROBLEMS
 
-### SVGs Carregam mas Categorias Erradas
-**Ver:** Console (F12) → Procurar "Categorization Stats"
+### SVGs Load but Wrong Categories
+**See:** Console (F12) → Look for "Categorization Stats"
 **Debug:**
 ```javascript
 svgViewer.getAll()[0]
 ```
 
-### Modal Não Abre
-**Verificar:** Console tem erro de módulo?
-**Solução:** Usar servidor HTTP
+### Modal Doesn't Open
+**Check:** Console has module error?
+**Solution:** Use HTTP server
 
-### Badges Não Aparecem
-**Verificar:** CSS foi carregado?
-**Solução:** Ver Network tab (F12) se arquivos CSS carregaram
+### Badges Don't Appear
+**Check:** CSS loaded?
+**Solution:** See Network tab (F12) if CSS files loaded
 
 ---
 
-## 📞 Precisa de Ajuda?
+## 📞 Need Help?
 
-1. Abrir Console (F12)
-2. Copiar mensagens de erro
-3. Abrir issue no GitHub
+1. Open Console (F12)
+2. Copy error messages
+3. Open issue on GitHub
