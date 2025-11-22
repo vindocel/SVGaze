@@ -64,12 +64,12 @@ export function renderGallery() {
 
   // Update category name
   if (catNameSpan) {
-    catNameSpan.textContent = appState.filters.category || 'Todas';
+    catNameSpan.textContent = appState.filters.category || t('header.allCategories');
   }
 
   // No results
   if (visible.length === 0 && appState.allItems.length > 0 && allFavorites.length === 0) {
-    gridElement.innerHTML = '<div class="card" style="grid-column:1/-1;padding:18px">Nenhum resultado encontrado.</div>';
+    gridElement.innerHTML = `<div class="card" style="grid-column:1/-1;padding:18px">${t('notifications.noResults')}</div>`;
     return;
   }
 
@@ -115,7 +115,7 @@ function createCategoryHeader(category, allVisibleItems) {
   const count = document.createElement('span');
   count.className = 'category-count';
   const itemsInCategory = allVisibleItems.filter(v => v.category === category).length;
-  count.textContent = `${itemsInCategory} ícone${itemsInCategory !== 1 ? 's' : ''}`;
+  count.textContent = `${itemsInCategory} ${itemsInCategory === 1 ? t('toolbar.icon') : t('toolbar.icons')}`;
 
   header.appendChild(title);
   header.appendChild(count);
@@ -129,11 +129,11 @@ function renderFavoritesSection(favorites) {
   header.className = 'category-header favorites-header';
 
   const title = document.createElement('span');
-  title.textContent = '⭐ Favoritos';
+  title.textContent = t('favorites.title');
 
   const count = document.createElement('span');
   count.className = 'category-count';
-  count.textContent = `${favorites.length} ícone${favorites.length !== 1 ? 's' : ''}`;
+  count.textContent = `${favorites.length} ${favorites.length === 1 ? t('toolbar.icon') : t('toolbar.icons')}`;
 
   header.appendChild(title);
   header.appendChild(count);
@@ -170,7 +170,7 @@ function createPreview(item) {
   const svgElement = item.svgElement || parseAndSanitizeSVG(item.svgText);
 
   if (!svgElement) {
-    preview.textContent = 'SVG inválido';
+    preview.textContent = t('card.invalidSvg');
     console.error('Failed to render SVG:', item.fileName);
     return preview;
   }
@@ -204,7 +204,7 @@ function createPreview(item) {
   // Add favorite button to preview
   const btnFav = document.createElement('button');
   btnFav.className = 'favorite-btn';
-  btnFav.title = 'Favoritar';
+  btnFav.title = isFavorite(item.originalPath) ? t('card.unfavorite') : t('card.favorite');
   btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
   if (isFavorite(item.originalPath)) {
     btnFav.classList.add('favorited');
@@ -213,6 +213,7 @@ function createPreview(item) {
     evt.stopPropagation();
     toggleFavorite(item.originalPath);
     btnFav.innerHTML = isFavorite(item.originalPath) ? '★' : '☆';
+    btnFav.title = isFavorite(item.originalPath) ? t('card.unfavorite') : t('card.favorite');
     btnFav.classList.toggle('favorited');
     renderGallery();
   });
@@ -332,7 +333,7 @@ export function populateCategoryFilter(dropdownElement) {
   allOption.setAttribute('aria-selected', 'true');
   allOption.setAttribute('tabindex', '0');
   allOption.className = 'is-selected';
-  allOption.textContent = 'Todas as categorias';
+  allOption.textContent = t('header.allCategories');
   menu.appendChild(allOption);
 
   // Add category options with icons

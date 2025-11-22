@@ -5,6 +5,7 @@
  */
 
 import { appState } from '../state.js';
+import { t } from '../../i18n/i18n.js';
 
 // DOM elements
 let galleryView, editorView, galleryBtn, editorBtn;
@@ -82,9 +83,9 @@ function updateLogoTooltip(view) {
   if (!appBranding) return;
 
   if (view === 'editor') {
-    appBranding.setAttribute('title', 'Clique para editar o logo do SVGaze');
+    appBranding.setAttribute('title', t('editor.uploadTitle'));
   } else {
-    appBranding.setAttribute('title', 'Voltar ao início');
+    appBranding.setAttribute('title', t('header.backToHome'));
   }
 }
 

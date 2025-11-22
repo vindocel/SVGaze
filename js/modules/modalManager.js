@@ -8,6 +8,7 @@ import { escapeHtml } from './utils.js';
 import { parseAndSanitizeSVG, ensureViewBox, applyCurrentColorToSVG, getSVGText } from './svgProcessor.js';
 import { copySVGCode, copyFileName, copyFilePath } from './clipboardManager.js';
 import { openInEditor } from './viewManager.js';
+import { t } from '../../i18n/i18n.js';
 
 let modalBackdrop, modalContent, modalCopyBtn, modalNameBtn, modalEditBtn, modalPathBtn, modalCloseBtn, modalColorPicker;
 
@@ -92,7 +93,7 @@ export function openModal(item) {
     svgEl.style.overflow = 'visible';
     previewWrap.appendChild(svgEl);
   } else {
-    previewWrap.textContent = 'SVG inválido';
+    previewWrap.textContent = t('card.invalidSvg');
   }
 
   modalContent.appendChild(title);

@@ -10,7 +10,7 @@ export const translations = {
   app: {
     name: 'SVGaze',
     tagline: 'Visualizador moderno de ícones SVG',
-    description: 'Visualize e organize arquivos SVG locais diretamente no navegador'
+    description: 'Funcionalidades: busca, filtro por categoria, modal, favoritos, personalização de cor e tamanho'
   },
 
   // === Header ===
@@ -25,7 +25,8 @@ export const translations = {
     colorLabel: 'Cor global do ícone',
     clearFavorites: 'Limpar favoritos',
     themeToggle: 'Alternar tema',
-    languageToggle: 'Alterar idioma'
+    languageToggle: 'Alterar idioma',
+    backToHome: 'Voltar ao início'
   },
 
   // === Toolbar ===

@@ -121,7 +121,14 @@ function selectItem(dropdownElement, item, value, text, onSelect) {
   // Update trigger text (extract only text, not icon)
   const textNode = Array.from(item.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
   const displayText = textNode ? textNode.textContent.trim() : text;
-  trigger.textContent = displayText;
+
+  // Check if trigger has a span for i18n, update that instead
+  const triggerSpan = trigger.querySelector('span');
+  if (triggerSpan) {
+    triggerSpan.textContent = displayText;
+  } else {
+    trigger.textContent = displayText;
+  }
 
   // Update selected state
   menu.querySelectorAll('[role="option"]').forEach(opt => {
@@ -221,7 +228,13 @@ export function setSelectedValue(dropdownElement, value) {
     const textNode = Array.from(item.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
     const displayText = textNode ? textNode.textContent.trim() : item.textContent.trim();
 
-    trigger.textContent = displayText;
+    // Check if trigger has a span for i18n, update that instead
+    const triggerSpan = trigger.querySelector('span');
+    if (triggerSpan) {
+      triggerSpan.textContent = displayText;
+    } else {
+      trigger.textContent = displayText;
+    }
 
     // Update selected state
     menu.querySelectorAll('[role="option"]').forEach(opt => {

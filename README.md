@@ -1,51 +1,58 @@
 # SVGaze 🔍
 
-> Visualizador e editor moderno de ícones SVG — totalmente local, sem upload, 100% privacidade
+> Modern SVG icon viewer and editor — fully local, no uploads, 100% privacy
 
-**SVGaze** é uma aplicação web open-source que permite visualizar, organizar, editar e exportar arquivos SVG locais diretamente no navegador, sem necessidade de upload ou backend.
+**SVGaze** is an open-source web application that lets you view, organize, edit, and export local SVG files directly in your browser, with no upload or backend required.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://app.svgaze.com)
 
 ---
 
-## ✨ Recursos Principais
+## ✨ Key Features
 
-### 🎯 Galeria de SVGs
-- Galeria responsiva com grid adaptativo e preview em tempo real
-- Categorização inteligente — detecta categorias semânticas vs estilos
-- Busca instantânea e filtros por categoria/estilo
-- Sistema de favoritos com persistência local
-- Badges de estilo (Outline, Solid) nos cards
+### 🎯 SVG Gallery
+- Responsive gallery with adaptive grid and real-time preview
+- Smart categorization — detects semantic categories vs styles
+- Instant search and filters by category/style
+- Favorites system with local persistence
+- Style badges (Outline, Solid) on cards
 
-### ✏️ Editor SVG Integrado
-- Editor de código com syntax highlighting
-- Preview ao vivo com zoom (10%-5000%), pan e grid
-- 5 formatos de exportação: Preview, React, React Native, PNG, Data URI
-- Otimização SVGO com 20+ opções configuráveis
-- Ferramentas de transformação (rotação, flip, dimensões)
+### ✏️ Integrated SVG Editor
+- Code editor with syntax highlighting
+- Live preview with zoom (10%-5000%), pan, and grid
+- 5 export formats: Preview, React, React Native, PNG, Data URI
+- SVGO optimization with 20+ configurable options
+- Transformation tools (rotate, flip, dimensions)
 
-**[📖 Documentação completa do Editor](docs/EDITOR.md)**
+**[📖 Complete Editor Documentation](docs/EDITOR.md)**
 
-### 🎨 Personalização
-- Seletor de cor global com cores adaptativas por tema
-- Tema claro/escuro com transição suave
-- Controle de tamanho (24px - 180px)
+### 🌍 Internationalization
+- Automatic system language detection (PT-BR, EN-US)
+- Manual language switcher in header
+- Complete UI translation on language change
+- Language preference saved to localStorage
 
-### 🔒 Segurança
-- 100% processamento local — seus arquivos nunca saem do navegador
-- Sanitização de SVG — remove scripts e conteúdo malicioso
-- Sem tracking — total privacidade
+### 🎨 Customization
+- Global color picker with theme-adaptive colors
+- Light/dark theme with smooth transitions
+- Size control (24px - 180px)
+- Standardized 20×20px icons across all UI elements
+
+### 🔒 Security
+- 100% local processing — your files never leave the browser
+- SVG sanitization — removes scripts and malicious content
+- No tracking — complete privacy
 
 ---
 
-## 🚀 Como Usar
+## 🚀 How to Use
 
-### Online (Recomendado)
-1. Acesse: **[app.svgaze.com](https://app.svgaze.com)**
-2. Clique em **"Selecionar pasta"**
-3. Escolha a pasta com seus SVGs
-4. Aproveite! 🎉
+### Online (Recommended)
+1. Visit: **[app.svgaze.com](https://app.svgaze.com)**
+2. Click **"Select folder"**
+3. Choose your SVG folder
+4. Enjoy! 🎉
 
 ### Local
 
@@ -60,68 +67,69 @@ start-local.bat
 ./start-local.sh
 ```
 
-**[📖 Guia completo de instalação](docs/QUICK_START.md)** | **[🧪 Como testar](docs/HOW_TO_TEST.md)**
+**[📖 Complete Installation Guide](docs/QUICK_START.md)** | **[🧪 How to Test](docs/HOW_TO_TEST.md)**
 
 ---
 
-## 📁 Categorização Inteligente
+## 📁 Smart Categorization
 
-O SVGaze detecta automaticamente a estrutura das suas pastas:
+SVGaze automatically detects your folder structure:
 
 ```
 icons/
-├── Outline/           ← Estilo (ignorado como categoria)
-│   ├── Brands/        ← Categoria semântica
+├── Outline/           ← Style (ignored as category)
+│   ├── Brands/        ← Semantic category
 │   └── Devices/
-└── Solid/             ← Estilo
+└── Solid/             ← Style
     ├── Brands/
     └── Devices/
 ```
 
-**Resultado:** Filtro mostra "Brands" e "Devices" (não "Outline"/"Solid"), com badges de estilo nos cards.
+**Result:** Filter shows "Brands" and "Devices" (not "Outline"/"Solid"), with style badges on cards.
 
-**[📖 Documentação completa da Categorização](docs/CATEGORIZATION.md)**
-
----
-
-## 🛠️ Tecnologias
-
-- **26 módulos JavaScript ES6** — arquitetura modular
-- **12 arquivos CSS** — design system componentizado
-- **Zero dependências de runtime** — vanilla JS
-- **APIs nativas:** File System Access, DOMParser, Clipboard, LocalStorage
+**[📖 Complete Categorization Documentation](docs/CATEGORIZATION.md)**
 
 ---
 
-## 📚 Documentação
+## 🛠️ Technologies
 
-| Guia | Descrição |
+- **26 JavaScript ES6 modules** — modular architecture
+- **12 CSS files** — componentized design system
+- **Zero runtime dependencies** — vanilla JS
+- **Native APIs:** File System Access, DOMParser, Clipboard, LocalStorage
+
+---
+
+## 📚 Documentation
+
+| Guide | Description |
 |------|-----------|
-| 🚀 **[Início Rápido](docs/QUICK_START.md)** | Como começar em 30 segundos |
-| 🧪 **[Como Testar](docs/HOW_TO_TEST.md)** | Guia completo com troubleshooting |
-| ✏️ **[Editor SVG](docs/EDITOR.md)** | Documentação completa do editor |
-| 🧠 **[Categorização](docs/CATEGORIZATION.md)** | Sistema de detecção inteligente |
-| 🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)** | Solução de problemas |
-| 🗺️ **[Roadmap](docs/ROADMAP.md)** | Plano de desenvolvimento |
+| 🚀 **[Quick Start](docs/QUICK_START.md)** | Get started in 30 seconds |
+| 🧪 **[How to Test](docs/HOW_TO_TEST.md)** | Complete guide with troubleshooting |
+| ✏️ **[SVG Editor](docs/EDITOR.md)** | Complete editor documentation |
+| 🧠 **[Categorization](docs/CATEGORIZATION.md)** | Smart detection system |
+| 🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)** | Problem solving |
+| 🗺️ **[Roadmap](docs/ROADMAP.md)** | Development plan |
 
 ---
 
 ## 🗺️ Roadmap
 
-| Versão | Status |
+| Version | Status |
 |--------|--------|
-| v1.0 - Visualizador | ✅ Concluído |
-| v1.1 - Melhorias UX | ✅ Concluído |
-| v2.0 - Editor SVG | ✅ Concluído |
-| v3.0 - Avançado | 📋 Planejado |
+| v1.0 - Viewer | ✅ Completed |
+| v1.1 - UX Improvements | ✅ Completed |
+| v2.0 - SVG Editor | ✅ Completed |
+| v2.1 - Internationalization | ✅ Completed |
+| v3.0 - Advanced | 📋 Planned |
 
-**[📖 Ver roadmap completo](docs/ROADMAP.md)**
+**[📖 View complete roadmap](docs/ROADMAP.md)**
 
 ---
 
-## 🌐 Compatibilidade
+## 🌐 Browser Compatibility
 
-| Navegador | Versão | Status |
+| Browser | Version | Status |
 |-----------|--------|--------|
 | Chrome | 90+ | ✅ |
 | Edge | 90+ | ✅ |
@@ -130,30 +138,30 @@ icons/
 
 ---
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-Contribuições são bem-vindas!
+Contributions are welcome!
 
-- 🐛 **[Reportar bugs](https://github.com/vindocel/SVGaze/issues)**
-- 💡 **Sugerir features**
+- 🐛 **[Report bugs](https://github.com/vindocel/SVGaze/issues)**
+- 💡 **Suggest features**
 - 🔧 **Pull requests**
 
-### Diretrizes
-- Código vanilla (sem dependências)
+### Guidelines
+- Vanilla code (no dependencies)
 - ES6 modules
-- Commits semânticos
+- Semantic commits
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-**MIT License** — use comercialmente, modifique, distribua livremente.
+**MIT License** — use commercially, modify, distribute freely.
 
-⚠️ **"SVGaze"** e **"svgaze.com"** são marcas registradas.
+⚠️ **"SVGaze"** and **"svgaze.com"** are registered trademarks.
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
 **Vindocel** — [@vindocel](https://github.com/vindocel) | [app.svgaze.com](https://app.svgaze.com)
 
@@ -161,7 +169,7 @@ Contribuições são bem-vindas!
 
 <div align="center">
 
-**Se este projeto foi útil, considere dar uma ⭐ no repositório!**
+**If this project was helpful, consider giving it a ⭐ on the repository!**
 
 [🌐 App](https://app.svgaze.com) • [📖 Docs](docs/) • [🐛 Issues](https://github.com/vindocel/SVGaze/issues)
 

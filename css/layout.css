@@ -33,6 +33,11 @@ header.app-header {
   overflow-y: hidden;
 }
 
+/* Allow language dropdown to escape header bounds when open */
+header.app-header:has(.language-selector.is-open) {
+  overflow: visible;
+}
+
 header.app-header::-webkit-scrollbar {
   height: 6px;
 }
@@ -133,6 +138,103 @@ header h1 {
   margin-left: auto;
   flex-wrap: nowrap;
   white-space: nowrap;
+}
+
+/* === Language Selector === */
+.language-selector {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.language-selector.is-open {
+  z-index: 100;
+}
+
+.language-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.language-btn svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.language-btn:hover {
+  background: var(--bg);
+  border-color: var(--border-hover);
+}
+
+.language-btn:active {
+  transform: scale(0.98);
+}
+
+.language-text {
+  min-width: 20px;
+  text-align: center;
+}
+
+.language-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  list-style: none;
+  padding: 4px;
+  margin: 0;
+  z-index: 9999;
+}
+
+.language-selector.is-open .language-menu {
+  display: block;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.language-option:hover {
+  background: var(--bg);
+}
+
+.language-option.is-selected {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.language-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.language-name {
+  flex: 1;
+  font-size: var(--font-size-sm);
 }
 
 /* === Secondary Toolbar === */
@@ -286,8 +388,9 @@ footer {
   }
 
   .view-toggle-btn {
-    padding: 6px 8px;
+    padding: 8px;
     font-size: var(--font-size-sm);
+    min-width: 40px;
   }
 
   /* Ocultar texto dos botões em mobile, mostrar apenas ícones */
@@ -300,6 +403,21 @@ footer {
     gap: 6px;
   }
 
+  /* Language selector em mobile - apenas ícone de globo */
+  .language-btn {
+    padding: 8px;
+    min-width: 40px;
+  }
+
+  .language-text {
+    display: none;
+  }
+
+  .language-menu {
+    right: 0;
+    min-width: 180px;
+  }
+
   /* Reduzir tamanho do switch de tema */
   .switch {
     --width-of-switch: 2.8em;
@@ -310,14 +428,9 @@ footer {
 
   /* Reduzir tamanho do botão mobile */
   .mobile-toolbar-toggle {
-    width: 36px;
-    height: 36px;
-    padding: 6px;
-  }
-
-  .mobile-toolbar-toggle svg {
-    width: 18px;
-    height: 18px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
   }
 
   /* Mobile toolbar as dropdown */

@@ -1,151 +1,139 @@
 # Changelog
 
-Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
+All notable changes to this project will be documented in this file.
 
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
-e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Não Lançado]
+## [Unreleased]
 
-### Adicionado - Melhorias de UX e Interface
-- **Novo design de cards modernizado**:
-  - Preview com aspect-ratio 1:1 e background temático
-  - Botão de favorito posicionado no canto superior direito da preview
-  - Filename centralizado abaixo da preview
-  - Badges de estilo e subcategoria centralizadas
-  - Botão "Abrir" como ação primária ocupando toda largura
-  - Botões "Editar" e "Copiar" como links secundários no rodapé
-- **Ícones nos botões do header**:
-  - Botão "Galeria" com ícone de galeria (imagem)
-  - Botão "Editor" com ícone de workflow/git
-  - Botão "Selecionar pasta" com ícone de pasta
-  - Desktop: ícone + texto visíveis
-  - Mobile: apenas ícone visível (exceto "Selecionar pasta" que mantém ambos)
-- **Melhorias no comportamento do logo**:
-  - Clicar no logo no modo galeria reseta filtros para "Todas as categorias"
-  - Scroll suave para o topo da página ao clicar no logo
-  - Atualização correta do estado do dropdown de categorias
-- **Otimização de espaço no header mobile**:
-  - Elementos reduzidos em escala (logo 24px, botões menores, switch compacto)
-  - Elimina necessidade de scroll horizontal
-  - Botão de menu mobile movido para o header primário
-  - Layout mais harmonioso e compacto
+### Added - Internationalization System
+- **Complete i18n implementation** with 2 languages (PT-BR, EN-US)
+  - Dynamic language loading with ES6 async imports
+  - Automatic system language detection via `navigator.language`
+  - Manual language switcher with globe icon in header
+  - Language preference saved to localStorage
+  - Full page reload on language change for 100% translation coverage
+- **Translation system**:
+  - 375+ translation keys covering entire UI
+  - Nested key support with dot notation (`header.title`)
+  - Variable interpolation (`{count} items`)
+  - Plural forms support
+  - `data-i18n` attributes for static HTML elements
+  - `t()` function calls for dynamic JavaScript content
 
-### Adicionado - Nova View de Editor SVG
-- **Sistema de visualização dual** (Galeria ↔ Editor) com gerenciador de views
-- **Editor de código** com syntax highlighting customizado para SVG/XML
-- **Preview ao vivo** com controles de zoom (10%-5000%), pan e alternância de grid/checkered
-- **Sistema de 5 abas de exportação**:
-  - Preview: Visualização do SVG com controles de zoom
-  - React: Conversão para componente JSX com opções (TypeScript, aspas simples)
-  - React Native: Template de componente com react-native-svg
-  - PNG: Exportação de imagem com seletor de escala (1x-4x)
-  - Data URI: Geração de URI base64 e encodeURIComponent
-- **Modal SVGO** com 20+ opções de otimização configuráveis
-- **Ferramentas de transformação**:
-  - Rotação (90° horário e anti-horário)
-  - Espelhamento (Horizontal e Vertical)
-  - Editor de dimensões com bloqueio proporcional
-- **Botão "Editar"** nos cards e modal da galeria para abrir SVG no editor
-- **Detecção inteligente de cores** (monocromático vs multicolorido) para aplicação automática de tema
-- **Resolução de cores CSS** para SVGs com `<style>` tags e classes (ex: `.fil1 {fill:black}`)
-- **Sistema de toast** para notificações de ações do usuário
-- **14 novos módulos JavaScript** do editor:
-  - `viewManager.js` - Gerenciamento de views
-  - `editorManager.js` - Orquestrador principal
-  - `editorCodeManager.js` - Editor de código
-  - `editorPreviewManager.js` - Preview com zoom/pan
-  - `editorToolsManager.js` - Ferramentas principais
-  - `editorExportManager.js` - Exportação multi-formato
-  - `editorTabManager.js` - Sistema de abas
-  - `editorTransformManager.js` - Transformações
-  - `editorDimensionsManager.js` - Editor de dimensões
-  - `editorSvgoManager.js` - Integração SVGO
-  - `editorSvgMapper.js` - Mapeamento SVG para React/RN
-  - `editorSyntaxHighlighter.js` - Syntax highlighting
-  - `svgColorDetector.js` - Detecção de cores
-  - `toast.js` - Notificações
-- **3 novos arquivos CSS**: `editor.css`, `svgo-modal.css`, `toast.css`
+### Added - Icon Standardization
+- **Consistent 20×20px icons** across entire navbar
+  - View toggle buttons (Gallery/Editor): 16px → 20px
+  - Language selector: 16px → 20px
+  - Mobile menu toggle: maintained at 20px
+- **Uniform button styling** in mobile view:
+  - All buttons: 40×40px with 8px padding
+  - Perfect vertical and horizontal centering
+  - Harmonious visual proportion
 
-### Adicionado - Branding Atualizado
-- Nova logo polida com viewBox 400x400
-- Favicons dinâmicos (dark/light) que adaptam ao tema do sistema
-- Logo interativa (clique navega para galeria ou abre no editor)
-- Tradução "Carregar SVG" para botão de upload no editor
+### Added - UX & Interface Improvements
+- **Modernized card design**:
+  - Preview with 1:1 aspect-ratio and themed background
+  - Favorite button positioned at top-right of preview
+  - Centered filename below preview
+  - Centered style and subcategory badges
+  - "Open" button as primary action spanning full width
+  - "Edit" and "Copy" buttons as secondary ghost links in footer
+- **Icons in header buttons**:
+  - "Gallery" button with gallery icon (image)
+  - "Editor" button with workflow/git icon
+  - "Select folder" button with folder icon
+  - Desktop: icon + text visible
+  - Mobile: icon only (except "Select folder" which keeps both)
+- **Logo behavior improvements**:
+  - Clicking logo in gallery mode resets filters to "All categories"
+  - Smooth scroll to top when clicking logo
+  - Correct dropdown state update
+- **Mobile header optimization**:
+  - Scaled-down elements (24px logo, smaller buttons, compact switch)
+  - Eliminates horizontal scroll
+  - Mobile menu button moved to primary header
+  - More harmonious and compact layout
 
-### Adicionado - Melhorias na Galeria
-- Seção de favoritos dedicada no topo da galeria com destaque visual
-- Ícones de categoria nos cabeçalhos da galeria
-- Ícones de categoria no menu de filtro de categorias
-- Sistema de seleção inteligente de ícones por categoria com correspondência semântica
-- Componente dropdown customizado substituindo `<select>` nativo
-- Suporte visual a ícones no dropdown de categorias
-- Navegação por teclado completa no dropdown (setas, Enter, Escape, Tab)
-- Gerenciador de ícones de categoria (`categoryIconManager.js`)
-- Gerenciador de dropdown customizado (`dropdownManager.js`)
-- Estilos CSS para componente dropdown (`dropdown.css`)
-- Consistência de estilo para todos os ícones de categoria (usa o estilo mais comum)
-- Adaptação automática de cores dos ícones ao tema (claro/escuro)
+### Added - SVG Editor View
+- **Dual view system** (Gallery ↔ Editor) with view manager
+- **Code editor** with custom SVG/XML syntax highlighting
+- **Live preview** with zoom controls (10%-5000%), pan, and grid/checkered toggle
+- **5-tab export system**:
+  - Preview: SVG visualization with zoom controls
+  - React: JSX component conversion with options (TypeScript, single quotes)
+  - React Native: Component template with react-native-svg
+  - PNG: Image export with scale selector (1x-4x)
+  - Data URI: Base64 and encodeURIComponent URI generation
+- **SVGO modal** with 20+ configurable optimization options
+- **Transformation tools**:
+  - Rotation (90° clockwise and counter-clockwise)
+  - Flipping (Horizontal and Vertical)
+  - Dimensions editor with proportional lock
+- **"Edit" button** in gallery cards and modal to open SVG in editor
+- **Smart color detection** (monochrome vs multicolor) for automatic theme application
 
-### Alterado
-- Arquitetura expandida para **26 módulos JavaScript ES6** (era 15)
-- **12 componentes CSS** modulares (era 8)
-- Favoritos agora aparecem apenas na seção "⭐ Favoritos", não mais duplicados nas categorias originais
-- Menu de categorias usa dropdown customizado em vez de `<select>` padrão
-- Ícones de categoria agora usam correspondência semântica inteligente em vez de seleção aleatória
-- Zoom do preview exibe valores inteiros (ex: "106%" em vez de "106.1520150601%")
-- Preview PNG renderiza em tamanho limitado (máx 400px) para melhor visualização
+### Added - Technical Infrastructure
+- **26 JavaScript ES6 modules** — fully modular architecture
+- **12 CSS files** — componentized design system
+- **i18n module** (`i18n/i18n.js`) with dynamic imports
+- **Translation files**: `i18n/en-US.js` and `i18n/pt-BR.js`
+- **Dropdown manager** adapted for i18n with span support
 
-### Corrigido
-- Problema de texto cortado no botão do dropdown
-- Ícones aparecendo pretos no tema escuro (agora adaptam corretamente)
-- Menu dropdown sendo cortado dentro da toolbar (overflow context)
-- Duplicação de favoritos na galeria
-- Conflito de padding no botão do dropdown
-- SVGs com `fill="none"` no elemento raiz agora recebem coloração correta
-- SVGs com elementos dentro de `<g>` (grupos) agora são processados corretamente
-- Scroll horizontal desnecessário no header mobile
-- Comportamento incorreto ao clicar no logo (não resetava para "Todas as categorias")
+### Added - Features & Capabilities
+- **Toast notification system** for user feedback (success, error, info, warning)
+- **Modal system** with keyboard navigation (Esc to close)
+- **Settings persistence** across sessions
+- **Export code formatting** (Prettier-like) for React components
+- **PNG export** renders at limited size (max 400px) for better visualization
+
+### Fixed
+- Dropdown text being cut off
+- Icons appearing black in dark theme (now adapt correctly)
+- Dropdown menu being cut off inside toolbar (overflow context)
+- Duplicate favorites in gallery
+- Padding conflict in dropdown button
+- SVGs with `fill="none"` on root element now receive correct coloring
+- SVGs with elements inside `<g>` (groups) now process correctly
+- Unnecessary horizontal scroll in mobile header
+- Incorrect behavior when clicking logo (didn't reset to "All categories")
+- Language menu misalignment and inconsistent icon sizes
+- Missing translation imports in `modalManager.js` and `viewManager.js`
 
 ## [1.1.0] - 2025-01-07
 
-### Adicionado
-- Arquitetura 100% modular (13 módulos JS + 7 CSS)
-- Sistema de categorização inteligente
-- Detecção automática de estilos (Outline, Solid, Linear, etc)
-- Suporte a estilos compostos ("Linear (Border)")
-- Suporte a separadores variados ("Name- Style", "Name - Style")
-- Badges de estilo nos cards
-- Unificação de categorias duplicadas
-- Layout de botões otimizado (★ Abrir Copiar)
-- Copiar caminho completo com nome do arquivo
-- Tema claro/escuro com toggle animado
-- Cores adaptativas por tema (SVGs pretos/brancos)
-- Tema escuro com paleta cinza neutra (#1d1f24)
-- Renderização correta de ícones stroke-only
-- Ordenação inteligente agrupando variantes
+### Added
+- 100% modular architecture (13 JS modules + 7 CSS files)
+- Smart categorization system
+- Automatic style detection (Outline, Solid, Linear, etc)
+- Composite style support ("Linear (Border)")
+- Subcategory extraction from folder structure
+- Style filter dropdown
+- Badge system (style + subcategory) on cards
+- Color picker for global icon color
+- Size slider (24px - 180px)
+- Instant search
+- Favorites system with localStorage
+- Copy SVG to clipboard
+- SVG sanitization (removes scripts and dangerous content)
+- ViewBox support with smart correction
+- 100% local processing (no upload)
 
-### Alterado
-- Reorganização completa da arquitetura em módulos ES6
-- Sistema de categorização migrado de pastas para detecção semântica
-- Interface redesenhada com design system moderno
+## [1.0.0] - 2025-01-05
 
-## [1.0.0] - 2024-12-15
+### Added
+- Initial release
+- SVG gallery with responsive grid
+- Category filter
+- Light/dark theme
+- Modal preview
+- Favorites system
+- Copy SVG to clipboard
+- SVG sanitization (removes scripts and dangerous content)
+- ViewBox support with smart correction
+- 100% local processing (no upload)
 
-### Adicionado
-- Visualizador de ícones SVG com galeria responsiva
-- Preview em tempo real de todos os SVGs
-- Modal de visualização ampliada
-- Busca instantânea por nome de arquivo
-- Filtro por categoria
-- Seletor de cor global
-- Controle de tamanho com slider (24px - 180px)
-- Sistema de favoritos com localStorage
-- Copiar SVG para área de transferência
-- Sanitização de SVG (remove scripts e conteúdo perigoso)
-- Suporte a viewBox com correção inteligente
-- Processamento 100% local (sem upload)
-
-[Não Lançado]: https://github.com/vindocel/SVGaze/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/vindocel/SVGaze/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/vindocel/SVGaze/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/vindocel/SVGaze/releases/tag/v1.0.0

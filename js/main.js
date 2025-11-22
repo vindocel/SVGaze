@@ -5,7 +5,7 @@
  * This is the only script loaded by index.html.
  */
 
-import { initI18n, t } from '../i18n/i18n.js';
+import { initI18n, t, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
 import { appState } from './state.js';
 import { initFileHandler } from './modules/fileHandler.js';
 import { initGallery, renderGallery, populateCategoryFilter } from './modules/galleryRenderer.js';
@@ -21,7 +21,7 @@ import { initViewManager } from './modules/viewManager.js';
 import { initEditorManager } from './modules/editorManager.js';
 
 // DOM Elements
-let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle, appBranding;
+let dirInput, searchInput, categoryDropdown, colorPicker, sizeRange, clearFavBtn, activeColorLabel, themeToggle, appBranding, languageSelector, languageBtn, languageMenu, languageText;
 
 // Track if user manually changed color (to preserve across theme changes)
 let userChangedColor = false;
@@ -45,6 +45,10 @@ function init() {
   activeColorLabel = document.getElementById('activeColorLabel');
   themeToggle = document.getElementById('themeToggle');
   appBranding = document.querySelector('.app-branding');
+  languageSelector = document.getElementById('languageSelector');
+  languageBtn = document.getElementById('languageBtn');
+  languageMenu = document.getElementById('languageMenu');
+  languageText = document.getElementById('languageText');
 
   // Initialize modules
   initGallery();
@@ -149,6 +153,47 @@ function setupEventListeners() {
       window.dispatchEvent(new CustomEvent('theme-changed', {
         detail: { theme: newTheme }
       }));
+    });
+  }
+
+  // Language selector
+  if (languageSelector && languageBtn && languageMenu) {
+    // Update UI to show current language
+    updateLanguageUI();
+
+    // Toggle language menu
+    languageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = languageSelector.classList.toggle('is-open');
+      languageBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Handle language option selection
+    languageMenu.querySelectorAll('.language-option').forEach(option => {
+      option.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const selectedLang = option.getAttribute('data-lang');
+
+        if (selectedLang && selectedLang !== getCurrentLanguage()) {
+          // Change language
+          await setLanguage(selectedLang);
+
+          // Reload page to apply all translations
+          window.location.reload();
+        }
+
+        // Close menu
+        languageSelector.classList.remove('is-open');
+        languageBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close language menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!languageSelector.contains(e.target)) {
+        languageSelector.classList.remove('is-open');
+        languageBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 
@@ -293,6 +338,30 @@ function onFilesLoaded(items) {
   // Apply colors and sizes
   applyColor();
   applySize();
+}
+
+/**
+ * Update language selector UI based on current language
+ */
+function updateLanguageUI() {
+  const currentLang = getCurrentLanguage();
+
+  // Update button text (PT or EN)
+  if (languageText) {
+    languageText.textContent = currentLang === 'en-US' ? 'EN' : 'PT';
+  }
+
+  // Update selected state in menu
+  if (languageMenu) {
+    languageMenu.querySelectorAll('.language-option').forEach(option => {
+      const lang = option.getAttribute('data-lang');
+      if (lang === currentLang) {
+        option.classList.add('is-selected');
+      } else {
+        option.classList.remove('is-selected');
+      }
+    });
+  }
 }
 
 /**
