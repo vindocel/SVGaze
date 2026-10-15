@@ -19,13 +19,17 @@
 - Style badges (Outline, Solid) on cards
 
 ### ✏️ Integrated SVG Editor
-- Code editor with syntax highlighting
+- Code editor with 14px XML syntax highlighting, inline color pickers and source-linked shape inspection
 - Live preview with zoom (10%-5000%), pan, and grid
 - 5 export formats: Preview, React, React Native, PNG, Data URI
-- SVGO optimization with 20+ configurable options
+- Local SVGO 4 optimization in a Web Worker, 41 working options, independent precision and automatic savings estimates
 - Transformation tools (rotate, flip, dimensions)
+- Proportional dimensions while typing, full color editing, React/React Native conversion, raster formats and favicon ZIP
+- Switching themes preserves the document, active tab, preview and camera
 
 **[📖 Complete Editor Documentation](docs/EDITOR.md)**
+
+**[GitHub Pages editor integration and development checks](docs/GITHUB_PAGES_EDITOR.md)** — static hosting, no backend, no API key required.
 
 ### 🌍 Internationalization
 - Automatic system language detection (PT-BR, EN-US)
@@ -93,9 +97,10 @@ icons/
 
 ## 🛠️ Technologies
 
-- **26 JavaScript ES6 modules** — modular architecture
-- **12 CSS files** — componentized design system
-- **Zero runtime dependencies** — vanilla JS
+- **JavaScript ES modules** — modular, vanilla application code
+- **Componentized CSS** — existing SVGaze design tokens
+- **Vendored browser libraries** — CodeMirror, SVGO, Prism and local XML/ZIP helpers; no CDN requests or runtime installation
+- **Static GitHub Pages hosting** — no server or deployment build required; npm scripts are for development and library maintenance only
 - **Native APIs:** File System Access, DOMParser, Clipboard, LocalStorage
 
 ---

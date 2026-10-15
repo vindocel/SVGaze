@@ -546,11 +546,11 @@ if (DEBUG) {
 
 ```javascript
 // Get first item's debug info
-const item = svgViewer.getAll()[0];
+const item = svgaze.getAll()[0];
 console.log(item._debug);
 
 // Get all categories
-const categories = [...new Set(svgViewer.getAll().map(i => i.category))];
+const categories = [...new Set(svgaze.getAll().map(i => i.category))];
 console.log('Categories found:', categories);
 ```
 

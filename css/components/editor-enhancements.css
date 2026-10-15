@@ -1,0 +1,730 @@
+/* Editor capabilities inherit SVGaze's design tokens; gallery styles stay intact. */
+#editorCode .CodeMirror.cm-s-svgaze {
+  font:
+    14px/1.8 Consolas,
+    "Cascadia Code",
+    Monaco,
+    monospace;
+  background: var(--card);
+  color: var(--text-primary);
+}
+#editorCode .cm-s-svgaze .CodeMirror-gutters {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+#editorCode .cm-s-svgaze .CodeMirror-linenumber {
+  color: var(--text-muted);
+}
+#editorCode .cm-s-svgaze .CodeMirror-cursor {
+  border-left-color: var(--text-primary);
+}
+#editorCode .cm-s-svgaze .cm-tag {
+  color: #c94757;
+}
+#editorCode .cm-s-svgaze .cm-attribute {
+  color: #a86313;
+}
+#editorCode .cm-s-svgaze .cm-string {
+  color: #0a855b;
+}
+#editorCode .cm-s-svgaze .cm-bracket {
+  color: #7c8088;
+}
+#editorCode .cm-s-svgaze .cm-comment {
+  color: #89909c;
+  font-style: italic;
+}
+#editorCode .cm-s-svgaze .cm-meta {
+  color: #8256b2;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-tag {
+  color: #f07178;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-attribute {
+  color: #ffb454;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-string {
+  color: #35cda5;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-bracket {
+  color: #a6a6a6;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-comment {
+  color: #7d858f;
+}
+[data-theme="dark"] #editorCode .cm-s-svgaze .cm-meta {
+  color: #b9a1e8;
+}
+#editorCode .CodeMirror-selected {
+  background: var(--primary-light) !important;
+}
+.svgaze-source-highlight {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+}
+#editorCode input.svgaze-inline-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+  border: 0;
+  padding: 0;
+  margin: 0 4px;
+  background: transparent;
+  cursor: pointer;
+}
+#editorCode input.svgaze-inline-color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+#editorCode input.svgaze-inline-color::-webkit-color-swatch {
+  border: 1px solid var(--border-hover);
+  border-radius: 2px;
+}
+#previewContent {
+  display: block;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  transform: none !important;
+  transition: none;
+  background: transparent;
+}
+.svgaze-artboard {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  outline: 1px dashed var(--text-muted);
+  outline-offset: 1px;
+  background: transparent;
+}
+.svgaze-preview-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: light;
+}
+.preview-container {
+  touch-action: none;
+}
+.preview-container.svgaze-panning {
+  cursor: grabbing;
+}
+.svgaze-shape-highlight {
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid var(--primary);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
+  z-index: 1;
+}
+.svgaze-shape-highlight[hidden] {
+  display: none;
+}
+.svgaze-shape-highlight > span {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: -1px;
+  background: var(--primary);
+  color: white;
+  font:
+    10px/1.5 Consolas,
+    monospace;
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+.svgaze-shape-highlight:before,
+.svgaze-shape-highlight:after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--card);
+  border: 1px solid var(--primary);
+}
+.svgaze-shape-highlight:before {
+  left: -3px;
+  top: -3px;
+}
+.svgaze-shape-highlight:after {
+  bottom: -3px;
+  right: -3px;
+}
+.svgaze-background-select,
+.svgaze-raster-controls select,
+.svgaze-raster-controls input,
+.svgaze-small-modal select,
+.svgaze-color-row input[type="text"] {
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px;
+}
+.svgaze-background-select {
+  max-width: 100px;
+  min-width: 0;
+}
+.svgaze-background-color {
+  border: 0;
+  padding: 0;
+  background: none;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+#editor .preview-footer {
+  flex-wrap: wrap;
+}
+#editor .preview-footer .footer-left {
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.svgaze-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.svgaze-small-modal {
+  max-width: 420px;
+}
+.svgaze-small-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.svgaze-small-modal h2 {
+  font-size: 16px;
+  margin: 0;
+}
+.svgaze-small-modal .modal-body {
+  padding-top: 16px;
+}
+.svgaze-color-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 10px 0;
+}
+.svgaze-color-row input[type="color"] {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.svgaze-color-row input[type="text"] {
+  width: 100px;
+  min-width: 0;
+}
+.svgaze-color-row span {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.svgaze-color-row button {
+  margin-left: auto;
+  font: 11px monospace;
+  padding: 4px;
+}
+.svgaze-settings-backdrop {
+  background: transparent;
+  backdrop-filter: none;
+}
+.svgaze-settings-backdrop .svgo-modal-content {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  max-width: calc(100vw - 16px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  animation: none;
+  overflow: hidden;
+}
+.svgaze-settings-backdrop .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+.svgaze-settings-backdrop h2 {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-secondary);
+}
+.svgaze-settings-backdrop .svgo-modal-body {
+  padding: 0 12px 12px;
+  max-height: none;
+  overflow: auto;
+  min-height: 0;
+}
+.svgaze-settings-backdrop .svgo-plugins-grid {
+  grid-template-columns: 1fr;
+  gap: 1px;
+}
+.svgaze-settings-backdrop .svgo-plugin-item {
+  padding: 5px 4px;
+  border-color: transparent;
+  background: transparent;
+  border-radius: 3px;
+}
+.svgaze-settings-backdrop .svgo-plugin-item span {
+  font-size: 12px;
+}
+.svgaze-settings-backdrop .svgo-plugin-item input:checked + span {
+  color: var(--text-primary);
+  font-weight: 400;
+}
+.svgaze-settings-backdrop .svgo-plugin-item:hover {
+  background: var(--bg);
+}
+.svgaze-settings-backdrop .modal-footer {
+  flex-shrink: 0;
+  justify-content: space-between;
+  padding: 9px 12px;
+}
+.svgaze-settings-backdrop .modal-footer .btn {
+  font-size: 12px;
+  padding: 7px;
+}
+.svgaze-precision {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  padding: 6px 0 14px;
+}
+.svgaze-precision label {
+  flex: 1;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.svgaze-precision output {
+  float: right;
+  color: var(--primary);
+}
+.svgaze-precision input {
+  width: 100%;
+  margin-top: 12px;
+  accent-color: var(--primary);
+}
+.svgaze-raster-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+.svgaze-raster-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.svgaze-raster-controls input[type="number"] {
+  width: 67px;
+}
+.svgaze-raster-controls input[type="range"] {
+  width: 75px;
+  accent-color: var(--primary);
+}
+#pngPreviewArea img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+#tabPNG .png-footer {
+  flex-wrap: wrap;
+}
+#tabPNG .footer-right {
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.modal-close {
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 22px;
+  cursor: pointer;
+}
+@media (max-width: 800px) {
+  #editor .code-toolbar {
+    height: auto;
+    min-height: 48px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .svgaze-background-select {
+    max-width: 80px;
+  }
+  .svgaze-quality {
+    display: none;
+  }
+  .svgaze-raster-controls {
+    gap: 6px;
+  }
+}
+
+/* SVGaze editor toolbar arrangement and theme tokens. */
+#editor .code-toolbar,
+#editor .export-tabs {
+  box-sizing: border-box;
+  min-height: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  padding: 8px 12px;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  overflow: visible;
+}
+#editor .code-toolbar {
+  flex-wrap: nowrap;
+}
+#editor .toolbar-group {
+  gap: 3px;
+  min-width: 0;
+}
+#editor .toolbar-group:last-child {
+  margin-left: auto;
+}
+#editor .icon-btn-minimal {
+  width: 28px;
+  height: 30px;
+  flex-shrink: 0;
+}
+#editor .btn-minimal,
+#editor .btn-dimensions,
+#editor .btn-optimize {
+  padding: 5px 6px;
+  font-size: 12px;
+  gap: 5px;
+  white-space: nowrap;
+}
+#editor .btn-optimize {
+  background: transparent;
+  color: var(--text-primary);
+}
+#editor .optimize-sizes {
+  background: var(--success);
+  color: white;
+  padding: 1px 4px;
+  border-radius: 3px;
+  gap: 4px;
+  font-size: 11px;
+}
+#editor .optimize-percent {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+#editor .preview-panel > .panel-header[hidden] {
+  display: none;
+}
+#editor .export-tabs {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+}
+#editor .export-tab {
+  border: 0;
+  border-radius: 5px;
+  padding: 8px 16px;
+  min-height: 32px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+#editor .export-tab.active {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+#editor .export-tab::after {
+  display: none;
+}
+.svgaze-code-status {
+  display: flex;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px 4px 18px;
+  background: var(--card);
+  gap: 8px;
+}
+#editorCursorPosition {
+  font:
+    11px Consolas,
+    monospace;
+  color: var(--text-secondary);
+}
+.svgaze-code-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.svgaze-wrap-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  background: var(--bg);
+  font-size: 11px;
+}
+.svgaze-wrap-toggle:has(input:checked) {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.svgaze-wrap-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.svgaze-wrap-toggle:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+#editor .svgaze-code-actions .btn-minimal {
+  background: var(--bg);
+  padding: 3px 7px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+#editorCode .CodeMirror-gutters {
+  border: 0;
+  background: var(--card);
+}
+#editorCode .CodeMirror-lines {
+  padding-top: 8px;
+}
+#editor .code-footer,
+#editor .preview-footer {
+  box-sizing: border-box;
+  min-height: 56px;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  gap: 8px;
+}
+#editor .btn-footer {
+  border: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  padding: 7px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+  gap: 5px;
+}
+#editor #editorUpload,
+#editor #downloadPreviewSVG {
+  background: var(--primary);
+  color: white;
+}
+#editor #editorShare {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+#editor .preview-footer .footer-left {
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+#editor .preview-footer .icon-btn {
+  background: var(--bg);
+  border: 0;
+  height: 30px;
+  width: 30px;
+}
+#editor #previewCheckered {
+  order: 5;
+}
+#editor #previewDimensions {
+  display: none;
+}
+.svgaze-background-swatches {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  order: 6;
+  margin-left: 5px;
+}
+.svgaze-background-swatch {
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  border: 1px solid var(--border-hover);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.svgaze-background-swatch[aria-pressed="true"] {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+#editor .svgaze-background-color {
+  order: 7;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+}
+.svgaze-background-color::-webkit-color-swatch-wrapper {
+  opacity: 0;
+}
+.svgaze-preview-coordinates {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  z-index: 2;
+  pointer-events: none;
+  font:
+    11px Consolas,
+    monospace;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+.svgaze-document-colors {
+  display: inline-flex;
+  margin-right: 6px;
+}
+.svgaze-document-colors i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hover);
+  margin-right: -6px;
+}
+#editorColors {
+  display: inline-flex;
+  align-items: center;
+}
+.svgaze-format-utilities {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+#editor .editor-resizer {
+  flex: 0 0 4px;
+}
+.svgaze-settings-backdrop .svgaze-small-modal {
+  position: fixed;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-lg);
+}
+@media (max-width: 1400px) and (min-width: 801px) {
+  #editor .code-toolbar {
+    height: auto;
+    min-height: 56px;
+    flex-basis: auto;
+    flex-wrap: wrap;
+  }
+  #editor .code-toolbar .toolbar-group:last-child {
+    margin-left: auto;
+  }
+  #editor .preview-footer {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 800px) {
+  #editor .code-toolbar {
+    height: auto;
+    flex-basis: auto;
+    flex-wrap: wrap;
+  }
+  #editor .code-panel,
+  #editor .preview-panel {
+    min-width: 0;
+  }
+  #editor .export-tabs {
+    height: 48px;
+    min-height: 48px;
+    flex-basis: 48px;
+  }
+  #editor .preview-footer .footer-left {
+    flex-wrap: wrap;
+  }
+  #editor .svgaze-background-swatches {
+    gap: 4px;
+  }
+}
+
+/* One shared hover surface, with independent action and menu hit targets. */
+#editor .svgaze-split-button {
+  display: inline-flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+#editor .svgaze-split-button:hover,
+#editor .svgaze-split-button:focus-within {
+  background: var(--bg);
+  border-color: var(--border);
+}
+#editor .svgaze-split-button > button,
+#editor .svgaze-split-button > button:hover,
+#editor .svgaze-split-button > button:active {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  transform: none;
+  margin: 0;
+  height: 30px;
+  min-height: 30px;
+}
+#editor .svgaze-split-button > button:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  padding-left: 8px;
+}
+#editor .svgaze-split-button > button:last-child {
+  width: 25px;
+  border-left: 1px solid transparent;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+#editor .svgaze-split-button:hover > button:last-child,
+#editor .svgaze-split-button:focus-within > button:last-child {
+  border-left-color: var(--border);
+}
+#editor .svgaze-split-button > button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+#editor .svgaze-split-button #editorOptimize.optimized {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+#editorCode input.svgaze-inline-color:hover {
+  transform: none;
+  border: 0;
+  background: transparent;
+}
+#editorCode input.svgaze-inline-color::-moz-color-swatch {
+  border: 1px solid var(--border-hover);
+  border-radius: 2px;
+}
+#editor #editorOptimize.optimized .optimize-sizes {
+  display: none !important;
+}

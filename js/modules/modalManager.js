@@ -113,7 +113,7 @@ export function openModal(item) {
     modalEditBtn.onclick = () => {
       const svgText = getSVGText(item);
       if (svgText) {
-        openInEditor(svgText, item.name);
+        openInEditor(svgText, item.fileName || item.name || 'untitled.svg');
         closeModal();
       }
     };

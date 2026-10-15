@@ -76,7 +76,7 @@ function init() {
   applyInitialState();
 
   // Expose API for debugging
-  window.svgViewer = {
+  window.svgaze = {
     getAll: () => appState.allItems,
     getFavorites: () => Array.from(appState.favorites),
     getState: () => appState
@@ -147,6 +147,7 @@ function setupEventListeners() {
     themeToggle.addEventListener('change', (e) => {
       const newTheme = e.target.checked ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', newTheme);
+      appState.ui.theme = newTheme;
       localStorage.setItem('theme', newTheme);
 
       // Dispatch custom event to notify editor preview of theme change
@@ -267,7 +268,7 @@ function setupEventListeners() {
   // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     // Ctrl+F or Cmd+F - Focus search
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+    if (appState.currentView === 'gallery' && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
       e.preventDefault();
       if (searchInput) {
         searchInput.focus();

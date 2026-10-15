@@ -100,3 +100,8 @@ lerna-debug.log*
 # ✅ CNAME
 # ✅ start-local.bat
 # ✅ start-local.sh
+
+# Versioned editor tests and reproducible development dependencies
+!/tests/
+!/tests/**
+!package-lock.json

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved - Editor workspace and local processing
+
+- Added the SVGaze workspace with document name, change indicator, undo/redo, export menu, validation status and byte count.
+- Keep code and preview visible with a persistent Swap panels button; preserve the preview document, selection and camera, with pointer/keyboard panel resizing in either order.
+- Added a collapsible contextual inspector for supported shape geometry, fill/stroke, stroke width, opacity, transforms, path data and points; preserve unrelated source and support undo.
+- Added image/code comparison of original and optimized SVGs, explicit apply and stale-snapshot protection.
+- Rebuilt optimization with local SVGO 4.1.0 in a lazy Web Worker, 41 functional settings, independent numeric/transform precision, preference migration and defaults restoration.
+- Added automatic savings estimates on load, edit and settings changes; display a disabled Optimized state after applying, hiding the estimate until the document/settings change.
+- Organized optimization settings into a searchable side panel with cleanup, geometry/colors and structure sections.
+- Added XML syntax highlighting, 14px code typography, inline color controls, search/replace, folding and formatting preferences for indentation and short tags.
+- Added isolated transparent previews with shape hover/click linked to source, pan, zoom, fit, grid, checkerboard, background colors and contextual coordinates.
+- Added live proportional dimensions and corrected flips/quarter turns, including rectangular and shifted viewBoxes; compose transforms into one matrix and remove identity wrappers.
+- Added global color editing and currentColor conversion.
+- Rebuilt XML-aware React/React Native conversion with JSX/TSX, dynamic imports, styles, namespaces, ARIA/data attributes and mixed text.
+- Added PNG/JPEG/WebP/ICO export, dimensions, scaling, background, quality, clipboard and favicon ZIP; keep export tabs synchronized with code edits.
+- Added Unicode-safe Data URI/Base64 and local SVG sharing through URL fragments.
+- Start with the bundled SVGaze icon; preserve explicitly opened gallery/upload/shared documents and filename handling.
+- Preserve code, preview, camera and active tab across theme changes; isolate SVG CSS from application styles.
+- Corrected language-menu stacking, editor search shortcuts, inline color sizing, safe notification cleanup and preview downloads without inspection attributes.
+- Added local drag/drop, validated uploads and SVG file paste; all editor processing remains in the browser without a backend or API key.
+- Vendored browser dependencies and license notices; keep static deployment compatible with GitHub Pages without a production build.
+- Added 37 automated tests and a static browser-import/asset check; manually checked desktop themes, mobile layout, inspector, settings, comparison and panel ordering.
+- Standardized editor documentation and developer-facing naming under SVGaze.
+
 ### Added - Internationalization System
 - **Complete i18n implementation** with 2 languages (PT-BR, EN-US)
   - Dynamic language loading with ES6 async imports

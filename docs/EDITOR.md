@@ -1,5 +1,7 @@
 # SVGaze Editor - Complete Documentation
 
+> Updated editor capabilities and GitHub Pages deployment notes are documented in [GITHUB_PAGES_EDITOR.md](GITHUB_PAGES_EDITOR.md). This includes the rebuilt settings, source-linked preview, theme regression fix, raster exports and automated checks.
+
 ## Overview
 
 The **SVGaze Editor** is a complete SVG code editor integrated into SVGaze. It allows editing, viewing, transforming, optimizing and exporting SVG files in multiple formats, all in real-time.

@@ -292,7 +292,7 @@ function createActions(item) {
     try {
       const svgText = getSVGText(item);
       if (svgText) {
-        openInEditor(svgText, item.name);
+        openInEditor(svgText, item.fileName || item.name || 'untitled.svg');
       }
     } catch (error) {
       console.error('Error loading SVG for editing:', error);

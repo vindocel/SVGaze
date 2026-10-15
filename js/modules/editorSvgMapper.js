@@ -1,259 +1,80 @@
-/**
- * SVGaze - Editor SVG Mapper
- *
- * Creates bidirectional mapping between SVG code lines and rendered elements
- * Enables interactive hover highlighting between code editor and preview
- */
+import { xmlParser } from '../vendor/xml-parser.js';
 
-// Mapping data structure
-let lineToElementMap = new Map(); // line number -> element IDs
-let elementToLineMap = new Map(); // element ID -> {start, end}
-let svgElements = new Map();      // element ID -> DOM element
-
-/**
- * Parse SVG code and create line-to-element mapping
- * @param {string} svgCode - SVG source code
- * @returns {object} - Mapping data
- */
-export function parseSvgCode(svgCode) {
-  console.log('🗺️ Parsing SVG code for mapping...');
-
-  // Reset maps
-  lineToElementMap.clear();
-  elementToLineMap.clear();
-  svgElements.clear();
-
-  const lines = svgCode.split('\n');
-  let elementCounter = 0;
-
-  // Track opening tags and their line numbers
-  const openTagRegex = /<(\w+)([^>]*?)>/g;
-  const selfClosingRegex = /<(\w+)([^>]*?)\/>/g;
-  const closingTagRegex = /<\/(\w+)>/g;
-
-  // Stack to track nested elements
-  const elementStack = [];
-
-  lines.forEach((line, lineIndex) => {
-    const lineNum = lineIndex + 1; // 1-based line numbers
-
-    // Check for self-closing tags (e.g., <circle ... />)
-    const selfClosingMatches = [...line.matchAll(selfClosingRegex)];
-    selfClosingMatches.forEach(match => {
-      const tagName = match[1];
-      if (isSvgElement(tagName)) {
-        const elementId = `svg-el-${elementCounter}`;
-        console.log(`📍 Line ${lineNum}: Found self-closing <${tagName}/> → ID: ${elementId}`);
-        elementCounter++;
-
-        // Map: line -> element
-        if (!lineToElementMap.has(lineNum)) {
-          lineToElementMap.set(lineNum, []);
-        }
-        lineToElementMap.get(lineNum).push(elementId);
-
-        // Map: element -> line
-        elementToLineMap.set(elementId, {
-          start: lineNum,
-          end: lineNum,
-          tag: tagName
-        });
-      }
-    });
-
-    // Check for opening tags
-    const openMatches = [...line.matchAll(openTagRegex)];
-    openMatches.forEach(match => {
-      const tagName = match[1];
-      // Skip self-closing tags (already handled) and svg root
-      if (!match[0].endsWith('/>') && isSvgElement(tagName) && tagName !== 'svg') {
-        const elementId = `svg-el-${elementCounter}`;
-        console.log(`📍 Line ${lineNum}: Found opening <${tagName}> → ID: ${elementId}`);
-        elementCounter++;
-
-        elementStack.push({
-          id: elementId,
-          tag: tagName,
-          startLine: lineNum
-        });
-
-        // Map: line -> element
-        if (!lineToElementMap.has(lineNum)) {
-          lineToElementMap.set(lineNum, []);
-        }
-        lineToElementMap.get(lineNum).push(elementId);
-      }
-    });
-
-    // Check for closing tags
-    const closeMatches = [...line.matchAll(closingTagRegex)];
-    closeMatches.forEach(match => {
-      const tagName = match[1];
-      if (isSvgElement(tagName) && tagName !== 'svg') {
-        // Find matching opening tag in stack
-        for (let i = elementStack.length - 1; i >= 0; i--) {
-          if (elementStack[i].tag === tagName) {
-            const element = elementStack.splice(i, 1)[0];
-
-            console.log(`📍 Line ${lineNum}: Found closing </${tagName}> for ID: ${element.id} (lines ${element.startLine}-${lineNum})`);
-
-            // Map: element -> lines (start to end)
-            elementToLineMap.set(element.id, {
-              start: element.startLine,
-              end: lineNum,
-              tag: tagName
-            });
-
-            // Add end line to lineToElementMap
-            if (!lineToElementMap.has(lineNum)) {
-              lineToElementMap.set(lineNum, []);
-            }
-            if (!lineToElementMap.get(lineNum).includes(element.id)) {
-              lineToElementMap.get(lineNum).push(element.id);
-            }
-
-            break;
-          }
-        }
-      }
-    });
+// Use the XML grammar, so quoted >, comments, CDATA and nested/repeated tags
+// cannot shift the relationship between rendered elements and source ranges.
+export function sourceElements(source) {
+  const elements = [];
+  xmlParser.parse(source).iterate({
+    enter(node) {
+      if (node.name !== 'Element') return;
+      const tag = node.node.firstChild;
+      const name = tag?.getChild('TagName');
+      if (!name) return;
+      elements.push({
+        index: elements.length,
+        name: source.slice(name.from, name.to),
+        from: node.from,
+        to: node.to,
+        openTo: tag.to,
+      });
+    },
   });
-
-  console.log(`✅ Mapping complete: ${elementCounter} elements found`);
-  console.log('📊 Line → Element map:', lineToElementMap);
-  console.log('📊 Element → Line map:', elementToLineMap);
-
-  return {
-    lineToElement: lineToElementMap,
-    elementToLine: elementToLineMap,
-    totalElements: elementCounter
-  };
-}
-
-/**
- * Check if tag name is an SVG element
- * @param {string} tagName - HTML tag name
- * @returns {boolean}
- */
-function isSvgElement(tagName) {
-  const svgElements = [
-    'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line',
-    'polyline', 'polygon', 'text', 'tspan', 'image', 'use',
-    'defs', 'clipPath', 'mask', 'pattern', 'linearGradient',
-    'radialGradient', 'stop', 'symbol', 'marker', 'animate',
-    'animateTransform', 'animateMotion'
-  ];
-  return svgElements.includes(tagName.toLowerCase());
-}
-
-/**
- * Apply data attributes to rendered SVG elements
- * @param {SVGElement} svgRoot - Root SVG element
- * @param {Map} elementToLineMap - Mapping of element IDs to line ranges
- */
-export function applyDataAttributes(svgRoot, mapping) {
-  if (!svgRoot || !mapping) return;
-
-  console.log('🏷️ Applying data attributes to SVG elements...');
-  console.log('   Mapping has', mapping.elementToLine.size, 'element mappings');
-
-  const elementToLineMap = mapping.elementToLine;
-  let elementIndex = 0;
-
-  // Traverse all SVG elements
-  const finalIndex = traverseAndTag(svgRoot, elementToLineMap, elementIndex);
-
-  console.log(`✅ Data attributes applied to ${svgElements.size} elements (traversed ${finalIndex} elements)`);
-}
-
-/**
- * Recursively traverse SVG tree and apply data attributes
- * @param {Element} element - Current element
- * @param {Map} elementToLineMap - Mapping data
- * @param {number} index - Current element index
- * @returns {number} - Updated index
- */
-function traverseAndTag(element, elementToLineMap, index) {
-  const tagName = element.tagName.toLowerCase();
-
-  if (isSvgElement(tagName) && tagName !== 'svg') {
-    const elementId = `svg-el-${index}`;
-    const lineInfo = elementToLineMap.get(elementId);
-
-    console.log(`   [${index}] Checking <${tagName}> with ID ${elementId}:`, lineInfo ? `lines ${lineInfo.start}-${lineInfo.end}` : 'NO MAPPING');
-
-    if (lineInfo) {
-      element.setAttribute('data-svg-id', elementId);
-      element.setAttribute('data-line-start', lineInfo.start);
-      element.setAttribute('data-line-end', lineInfo.end);
-      element.classList.add('svg-interactive-element');
-
-      // Store element reference
-      svgElements.set(elementId, element);
-      console.log(`   ✅ Applied data attributes to ${elementId}`);
-    } else {
-      console.log(`   ⚠️ Skipping ${elementId} - no line mapping found`);
-    }
-
-    index++;
-  }
-
-  // Traverse children
-  for (let child of element.children) {
-    index = traverseAndTag(child, elementToLineMap, index);
-  }
-
-  return index;
-}
-
-/**
- * Get elements for a specific line number
- * @param {number} lineNum - Line number (1-based)
- * @returns {Array<Element>} - Array of DOM elements
- */
-export function getElementsForLine(lineNum) {
-  const elementIds = lineToElementMap.get(lineNum) || [];
-  console.log(`🔎 getElementsForLine(${lineNum}):`, elementIds);
-
-  const elements = elementIds
-    .map(id => svgElements.get(id))
-    .filter(el => el !== undefined);
-
-  console.log(`   → Returning ${elements.length} DOM elements`);
   return elements;
 }
 
-/**
- * Get line range for a specific element
- * @param {string} elementId - Element ID
- * @returns {object|null} - {start, end, tag} or null
- */
-export function getLineRangeForElement(elementId) {
-  return elementToLineMap.get(elementId) || null;
+export function elementAtPosition(elements, position) {
+  let match = null;
+  for (const element of elements)
+    if (
+      element.from <= position &&
+      position < element.to &&
+      (!match || element.to - element.from < match.to - match.from)
+    )
+      match = element;
+  return match;
 }
 
-/**
- * Get all mapped elements
- * @returns {Map} - Map of element IDs to DOM elements
- */
-export function getAllElements() {
-  return svgElements;
+export function proportionalSize(width, height, axis, value) {
+  const amount = Number(value);
+  if (
+    value === '' ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    !Number.isFinite(width / height) ||
+    width <= 0 ||
+    height <= 0
+  )
+    return null;
+  const round = (n) => Number(n.toFixed(4));
+  return axis === 'width'
+    ? { w: amount, h: round((amount * height) / width) }
+    : { w: round((amount * width) / height), h: amount };
 }
 
-/**
- * Clear all mappings
- */
-export function clearMappings() {
-  lineToElementMap.clear();
-  elementToLineMap.clear();
-  svgElements.clear();
+export function previewDocument(source, elements) {
+  const doc = new DOMParser().parseFromString(source, 'image/svg+xml');
+  const root = doc.documentElement;
+  if (root.localName !== 'svg' || doc.querySelector('parsererror')) return '';
+  const nodes = [root, ...root.querySelectorAll('*')];
+  nodes.forEach((node, index) => {
+    const range = elements[index];
+    if (range) node.setAttribute('data-studio-key', range.index);
+    for (const attr of [...node.attributes]) {
+      if (/^on/i.test(attr.name) || attr.name === 'tabindex') node.removeAttribute(attr.name);
+      if (
+        /^(href|xlink:href)$/i.test(attr.name) &&
+        !attr.value.startsWith('#') &&
+        !/^data:image\//i.test(attr.value)
+      )
+        node.removeAttribute(attr.name);
+    }
+  });
+  for (const node of root.querySelectorAll('script,iframe,object,embed,base,meta,link'))
+    node.remove();
+  root.setAttribute(
+    'style',
+    (root.getAttribute('style') || '') + ';width:100%!important;height:100%!important;',
+  );
+  const markup = new XMLSerializer().serializeToString(root);
+  return `<!doctype html><html><head><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; font-src data:; base-uri 'none'; form-action 'none'"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent!important;color-scheme:light}body{cursor:grab;user-select:none}body>svg{display:block}svg *{cursor:inherit!important}</style></head><body>${markup}</body></html>`;
 }
-
-export default {
-  parseSvgCode,
-  applyDataAttributes,
-  getElementsForLine,
-  getLineRangeForElement,
-  getAllElements,
-  clearMappings
-};

@@ -230,10 +230,10 @@ Categorization Stats: {
 **Debug in console:**
 ```javascript
 // See detected structure
-svgViewer.getAll()[0]._debug
+svgaze.getAll()[0]._debug
 
 // See all categories
-svgViewer.getAll().map(i => i.category)
+svgaze.getAll().map(i => i.category)
 ```
 
 ---
@@ -278,7 +278,7 @@ svgViewer.getAll().map(i => i.category)
 | Start server | Double click `start-local.bat` |
 | VSCode Live Server | Right-click → Open with Live Server |
 | See console | F12 |
-| Debug categories | `svgViewer.getAll()[0]._debug` |
+| Debug categories | `svgaze.getAll()[0]._debug` |
 | Hard refresh (no cache) | Ctrl+Shift+R |
 
 ---

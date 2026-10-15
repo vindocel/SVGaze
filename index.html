@@ -55,21 +55,13 @@
 <link rel="stylesheet" href="css/components/svgo-modal.css">
 <link rel="stylesheet" href="css/components/toast.css">
 
-<!-- CodeMirror 5 for code editing -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
-
-<!-- Prism.js for syntax highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
-
-<!-- SVGO for professional SVG optimization -->
-<script src="https://cdn.jsdelivr.net/npm/svgo@3.0.2/dist/svgo.browser.js"></script>
+<!-- Browser libraries are served locally; GitHub Pages needs no build or API. -->
+<link rel="stylesheet" href="css/vendor/codemirror.css">
+<link rel="stylesheet" href="css/vendor/prism.css">
+<link rel="stylesheet" href="css/components/editor-enhancements.css">
+<link rel="stylesheet" href="css/components/editor-workbench.css">
+<script defer src="js/vendor/codemirror.js"></script>
+<script defer src="js/vendor/prism.js"></script>
 </head>
 
 <body>
@@ -240,10 +232,10 @@
               </svg>
               <span class="optimize-label" data-i18n="editor.optimize">Otimizar</span>
               <span id="optimizeSizes" class="optimize-sizes">
-                <span id="optimizeOriginalSize">2.33 KB</span>
+                <span id="optimizeOriginalSize">—</span>
                 <span class="optimize-arrow">→</span>
-                <span id="optimizeNewSize">2.31 KB</span>
-                <span class="optimize-percent">-1%</span>
+                <span id="optimizeNewSize">—</span>
+                <span class="optimize-percent">—</span>
               </span>
             </button>
             <button id="editorPrettify" class="btn-minimal" data-i18n-title="editor.prettifyTitle"><span data-i18n="editor.prettify">Formatar</span></button>

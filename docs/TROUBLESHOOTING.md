@@ -44,7 +44,7 @@ npx serve
 **See:** Console (F12) → Look for "Categorization Stats"
 **Debug:**
 ```javascript
-svgViewer.getAll()[0]
+svgaze.getAll()[0]
 ```
 
 ### Modal Doesn't Open

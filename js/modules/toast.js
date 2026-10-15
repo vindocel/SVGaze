@@ -37,11 +37,11 @@ export function showToast(message, type = 'info', duration = 3000) {
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => {
-      container.removeChild(toast);
+      toast.remove();
 
       // Remove container if empty
       if (container.children.length === 0) {
-        document.body.removeChild(container);
+        container.remove();
       }
     }, 300);
   }, duration);

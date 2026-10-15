@@ -1,570 +1,378 @@
-/**
- * SVGaze - Editor Preview Manager
- *
- * Manages the live preview panel for the SVG editor.
- * Handles rendering, zoom, pan, and grid display.
- */
+import { appState } from "../state.js";
+import { sourceElements, previewDocument } from "./editorSvgMapper.js";
+import { dimensions, parse, download } from "./editorSvgCore.js";
+import { getEditorContent } from "./editorCodeManager.js";
+import { getDefaultColorForTheme } from "./colorManager.js";
+import { text } from "./editorText.js";
 
-import { appState } from '../state.js';
-import { parseSvgCode, applyDataAttributes } from './editorSvgMapper.js';
-import { getDefaultColorForTheme } from './colorManager.js';
-import { applyCurrentColorToSVG } from './svgProcessor.js';
-
-// DOM Elements
-let previewContainer, previewContent, previewDimensions;
-let zoomInBtn, zoomOutBtn, zoomLevel, fitBtn, gridBtn, checkeredBtn;
-
-// Preview state
-let currentZoom = 100;
-let isPanning = false;
-let panStart = { x: 0, y: 0 };
-let panOffset = { x: 0, y: 0 };
-
-/**
- * Initialize the preview manager
- */
+let stage,
+  content,
+  frame,
+  artboard,
+  overlay,
+  ranges = [],
+  info = { w: 400, h: 400 },
+  zoom = 100,
+  pan = { x: 0, y: 0 },
+  drag = null,
+  hover = null,
+  selected = null,
+  renderTimer;
+let initiallyFit = false;
+const emit = (name, range) =>
+  window.dispatchEvent(new CustomEvent(name, { detail: { range } }));
 export function initPreviewManager() {
-  // Get DOM elements
-  previewContainer = document.getElementById('previewContainer');
-  previewContent = document.getElementById('previewContent');
-  previewDimensions = document.getElementById('previewDimensions');
-
-  zoomInBtn = document.getElementById('previewZoomIn');
-  zoomOutBtn = document.getElementById('previewZoomOut');
-  zoomLevel = document.getElementById('previewZoomLevel');
-  fitBtn = document.getElementById('previewFit');
-  gridBtn = document.getElementById('previewGrid');
-  checkeredBtn = document.getElementById('previewCheckered');
-
-  if (!previewContainer || !previewContent) {
-    console.error('❌ Preview manager: Required elements not found');
-    return;
+  stage = document.getElementById("previewContainer");
+  content = document.getElementById("previewContent");
+  if (!stage || !content) return;
+  stage.addEventListener("pointerdown", start);
+  stage.addEventListener("pointermove", move);
+  stage.addEventListener("pointermove", updateCoordinates);
+  stage.addEventListener("pointerup", stop);
+  stage.addEventListener("pointercancel", cancel);
+  stage.addEventListener("dblclick", center);
+  stage.addEventListener("wheel", wheel, { passive: false });
+  document
+    .getElementById("previewZoomIn")
+    ?.addEventListener("click", () => setZoom(zoom * 1.2));
+  document
+    .getElementById("previewZoomOut")
+    ?.addEventListener("click", () => setZoom(zoom / 1.2));
+  document.getElementById("previewFit")?.addEventListener("click", fit);
+  const level = document.getElementById("previewZoomLevel");
+  if (level) {
+    level.tabIndex = 0;
+    level.setAttribute("role", "button");
+    level.title = text("Centralizar em 100%", "Center at 100%");
+    level.onclick = () => {
+      setZoom(100);
+      center();
+    };
+    level.onkeydown = (e) => {
+      if (e.key === "Enter") level.click();
+    };
   }
-
-  // Setup event listeners
-  setupEventListeners();
-
-  // Listen for code changes
-  window.addEventListener('editor-code-changed', handleCodeChange);
-
-  // Listen for editor view shown
-  window.addEventListener('editor-view-shown', () => {
-    updatePreview(appState.editor.currentSVG);
+  for (const [id, cls, property] of [
+    ["previewGrid", "show-grid", "showGrid"],
+    ["previewCheckered", "show-checkered", "showCheckered"],
+  ])
+    document.getElementById(id)?.addEventListener("click", (e) => {
+      stage.classList.toggle(cls);
+      appState.editor[property] = stage.classList.contains(cls);
+      e.currentTarget.classList.toggle("active", appState.editor[property]);
+    });
+  document
+    .getElementById("downloadPreviewSVG")
+    ?.addEventListener("click", () => {
+      try {
+        const source = getEditorContent();
+        parse(source);
+        download(source, appState.editor.fileName);
+      } catch {}
+    });
+  window.addEventListener("editor-code-changed", () => {
+    clearTimeout(renderTimer);
+    renderTimer = setTimeout(() => render(getEditorContent()), 100);
   });
-
-  // Listen for theme changes
-  window.addEventListener('theme-changed', (e) => {
-    // Update checkered background theme if active
-    if (appState.editor.showCheckered && previewContainer) {
-      previewContainer.setAttribute('data-theme', e.detail.theme);
-    }
-
-    // Re-render SVG with new theme color
-    if (appState.editor.currentSVG) {
-      updatePreview(appState.editor.currentSVG);
+  window.addEventListener("editor-view-shown", () => {
+    render(getEditorContent());
+    if (!initiallyFit && stage.clientWidth > 0 && stage.clientHeight > 0) {
+      initiallyFit = true;
+      if (info.w > stage.clientWidth - 64 || info.h > stage.clientHeight - 64)
+        fit();
     }
   });
-
-  console.log('✅ Preview manager initialized');
+  window.addEventListener("theme-changed", updateTheme);
+  window.addEventListener("editor-element-focus", (e) => {
+    selected = e.detail.range;
+    highlight(hover || selected);
+  });
+  document.addEventListener("keydown", keys);
+  new ResizeObserver(() => highlight(hover || selected)).observe(stage);
+  addBackgroundControls();
+  render(getEditorContent());
 }
-
-/**
- * Setup event listeners
- */
-function setupEventListeners() {
-  // Zoom controls
-  if (zoomInBtn) {
-    zoomInBtn.addEventListener('click', () => zoomIn());
-  }
-
-  if (zoomOutBtn) {
-    zoomOutBtn.addEventListener('click', () => zoomOut());
-  }
-
-  if (fitBtn) {
-    fitBtn.addEventListener('click', () => fitToView());
-  }
-
-  if (gridBtn) {
-    gridBtn.addEventListener('click', () => toggleGrid());
-  }
-
-  if (checkeredBtn) {
-    checkeredBtn.addEventListener('click', () => toggleCheckered());
-  }
-
-  // Download SVG button
-  const downloadSVGBtn = document.getElementById('downloadPreviewSVG');
-  if (downloadSVGBtn) {
-    downloadSVGBtn.addEventListener('click', () => downloadSVG());
-  }
-
-  // Pan functionality
-  if (previewContainer) {
-    previewContainer.addEventListener('mousedown', handlePanStart);
-    previewContainer.addEventListener('mousemove', handlePanMove);
-    previewContainer.addEventListener('mouseup', handlePanEnd);
-    previewContainer.addEventListener('mouseleave', handlePanEnd);
-
-    // Zoom with mouse wheel
-    previewContainer.addEventListener('wheel', handleWheel, { passive: false });
-  }
-
-  // Keyboard shortcuts for preview (when editor view is active)
-  document.addEventListener('keydown', handleKeyboardShortcuts);
-}
-
-/**
- * Handle code change event
- * @param {CustomEvent} e - Event with SVG code
- */
-function handleCodeChange(e) {
-  if (e.detail && e.detail.svgCode) {
-    updatePreview(e.detail.svgCode);
-  }
-}
-
-/**
- * Update preview with new SVG code
- * @param {string} svgCode - SVG code to render
- */
-function updatePreview(svgCode) {
-  if (!previewContent) return;
-
-  // Clear current preview
-  previewContent.innerHTML = '';
-
-  // Check if code is empty
-  if (!svgCode || !svgCode.trim()) {
-    showPlaceholder();
-    return;
-  }
-
+function render(source) {
+  hover = null;
+  selected = null;
+  frame = null;
+  content.replaceChildren();
   try {
-    // Parse and sanitize SVG
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgCode, 'image/svg+xml');
-
-    // Check for parsing errors
-    const parserError = doc.querySelector('parsererror');
-    if (parserError) {
-      showError('Erro de sintaxe no código SVG');
-      return;
-    }
-
-    const svgElement = doc.querySelector('svg');
-    if (!svgElement) {
-      showError('Nenhum elemento <svg> encontrado');
-      return;
-    }
-
-    // Clone and append to preview
-    const svgClone = svgElement.cloneNode(true);
-
-    // If SVG doesn't have width/height but has viewBox, set them from viewBox
-    if (!svgClone.hasAttribute('width') || !svgClone.hasAttribute('height')) {
-      const viewBox = svgClone.getAttribute('viewBox');
-      if (viewBox) {
-        const parts = viewBox.split(/\s+/);
-        if (parts.length === 4) {
-          if (!svgClone.hasAttribute('width')) {
-            svgClone.setAttribute('width', parts[2]);
-          }
-          if (!svgClone.hasAttribute('height')) {
-            svgClone.setAttribute('height', parts[3]);
-          }
-        }
+    parse(source);
+    info = dimensions(source);
+    ranges = sourceElements(source);
+    artboard = document.createElement("div");
+    artboard.className = "svgaze-artboard";
+    frame = document.createElement("iframe");
+    frame.className = "svgaze-preview-frame";
+    frame.title = text("Preview SVG interativo", "Interactive SVG preview");
+    frame.setAttribute("sandbox", "allow-same-origin");
+    frame.style.colorScheme = "light";
+    frame.style.background = "transparent";
+    frame.srcdoc = previewDocument(source, ranges);
+    frame.addEventListener("load", connectFrame);
+    overlay = document.createElement("div");
+    overlay.className = "svgaze-shape-highlight";
+    overlay.hidden = true;
+    artboard.append(frame, overlay);
+    content.append(artboard);
+    layout();
+    const label = document.getElementById("previewDimensions");
+    if (label) label.textContent = `${info.w} × ${info.h}`;
+  } catch (error) {
+    const p = document.createElement("p");
+    p.className = "preview-placeholder";
+    p.textContent = source.trim()
+      ? error.message
+      : text(
+          "Abra ou cole um SVG para começar.",
+          "Open or paste an SVG to get started.",
+        );
+    content.append(p);
+    ranges = [];
+  }
+}
+function connectFrame() {
+  const doc = frame?.contentDocument;
+  if (!doc) return;
+  updateTheme();
+  doc.addEventListener("pointerdown", start);
+  doc.addEventListener("pointermove", (e) => {
+    updateCoordinates(e);
+    if (!drag) {
+      const next = rangeFor(e.target);
+      if (next !== hover) {
+        hover = next;
+        highlight(hover || selected);
+        emit("svg-element-hover", hover);
       }
     }
-
-    // Apply theme-aware color via CSS FIRST
-    const defaultColor = getDefaultColorForTheme();
-
-    // Set CSS color property
-    svgClone.style.color = defaultColor;
-
-    // Apply currentColor transformation (converts fills/strokes to currentColor for monochrome SVGs)
-    applyCurrentColorToSVG(svgClone);
-
-    // Parse SVG code and create mapping
-    const mapping = parseSvgCode(svgCode);
-
-    // Apply data attributes to elements for interactive highlighting
-    applyDataAttributes(svgClone, mapping);
-
-    // Apply current zoom
-    applyZoom(currentZoom);
-
-    // Append to preview
-    previewContent.appendChild(svgClone);
-
-    // Note: Hover highlighting is triggered from CODE only, not from SVG
-    // setupSvgElementHoverListeners(svgClone); // DISABLED - only code → SVG highlighting
-
-    // Update dimensions display
-    updateDimensions(svgClone);
-
-  } catch (error) {
-    console.error('❌ Error rendering SVG:', error);
-    showError('Erro ao renderizar SVG');
-  }
-}
-
-/**
- * Show placeholder message
- */
-function showPlaceholder() {
-  previewContent.innerHTML = `
-    <div class="preview-placeholder">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <path d="M3 9h18M9 21V9"/>
-      </svg>
-      <p>Cole ou digite código SVG no editor</p>
-    </div>
-  `;
-
-  if (previewDimensions) {
-    previewDimensions.textContent = '—';
-  }
-}
-
-/**
- * Show error message
- * @param {string} message - Error message
- */
-function showError(message) {
-  previewContent.innerHTML = `
-    <div class="preview-placeholder" style="color: var(--error);">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
-      <p>${message}</p>
-    </div>
-  `;
-
-  if (previewDimensions) {
-    previewDimensions.textContent = '—';
-  }
-}
-
-/**
- * Update dimensions display
- * @param {SVGElement} svg - SVG element
- */
-function updateDimensions(svg) {
-  if (!previewDimensions) return;
-
-  const width = svg.getAttribute('width') || svg.viewBox?.baseVal?.width || '?';
-  const height = svg.getAttribute('height') || svg.viewBox?.baseVal?.height || '?';
-  const viewBox = svg.getAttribute('viewBox') || 'none';
-
-  previewDimensions.textContent = `${width} × ${height} • ViewBox: ${viewBox}`;
-}
-
-/**
- * Zoom in
- */
-function zoomIn() {
-  const newZoom = Math.min(currentZoom + 25, 400);
-  setZoom(newZoom);
-}
-
-/**
- * Zoom out
- */
-function zoomOut() {
-  const newZoom = Math.max(currentZoom - 25, 25);
-  setZoom(newZoom);
-}
-
-/**
- * Set zoom level
- * @param {number} zoom - Zoom percentage
- */
-function setZoom(zoom) {
-  currentZoom = zoom;
-  appState.editor.zoom = zoom;
-
-  // Update zoom label
-  if (zoomLevel) {
-    zoomLevel.textContent = `${zoom}%`;
-  }
-
-  // Apply zoom to preview
-  applyZoom(zoom);
-}
-
-/**
- * Apply zoom transform
- * @param {number} zoom - Zoom percentage
- */
-function applyZoom(zoom) {
-  if (previewContent) {
-    const scale = zoom / 100;
-    // CRITICAL FIX: translate FIRST, then scale (prevents pan offset from being multiplied by zoom)
-    // Add conditional transition: disable during pan for instant feedback, enable otherwise for smooth effect
-    previewContent.style.transition = isPanning ? 'none' : 'transform 0.1s ease-out';
-    previewContent.style.transform = `translate(${panOffset.x}px, ${panOffset.y}px) scale(${scale})`;
-  }
-}
-
-/**
- * Fit SVG to view
- */
-function fitToView() {
-  setZoom(100);
-  panOffset = { x: 0, y: 0 };
-  applyZoom(100);
-}
-
-/**
- * Toggle grid display
- */
-function toggleGrid() {
-  appState.editor.showGrid = !appState.editor.showGrid;
-
-  if (previewContainer) {
-    if (appState.editor.showGrid) {
-      previewContainer.classList.add('show-grid');
-    } else {
-      previewContainer.classList.remove('show-grid');
-    }
-  }
-}
-
-/**
- * Toggle checkered background
- */
-function toggleCheckered() {
-  appState.editor.showCheckered = !appState.editor.showCheckered;
-
-  if (previewContainer) {
-    if (appState.editor.showCheckered) {
-      previewContainer.classList.add('show-checkered');
-      // Apply theme attribute for CSS selectors
-      previewContainer.setAttribute('data-theme',
-        document.documentElement.getAttribute('data-theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      );
-    } else {
-      previewContainer.classList.remove('show-checkered');
-    }
-  }
-}
-
-/**
- * Handle pan start
- * @param {MouseEvent} e - Mouse event
- */
-function handlePanStart(e) {
-  // Pan with left mouse button (free panning like svgviewer.dev)
-  if (e.button === 0) {
-    isPanning = true;
-    panStart = { x: e.clientX - panOffset.x, y: e.clientY - panOffset.y };
-    previewContainer.style.cursor = 'grabbing';
-    previewContainer.style.userSelect = 'none';
-  }
-}
-
-/**
- * Handle pan move
- * @param {MouseEvent} e - Mouse event
- */
-function handlePanMove(e) {
-  if (!isPanning) return;
-
-  // Direct update (removed requestAnimationFrame for better responsiveness)
-  let newPanX = e.clientX - panStart.x;
-  let newPanY = e.clientY - panStart.y;
-
-  // Apply pan boundaries (prevent panning too far away)
-  const maxPanX = previewContainer.clientWidth * 1.5;
-  const maxPanY = previewContainer.clientHeight * 1.5;
-
-  panOffset = {
-    x: Math.max(-maxPanX, Math.min(maxPanX, newPanX)),
-    y: Math.max(-maxPanY, Math.min(maxPanY, newPanY))
-  };
-
-  applyZoom(currentZoom);
-}
-
-/**
- * Handle pan end
- */
-function handlePanEnd() {
-  if (isPanning) {
-    isPanning = false;
-    previewContainer.style.cursor = 'grab';
-    previewContainer.style.userSelect = '';
-  }
-}
-
-/**
- * Handle mouse wheel zoom
- * @param {WheelEvent} e - Wheel event
- */
-function handleWheel(e) {
-  // Zoom without Ctrl key requirement (like svgviewer.dev)
-  e.preventDefault();
-
-  if (!previewContainer || !previewContent) return;
-
-  // Get mouse position relative to preview container
-  const rect = previewContainer.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
-  // Calculate zoom delta (smoother with smaller increments)
-  const delta = e.deltaY * -0.001;
-  const newZoom = Math.round(Math.max(10, Math.min(5000, currentZoom + (delta * currentZoom * 0.1))));
-
-  // Calculate scale ratio for position adjustment
-  const oldScale = currentZoom / 100;
-  const newScale = newZoom / 100;
-  const scaleRatio = newScale / oldScale;
-
-  // Adjust pan offset to keep mouse position fixed during zoom
-  const newPanX = mouseX - (mouseX - panOffset.x) * scaleRatio;
-  const newPanY = mouseY - (mouseY - panOffset.y) * scaleRatio;
-
-  // Apply boundaries
-  const maxPanX = previewContainer.clientWidth * 1.5;
-  const maxPanY = previewContainer.clientHeight * 1.5;
-
-  panOffset = {
-    x: Math.max(-maxPanX, Math.min(maxPanX, newPanX)),
-    y: Math.max(-maxPanY, Math.min(maxPanY, newPanY))
-  };
-
-  setZoom(newZoom);
-}
-
-/**
- * Handle keyboard shortcuts for preview control
- * @param {KeyboardEvent} e - Keyboard event
- */
-function handleKeyboardShortcuts(e) {
-  // Only handle shortcuts when editor view is active
-  if (appState.currentView !== 'editor') return;
-
-  // Ignore if user is typing in an input/textarea
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-  switch(e.key) {
-    case '0':
-    case 'Escape':
-      // Reset view to 100% and center
-      e.preventDefault();
-      resetPreview();
-      break;
-
-    case 'f':
-    case 'F':
-      // Fit to view
-      e.preventDefault();
-      fitToView();
-      break;
-
-    case '+':
-    case '=':
-      // Zoom in
-      e.preventDefault();
-      zoomIn();
-      break;
-
-    case '-':
-    case '_':
-      // Zoom out
-      e.preventDefault();
-      zoomOut();
-      break;
-  }
-}
-
-/**
- * Setup hover listeners on SVG elements for interactive highlighting
- * @param {SVGElement} svgRoot - Root SVG element
- */
-function setupSvgElementHoverListeners(svgRoot) {
-  const interactiveElements = svgRoot.querySelectorAll('.svg-interactive-element');
-
-  interactiveElements.forEach(element => {
-    // Hover enter - highlight element and corresponding code lines
-    element.addEventListener('mouseenter', (e) => {
-      e.stopPropagation();
-
-      // Add hover class to element
-      element.classList.add('svg-element-hovered');
-
-      // Get line range for this element
-      const lineStart = parseInt(element.getAttribute('data-line-start'));
-      const lineEnd = parseInt(element.getAttribute('data-line-end'));
-
-      // Dispatch event for code editor to highlight lines
-      window.dispatchEvent(new CustomEvent('svg-element-hover', {
-        detail: { lineStart, lineEnd, action: 'enter' }
-      }));
-    });
-
-    // Hover leave - remove highlight
-    element.addEventListener('mouseleave', (e) => {
-      e.stopPropagation();
-
-      // Remove hover class
-      element.classList.remove('svg-element-hovered');
-
-      // Dispatch event to remove code highlighting
-      window.dispatchEvent(new CustomEvent('svg-element-hover', {
-        detail: { action: 'leave' }
-      }));
-    });
+    move(e);
   });
+  doc.addEventListener("pointerleave", () => {
+    if (!drag) {
+      hover = null;
+      highlight(selected);
+      emit("svg-element-hover", null);
+    }
+  });
+  doc.addEventListener("pointerup", stop);
+  doc.addEventListener("pointercancel", cancel);
+  doc.addEventListener("dblclick", center);
+  doc.addEventListener("wheel", wheel, { passive: false });
+  doc.addEventListener("keydown", keys);
+  doc.addEventListener("click", (e) => e.preventDefault());
+  highlight(selected);
 }
-
-/**
- * Get current zoom level
- * @returns {number} - Current zoom percentage
- */
-export function getZoom() {
-  return currentZoom;
+function rangeFor(node) {
+  const target = node?.closest?.("[data-studio-key]");
+  return target && target.localName !== "svg"
+    ? ranges[Number(target.getAttribute("data-studio-key"))] || null
+    : null;
 }
-
-/**
- * Download current SVG
- */
-function downloadSVG() {
-  const svgElement = previewContent.querySelector('svg');
-  if (!svgElement) {
+function point(event) {
+  const r =
+    event.view === frame?.contentWindow
+      ? frame.getBoundingClientRect()
+      : { left: 0, top: 0 };
+  return { x: event.clientX + r.left, y: event.clientY + r.top };
+}
+function start(event) {
+  if (event.button !== 0 && event.button !== 1) return;
+  event.preventDefault();
+  drag = {
+    point: point(event),
+    pan: { ...pan },
+    range: rangeFor(event.target),
+    moved: false,
+  };
+  event.target.setPointerCapture?.(event.pointerId);
+  stage.classList.add("svgaze-panning");
+}
+function move(event) {
+  if (!drag) return;
+  const p = point(event),
+    dx = p.x - drag.point.x,
+    dy = p.y - drag.point.y;
+  if (Math.hypot(dx, dy) > 3) drag.moved = true;
+  if (drag.moved) {
+    pan = { x: drag.pan.x + dx, y: drag.pan.y + dy };
+    layout();
+    if (overlay) overlay.hidden = true;
+  }
+}
+function stop(event) {
+  const previous = drag;
+  cancel();
+  if (previous && !previous.moved) {
+    selected = previous.range;
+    highlight(selected);
+    emit("svg-element-select", selected);
+  }
+  if (event.target.hasPointerCapture?.(event.pointerId))
+    event.target.releasePointerCapture(event.pointerId);
+}
+function cancel() {
+  drag = null;
+  stage.classList.remove("svgaze-panning");
+}
+function layout() {
+  if (!artboard) return;
+  artboard.style.width = (info.w * zoom) / 100 + "px";
+  artboard.style.height = (info.h * zoom) / 100 + "px";
+  artboard.style.transform = `translate(calc(-50% + ${pan.x}px),calc(-50% + ${pan.y}px))`;
+  const level = document.getElementById("previewZoomLevel");
+  if (level) level.textContent = Math.round(zoom) + "%";
+  appState.editor.zoom = zoom;
+  highlight(hover || selected);
+}
+function setZoom(value) {
+  zoom = Math.max(10, Math.min(5000, Math.round(value)));
+  layout();
+}
+function center() {
+  pan = { x: 0, y: 0 };
+  layout();
+}
+function fit() {
+  if (!stage) return;
+  const toolbarHeight =
+    document
+      .querySelector(".workbench .preview-footer")
+      ?.getBoundingClientRect().height || 0;
+  pan = { x: 0, y: -toolbarHeight / 2 };
+  setZoom(
+    Math.min(
+      (stage.clientWidth - 64) / info.w,
+      (stage.clientHeight - toolbarHeight - 64) / info.h,
+    ) * 100,
+  );
+}
+function wheel(event) {
+  event.preventDefault();
+  const p = point(event),
+    r = stage.getBoundingClientRect(),
+    factor = Math.exp(-event.deltaY * 0.0015);
+  const next = Math.max(10, Math.min(5000, zoom * factor)),
+    ratio = next / zoom;
+  const x = p.x - r.left - r.width / 2,
+    y = p.y - r.top - r.height / 2;
+  pan = { x: x - (x - pan.x) * ratio, y: y - (y - pan.y) * ratio };
+  setZoom(next);
+}
+function keys(event) {
+  if (
+    appState.currentView !== "editor" ||
+    event.target.closest?.(
+      'input,textarea,select,[contenteditable="true"],.CodeMirror',
+    )
+  )
+    return;
+  if (event.key === "0") {
+    setZoom(100);
+    center();
+  } else if (event.key.toLowerCase() === "f") fit();
+  else if (["+", "="].includes(event.key)) setZoom(zoom * 1.2);
+  else if (event.key === "-") setZoom(zoom / 1.2);
+  else return;
+  event.preventDefault();
+}
+function highlight(range) {
+  if (!overlay || !frame?.contentDocument) return;
+  const node =
+    range &&
+    frame.contentDocument.querySelector(`[data-studio-key="${range.index}"]`);
+  if (!node) {
+    overlay.hidden = true;
     return;
   }
-
-  // Clone the SVG to avoid modifying the preview
-  const svgClone = svgElement.cloneNode(true);
-  const svgString = new XMLSerializer().serializeToString(svgClone);
-
-  // Create blob and download
-  const blob = new Blob([svgString], { type: 'image/svg+xml' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'icon.svg';
-  a.click();
-  URL.revokeObjectURL(url);
+  const rect = node.getBoundingClientRect();
+  overlay.hidden = !(rect.width || rect.height);
+  Object.assign(overlay.style, {
+    left: rect.left + "px",
+    top: rect.top + "px",
+    width: rect.width + "px",
+    height: rect.height + "px",
+  });
+  overlay.textContent = "";
+  const label = document.createElement("span");
+  label.textContent = range.name;
+  overlay.append(label);
 }
-
-/**
- * Reset preview
- */
+function updateTheme() {
+  stage?.setAttribute(
+    "data-theme",
+    document.documentElement.getAttribute("data-theme") || "light",
+  );
+  const svg = frame?.contentDocument?.querySelector("svg");
+  if (!svg) return;
+  try {
+    const original = parse(getEditorContent()).documentElement;
+    if (
+      !original.hasAttribute("color") &&
+      !/(?:^|;)\s*color\s*:/i.test(original.getAttribute("style") || "")
+    )
+      svg.style.color = getDefaultColorForTheme();
+  } catch {}
+}
+function addBackgroundControls() {
+  const footer = document.querySelector("#tabPreview .footer-left");
+  if (!footer) return;
+  const palette = document.createElement("div");
+  palette.className = "svgaze-background-swatches";
+  palette.setAttribute("role", "group");
+  palette.setAttribute(
+    "aria-label",
+    text("Fundo do preview", "Preview background"),
+  );
+  for (const [value, label] of [
+    ["", text("Tema", "Theme")],
+    ["#ffffff", text("Branco", "White")],
+    ["#d4d4d4", text("Cinza", "Grey")],
+    ["#404040", text("Cinza escuro", "Dark grey")],
+    ["#171717", text("Preto", "Black")],
+  ]) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "svgaze-background-swatch";
+    button.title = label;
+    button.setAttribute("aria-label", label);
+    button.setAttribute("aria-pressed", String(value === ""));
+    button.style.backgroundColor = value || "var(--card)";
+    button.onclick = () => {
+      stage.style.backgroundColor = value;
+      for (const sibling of palette.children)
+        sibling.setAttribute("aria-pressed", String(sibling === button));
+    };
+    palette.append(button);
+  }
+  const custom = document.createElement("input");
+  custom.type = "color";
+  custom.className = "svgaze-background-color";
+  custom.title = text("Fundo personalizado", "Custom background");
+  custom.setAttribute("aria-label", custom.title);
+  custom.oninput = () => {
+    stage.style.backgroundColor = custom.value;
+    for (const button of palette.children)
+      button.setAttribute("aria-pressed", "false");
+  };
+  custom.value = "#ffffff";
+  custom.onchange = custom.oninput;
+  footer.append(palette, custom);
+}
+export function getZoom() {
+  return zoom;
+}
 export function resetPreview() {
   setZoom(100);
-  panOffset = { x: 0, y: 0 };
-  appState.editor.showGrid = false;
-  if (previewContainer) {
-    previewContainer.classList.remove('show-grid');
-  }
-  showPlaceholder();
+  center();
+}
+
+function updateCoordinates(event) {
+  if (!artboard) return;
+  const p = point(event),
+    rect = artboard.getBoundingClientRect();
+  const label = document.querySelector(".svgaze-preview-coordinates");
+  if (label)
+    label.textContent = `X: ${(((p.x - rect.left) * 100) / zoom).toFixed(1)}  Y: ${(((p.y - rect.top) * 100) / zoom).toFixed(1)}`;
 }

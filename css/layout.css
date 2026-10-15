@@ -21,7 +21,8 @@ body {
 header.app-header {
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  /* Keep header menus above the later sticky gallery toolbar. */
+  z-index: calc(var(--z-sticky) + 1);
   display: flex;
   gap: var(--space-md);
   align-items: center;

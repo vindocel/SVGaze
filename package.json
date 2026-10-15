@@ -1,0 +1,20 @@
+{
+  "name": "svgaze",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "vendor": "node scripts/build-vendor.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check-static.mjs"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.28.0",
+    "@lezer/xml": "^1.0.6",
+    "codemirror": "5.65.2",
+    "fflate": "0.8.3",
+    "jsdom": "22.1.0",
+    "prismjs": "1.30.0",
+    "rolldown": "1.2.14",
+    "svgo": "4.1.0"
+  }
+}

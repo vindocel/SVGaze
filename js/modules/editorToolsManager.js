@@ -1,228 +1,110 @@
-/**
- * SVGaze - Editor Tools Manager
- *
- * Handles SVG processing tools: Prettify, Minify, Validate.
- * Note: Optimize is handled by editorSvgoManager.js for advanced SVGO optimization.
- */
-
-import { getEditorContent, setEditorContent } from './editorCodeManager.js';
-import { showToast } from './toast.js';
-
-// DOM Elements
-let prettifyBtn, minifyBtn, validateBtn;
-
-/**
- * Initialize tools manager
- */
+import { getEditorContent, setEditorContent } from "./editorCodeManager.js";
+import { parse } from "./editorSvgCore.js";
+import { formatSvg } from "./editorSvgoManager.js";
+import { showToast } from "./toast.js";
+import { text } from "./editorText.js";
+import { placeEditorPopover } from "./editorPopover.js";
+import { groupEditorAction } from "./editorLayout.js";
+let preferences = { indent: "2", shortTags: true };
 export function initToolsManager() {
-  // Get DOM elements
-  prettifyBtn = document.getElementById('editorPrettify');
-  minifyBtn = document.getElementById('editorMinify');
-  validateBtn = document.getElementById('editorValidate');
-
-  // Setup event listeners
-  // Note: Optimize button is handled by editorSvgoManager.js for advanced SVGO optimization
-
-  if (prettifyBtn) {
-    prettifyBtn.addEventListener('click', handlePrettify);
-  }
-
-  if (minifyBtn) {
-    minifyBtn.addEventListener('click', handleMinify);
-  }
-
-  if (validateBtn) {
-    validateBtn.addEventListener('click', handleValidate);
-  }
-
-  console.log('✅ Tools manager initialized');
-}
-
-/**
- * Handle prettify (format SVG)
- */
-function handlePrettify() {
-  const content = getEditorContent();
-
-  if (!content.trim()) {
-    alert('Não há conteúdo para formatar.');
-    return;
-  }
-
   try {
-    // Format SVG
-    const formatted = prettifySVG(content);
-
-    // Update editor
-    setEditorContent(formatted);
-
-    showToast('✓ SVG formatado!');
-  } catch (error) {
-    console.error('❌ Error formatting:', error);
-    alert('Erro ao formatar SVG.');
-  }
-}
-
-/**
- * Prettify/format SVG code
- * @param {string} svg - SVG code
- * @returns {string} - Formatted SVG
- */
-function prettifySVG(svg) {
-  // Parse SVG
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(svg, 'image/svg+xml');
-
-  // Check for parsing errors
-  const parserError = doc.querySelector('parsererror');
-  if (parserError) {
-    throw new Error('Invalid SVG syntax');
-  }
-
-  // Format with indentation
-  const formatted = formatXML(doc.documentElement, 0);
-
-  return formatted;
-}
-
-/**
- * Format XML with indentation
- * @param {Element} element - XML element
- * @param {number} level - Indentation level
- * @returns {string} - Formatted XML
- */
-function formatXML(element, level = 0) {
-  const indent = '  '.repeat(level);
-  let result = indent + '<' + element.tagName;
-
-  // Add attributes
-  Array.from(element.attributes).forEach(attr => {
-    result += ` ${attr.name}="${attr.value}"`;
+    const saved = JSON.parse(localStorage.getItem("svgaze-format") || "null");
+    if (saved)
+      preferences = {
+        indent: ["2", "4", "tab"].includes(saved.indent) ? saved.indent : "2",
+        shortTags: saved.shortTags !== false,
+      };
+  } catch {}
+  document
+    .getElementById("editorPrettify")
+    ?.addEventListener("click", () => format(true));
+  document
+    .getElementById("editorMinify")
+    ?.addEventListener("click", () => format(false));
+  document.getElementById("editorValidate")?.addEventListener("click", () => {
+    try {
+      parse(getEditorContent());
+      showToast(text("SVG válido", "Valid SVG"), "success");
+    } catch (error) {
+      showToast(error.message, "error");
+    }
   });
-
-  // Check if element has children
-  if (element.children.length === 0) {
-    // Check if element has text content
-    const textContent = element.textContent.trim();
-    if (textContent) {
-      result += '>' + textContent + '</' + element.tagName + '>\n';
-    } else {
-      result += '/>\n';
-    }
-  } else {
-    result += '>\n';
-
-    // Add children
-    Array.from(element.children).forEach(child => {
-      result += formatXML(child, level + 1);
-    });
-
-    result += indent + '</' + element.tagName + '>\n';
-  }
-
-  return result;
+  const button = document.createElement("button");
+  button.id = "prettifyOptions";
+  button.className = "icon-btn-minimal";
+  button.textContent = "⌄";
+  button.title = text("Opções de formatação", "Formatting options");
+  button.onclick = showFormatting;
+  document.getElementById("editorPrettify")?.after(button);
+  groupEditorAction(
+    document.getElementById("editorPrettify"),
+    button,
+    text("Formatação", "Formatting"),
+  );
 }
-
-/**
- * Handle minify (remove whitespace)
- */
-function handleMinify() {
-  const content = getEditorContent();
-
-  if (!content.trim()) {
-    alert('Não há conteúdo para minificar.');
-    return;
-  }
-
+async function format(pretty) {
+  const source = getEditorContent();
   try {
-    // Minify SVG
-    const minified = minifySVG(content);
-
-    // Update editor
-    setEditorContent(minified);
-
-    showToast('✓ SVG minificado!');
+    parse(source);
+    const result = await formatSvg(source, { pretty, ...preferences });
+    if (source === getEditorContent()) setEditorContent(result);
   } catch (error) {
-    console.error('❌ Error minifying:', error);
-    alert('Erro ao minificar SVG.');
+    showToast(error.message, "error");
   }
 }
-
-/**
- * Minify SVG (remove all unnecessary whitespace)
- * @param {string} svg - SVG code
- * @returns {string} - Minified SVG
- */
-function minifySVG(svg) {
-  let minified = svg;
-
-  // Remove comments
-  minified = minified.replace(/<!--[\s\S]*?-->/g, '');
-
-  // Remove all whitespace between tags
-  minified = minified.replace(/>\s+</g, '><');
-
-  // Remove leading/trailing whitespace
-  minified = minified.trim();
-
-  // Remove newlines
-  minified = minified.replace(/\n/g, '');
-
-  return minified;
-}
-
-/**
- * Handle validate (check SVG syntax)
- */
-function handleValidate() {
-  const content = getEditorContent();
-
-  if (!content.trim()) {
-    alert('Não há conteúdo para validar.');
-    return;
+function showFormatting() {
+  document.getElementById("formattingModal")?.remove();
+  const modal = document.createElement("div");
+  modal.id = "formattingModal";
+  modal.className = "modal-backdrop svgaze-settings-backdrop";
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-hidden", "false");
+  modal.innerHTML = `<div class="modal svgaze-small-modal"><div class="modal-header"><h2>${text("Formatação", "Formatting")}</h2><button class="modal-close">×</button></div><div class="modal-body"><label>${text("Indentação", "Indentation")} <select>${["2", "4", "tab"].map((value) => `<option value="${value}" ${preferences.indent === value ? "selected" : ""}>${value === "tab" ? "Tab" : value + text(" espaços", " spaces")}</option>`).join("")}</select></label><label class="svgo-plugin-item"><input type="checkbox" ${preferences.shortTags ? "checked" : ""}>${text("Tags curtas", "Short tags")}</label><button class="btn secondary" data-reset>${text("Restaurar padrões", "Reset defaults")}</button></div></div>`;
+  document.body.append(modal);
+  placeEditorPopover(
+    modal.querySelector(".modal"),
+    document.getElementById("prettifyOptions"),
+    320,
+  );
+  const utilities = document.createElement("div");
+  utilities.className = "svgaze-format-utilities";
+  for (const [id, label] of [
+    ["editorValidate", text("Validar SVG", "Validate SVG")],
+    ["editorMinify", text("Minificar", "Minify")],
+  ]) {
+    const action = document.createElement("button");
+    action.className = "btn secondary";
+    action.textContent = label;
+    action.onclick = () => {
+      document.getElementById(id).click();
+      modal.remove();
+    };
+    utilities.append(action);
   }
-
-  try {
-    // Parse SVG
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'image/svg+xml');
-
-    // Check for parsing errors
-    const parserError = doc.querySelector('parsererror');
-    if (parserError) {
-      const errorText = parserError.textContent;
-      alert(`❌ Erro de sintaxe no SVG:\n\n${errorText}`);
-      return;
-    }
-
-    // Check if SVG element exists
-    const svgElement = doc.querySelector('svg');
-    if (!svgElement) {
-      alert('❌ Nenhum elemento <svg> encontrado.');
-      return;
-    }
-
-    // Validation passed
-    showToast('✓ SVG válido!');
-
-    // Optional: Show warnings for missing attributes
-    const warnings = [];
-
-    if (!svgElement.hasAttribute('xmlns')) {
-      warnings.push('- Atributo "xmlns" ausente (recomendado)');
-    }
-
-    if (!svgElement.hasAttribute('viewBox') && !svgElement.hasAttribute('width')) {
-      warnings.push('- Nenhum "viewBox" ou "width" definido');
-    }
-
-    if (warnings.length > 0) {
-      console.warn('⚠️ SVG Warnings:\n' + warnings.join('\n'));
-    }
-
-  } catch (error) {
-    console.error('❌ Error validating:', error);
-    alert('Erro ao validar SVG.');
-  }
+  modal.querySelector(".modal-body").append(utilities);
+  const close = () => modal.remove();
+  modal.querySelector(".modal-close").onclick = close;
+  modal.onclick = (e) => {
+    if (e.target === modal) close();
+  };
+  modal.onkeydown = (e) => {
+    if (e.key === "Escape") close();
+  };
+  modal.onchange = () => {
+    preferences = {
+      indent: modal.querySelector("select").value,
+      shortTags: modal.querySelector("input").checked,
+    };
+    try {
+      localStorage.setItem("svgaze-format", JSON.stringify(preferences));
+    } catch {}
+  };
+  modal.querySelector("[data-reset]").onclick = () => {
+    preferences = { indent: "2", shortTags: true };
+    try {
+      localStorage.removeItem("svgaze-format");
+    } catch {}
+    close();
+    showFormatting();
+  };
 }
-

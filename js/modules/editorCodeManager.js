@@ -1,252 +1,219 @@
-/**
- * SVGaze - Editor Code Manager (CodeMirror 5)
- *
- * Manages the code editor using CodeMirror 5 for professional SVG editing
- */
+import { DEFAULT_SVG } from "./editorDefaultDocument.js";
+import { appState } from "../state.js";
+import { sourceElements, elementAtPosition } from "./editorSvgMapper.js";
+import { colorHex } from "./editorSvgCore.js";
 
-import { appState } from '../state.js';
+let editor = null,
+  container = null,
+  marker = null,
+  colorMarks = [],
+  colorTimer,
+  nextModified;
+let ranges = [];
 
-// CodeMirror instance
-let editor = null;
-let editorContainer = null;
-
-// Default SVG template
-const DEFAULT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <rect width="400" height="400" fill="#f0f0f0"/>
-  <circle cx="200" cy="200" r="100" fill="#3b82f6"/>
-  <text x="200" y="210" text-anchor="middle" font-size="24" fill="white" font-family="Arial">
-    SVGaze
-  </text>
-</svg>`;
-
-/**
- * Initialize the code editor with CodeMirror
- */
 export function initCodeEditor() {
-  editorContainer = document.getElementById('editorCode');
-
-  if (!editorContainer) {
-    console.error('❌ Code editor container not found');
-    return;
-  }
-
-  // Wait for CodeMirror to be loaded
-  const initInterval = setInterval(() => {
-    if (window.CodeMirror) {
-      clearInterval(initInterval);
-      setupCodeMirror();
-    }
-  }, 100);
-
-  console.log('⏳ Waiting for CodeMirror to load...');
-}
-
-/**
- * Setup CodeMirror editor
- */
-function setupCodeMirror() {
-  // Check theme
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-  // Create CodeMirror instance
-  editor = CodeMirror(editorContainer, {
-    value: appState.editor.currentSVG || DEFAULT_SVG,
-    mode: 'xml',
-    theme: isDark ? 'material-darker' : 'default',
-    lineNumbers: true,
-    lineWrapping: appState.editor.wordWrap,
-    tabSize: 2,
-    indentUnit: 2,
-    indentWithTabs: false,
-    autoCloseTags: true,
-    matchBrackets: true,
-    autoCloseBrackets: true,
-    foldGutter: true,
-    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+  container = document.getElementById("editorCode");
+  if (!container) return;
+  window.addEventListener("editor-load-svg", (e) => {
+    appState.editor.fileName = e.detail.fileName;
+    setEditorContent(e.detail.svgCode, { modified: false });
   });
-
-  // Set height to 100%
-  editor.setSize('100%', '100%');
-
-  // Listen for changes
-  editor.on('change', () => {
-    handleCodeChange(editor.getValue());
+  window.addEventListener("editor-view-shown", () => {
+    editor?.refresh();
   });
-
-  console.log('✅ Code editor initialized with CodeMirror 5');
-
-  // Listen for theme changes
-  observeThemeChange();
-
-  // Listen for editor load event
-  window.addEventListener('editor-load-svg', handleLoadSVG);
-
-  // Listen for editor view shown
-  window.addEventListener('editor-view-shown', () => {
-    if (editor) {
-      editor.refresh();
-      editor.focus();
-    }
+  window.addEventListener("theme-changed", () => {
+    requestAnimationFrame(() => editor?.refresh());
   });
-
-  // Setup word wrap toggle
-  setupWordWrapToggle();
-
-  // Initial file size update
-  updateFileSize(editor.getValue());
-}
-
-/**
- * Handle code changes
- * @param {string} code - New code content
- */
-function handleCodeChange(code) {
-  appState.editor.currentSVG = code;
-  appState.editor.isModified = true;
-  appState.editor.originalSize = new Blob([code]).size;
-
-  // Update file size badge
-  updateFileSize(code);
-
-  // Trigger preview update (debounced)
-  clearTimeout(handleCodeChange.timeout);
-  handleCodeChange.timeout = setTimeout(() => {
-    window.dispatchEvent(new CustomEvent('editor-code-changed', {
-      detail: { svgCode: code }
-    }));
-  }, 300);
-}
-
-/**
- * Update file size display
- * @param {string} code - SVG code
- */
-function updateFileSize(code) {
-  const fileSizeBadge = document.getElementById('editorFileSize');
-  if (fileSizeBadge) {
-    const bytes = new Blob([code]).size;
-    fileSizeBadge.textContent = formatBytes(bytes);
-  }
-}
-
-/**
- * Format bytes to human readable size
- * @param {number} bytes - Size in bytes
- * @returns {string} - Formatted string
- */
-function formatBytes(bytes) {
-  if (bytes === 0) return '0 bytes';
-  const k = 1024;
-  const sizes = ['bytes', 'KB', 'MB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round(bytes / Math.pow(k, i) * 10) / 10 + ' ' + sizes[i];
-}
-
-/**
- * Get current editor content
- * @returns {string} - Current SVG code
- */
-export function getEditorContent() {
-  if (!editor) return '';
-  return editor.getValue();
-}
-
-/**
- * Set editor content
- * @param {string} code - SVG code to set
- */
-export function setEditorContent(code) {
-  if (!editor) {
-    console.error('❌ Editor not initialized');
-    return;
-  }
-
-  editor.setValue(code);
-  appState.editor.currentSVG = code;
-  appState.editor.isModified = false;
-  updateFileSize(code);
-}
-
-/**
- * Clear editor content
- */
-export function clearEditor() {
-  setEditorContent(DEFAULT_SVG);
-  appState.editor.fileName = 'untitled.svg';
-  appState.editor.isModified = false;
-}
-
-/**
- * Handle load SVG event from view manager
- * @param {CustomEvent} e - Custom event with SVG data
- */
-function handleLoadSVG(e) {
-  const { svgCode, fileName } = e.detail;
-  setEditorContent(svgCode);
-  appState.editor.fileName = fileName;
-}
-
-/**
- * Setup word wrap toggle
- */
-function setupWordWrapToggle() {
-  const wrapToggle = document.getElementById('editorWrap');
-  if (wrapToggle) {
-    wrapToggle.addEventListener('change', (e) => {
-      appState.editor.wordWrap = e.target.checked;
-      if (editor) {
-        editor.setOption('lineWrapping', e.target.checked);
-      }
-    });
-
-    // Set initial state
-    wrapToggle.checked = appState.editor.wordWrap;
-  }
-}
-
-/**
- * Observe theme changes and update CodeMirror theme
- */
-function observeThemeChange() {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-        updateEditorTheme();
-      }
-    });
-  });
-
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme']
-  });
-}
-
-/**
- * Update editor theme based on current app theme
- */
-function updateEditorTheme() {
-  if (!editor) return;
-
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  editor.setOption('theme', isDark ? 'material-darker' : 'default');
-
-  console.log(`🎨 Editor theme updated to ${isDark ? 'dark' : 'light'}`);
-}
-
-/**
- * Focus the editor
- */
-export function focusEditor() {
-  if (editor) {
+  window.addEventListener("svg-element-hover", (e) =>
+    highlightSource(e.detail.range),
+  );
+  window.addEventListener("svg-element-select", (e) => {
+    const r = e.detail.range;
+    if (!r || !editor) return;
+    editor.setSelection(editor.posFromIndex(r.from), editor.posFromIndex(r.to));
     editor.focus();
+    editor.scrollIntoView(
+      { from: editor.posFromIndex(r.from), to: editor.posFromIndex(r.openTo) },
+      32,
+    );
+  });
+  let attempts = 0;
+  const initialize = () => {
+    if (!window.CodeMirror) {
+      if (++attempts < 100) setTimeout(initialize, 100);
+      else
+        container.textContent = "CodeMirror could not load. Reload the page.";
+      return;
+    }
+    if (!appState.editor.currentSVG) appState.editor.fileName = "svgaze.svg";
+    editor = window.CodeMirror(container, {
+      value: appState.editor.currentSVG || DEFAULT_SVG,
+      mode: "xml",
+      theme: "svgaze",
+      lineNumbers: true,
+      lineWrapping: appState.editor.wordWrap,
+      tabSize: 2,
+      indentUnit: 2,
+      autoCloseTags: true,
+      matchTags: { bothTags: true },
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      foldGutter: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+    });
+    editor.setSize("100%", "100%");
+    editor.on("change", () => publish(editor.getValue(), nextModified ?? true));
+    editor.on("cursorActivity", () => {
+      const cursor = editor.getCursor("from");
+      const status = document.getElementById("editorCursorPosition");
+      if (status) status.textContent = `Line ${cursor.line + 1}:${cursor.ch}`;
+      const pos = editor.indexFromPos(cursor);
+      window.dispatchEvent(
+        new CustomEvent("editor-element-focus", {
+          detail: { range: elementAtPosition(ranges, pos) },
+        }),
+      );
+    });
+    const wrap = document.getElementById("editorWrap");
+    if (wrap) {
+      wrap.checked = appState.editor.wordWrap;
+      wrap.addEventListener("change", () => {
+        appState.editor.wordWrap = wrap.checked;
+        editor.setOption("lineWrapping", wrap.checked);
+      });
+    }
+    publish(editor.getValue(), false);
+  };
+  initialize();
+}
+
+function publish(code, modified = true) {
+  appState.editor.currentSVG = code;
+  appState.editor.isModified = modified;
+  appState.editor.originalSize = new TextEncoder().encode(code).length;
+  ranges = sourceElements(code);
+  marker?.clear();
+  marker = null;
+  const size = document.getElementById("editorFileSize");
+  if (size) size.textContent = appState.editor.originalSize + " B";
+  clearTimeout(colorTimer);
+  colorTimer = setTimeout(updateColorPickers, 100);
+  window.dispatchEvent(
+    new CustomEvent("editor-code-changed", { detail: { svgCode: code } }),
+  );
+}
+
+function highlightSource(range) {
+  marker?.clear();
+  marker = null;
+  if (!editor || !range || range.to > editor.getValue().length) return;
+  const from = editor.posFromIndex(range.from),
+    to = editor.posFromIndex(range.to);
+  for (let line = from.line; line <= to.line; line++)
+    for (const mark of editor.findMarksAt({ line, ch: 0 }))
+      if (mark.__isFold) mark.clear();
+  marker = editor.markText(from, to, { className: "svgaze-source-highlight" });
+  editor.scrollIntoView({ from, to: editor.posFromIndex(range.openTo) }, 30);
+}
+
+function updateColorPickers() {
+  if (!editor) return;
+  colorMarks.forEach((mark) => mark.clear());
+  colorMarks = [];
+  const code = editor.getValue(),
+    pattern =
+      /(?:fill|stroke|stop-color|flood-color|color)\s*=\s*["']([^"']+)["']/g;
+  let match;
+  while ((match = pattern.exec(code))) {
+    const value = match[1];
+    if (
+      /^(none|inherit|currentColor|transparent|url\(|var\()/i.test(value) ||
+      !CSS.supports("color", value)
+    )
+      continue;
+    const from = match.index + match[0].indexOf(value),
+      input = document.createElement("input");
+    input.type = "color";
+    input.className = "svgaze-inline-color";
+    input.value = colorHex(value);
+    input.setAttribute("aria-label", value);
+    const bookmark = editor.setBookmark(editor.posFromIndex(from), {
+      widget: input,
+      insertLeft: true,
+    });
+    colorMarks.push(bookmark);
+    input.addEventListener("change", () => {
+      const pos = bookmark.find();
+      if (!pos) return;
+      const at = editor.indexFromPos(pos);
+      editor.replaceRange(
+        input.value,
+        pos,
+        editor.posFromIndex(at + value.length),
+        "svgaze-color",
+      );
+    });
   }
 }
 
+export function getEditorContent() {
+  return editor ? editor.getValue() : appState.editor.currentSVG || "";
+}
+export function setEditorContent(code, { modified = true } = {}) {
+  if (!editor) {
+    publish(code, modified);
+    return;
+  }
+  const previous = editor.getValue();
+  if (previous === code) {
+    if (!modified) appState.editor.isModified = false;
+    window.dispatchEvent(new CustomEvent("editor-document-state-changed"));
+    return;
+  }
+  let start = 0;
+  while (
+    start < previous.length &&
+    start < code.length &&
+    previous[start] === code[start]
+  )
+    start++;
+  let oldEnd = previous.length,
+    newEnd = code.length;
+  while (
+    oldEnd > start &&
+    newEnd > start &&
+    previous[oldEnd - 1] === code[newEnd - 1]
+  ) {
+    oldEnd--;
+    newEnd--;
+  }
+  nextModified = modified;
+  try {
+    editor.replaceRange(
+      code.slice(start, newEnd),
+      editor.posFromIndex(start),
+      editor.posFromIndex(oldEnd),
+      "svgaze-edit",
+    );
+  } finally {
+    nextModified = undefined;
+  }
+  appState.editor.isModified = modified;
+}
+export function clearEditor() {
+  setEditorContent("");
+  appState.editor.fileName = "untitled.svg";
+}
+export function focusEditor() {
+  editor?.focus();
+}
+export function getCodeEditor() {
+  return editor;
+}
 export default {
   initCodeEditor,
   getEditorContent,
   setEditorContent,
   clearEditor,
-  focusEditor
+  focusEditor,
 };
